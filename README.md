@@ -16,96 +16,6 @@ before committing engineering time to build it for real.
 
 ---
 
-## What's built today
-
-### 1. Public Docket (the plugin) — `public-docket/`
-
-A generalized, many-item version of an earlier single-item pilot called
-HearBack. Every docket item is independent — a commission can have any number
-open for comment at once, and not every item needs to end in an up-or-down
-vote.
-
-- **Three content types**: a Docket Item (the public-facing question), Themes
-  (what admins group similar comments into), and Submissions (individual
-  resident comments, private until an admin publishes the synthesis).
-- **4-stage public timeline**, computed automatically from timestamps: *Open
-  for input → Synthesis published → Board reviewing → Outcome.* Items that
-  don't need public comment (purely informational postings) skip straight to
-  showing the outcome.
-- **Configurable outcome vocabulary** — no hardcoded Proceed/Do-not-proceed;
-  admins define their own outcome options under Settings, each tagged with a
-  tone (positive/neutral/negative) so the public page still gets a sensible
-  accent color.
-- **One-page admin Workspace** — edit an item's details, manage its themes,
-  sort submissions into them, and publish, all with a single Save button.
-- **Built for future automation, already**: every decision field is exposed
-  over the REST API, each item carries a `source` (manual vs. scraped) and an
-  `external_reference` (a case/license number) so a future ingestion tool can
-  recognize "this is the same matter resurfacing" instead of creating
-  duplicates, and anything created programmatically lands as WordPress's
-  native **Pending** status — invisible to the public until a human approves
-  it. This groundwork is what Phase 2 below builds on.
-- Spam protection (honeypot + nonce), no login required to comment, email
-  never shown publicly.
-
-Shortcodes: `[public_docket]` (archive listing), `[public_docket_item
-id="123"]` (embed one item elsewhere).
-
-### 2. Demo theme — `anc6a-demo-theme/`
-
-A minimal theme reproducing ANC6A's real header/nav/footer around the
-plugin's content, styled from an approved design mockup (Lora/Lato type,
-green-and-gold ANC6A palette). The plugin itself only renders docket
-*content* — a theme (or a page template in a client's existing site) supplies
-the surrounding chrome.
-
-### 3. Chatbot integration (AI Engine)
-
-The [AI Engine](https://wordpress.org/plugins/ai-engine/) plugin is installed
-and its chatbot widget is placed on the **Agendas** page specifically (not
-site-wide), so residents can ask questions about what's been discussed at
-past meetings. The Agendas page itself is seeded with the real September 10,
-2026 ANC6A agenda (sourced directly from
-[anc6a.org](https://anc6a.org/agendas/)), including case numbers, addresses,
-and committee recommendations, verbatim.
-
-**Current limitation:** the chatbot's API key is never stored in this repo or
-the Blueprint (a public repo is not a safe place for a live key) — you add
-your own key live in the running Playground instance. In our own testing with
-a Gemini free-tier key inside WordPress Playground specifically, currently
-valid Gemini models return an empty response through AI Engine's newer
-"Interactions" API integration, while the direct Gemini API itself works
-fine — this looks like a sandbox/plugin compatibility gap rather than an
-account problem, and may not reproduce on a real WordPress host. OpenAI does
-not offer a meaningful ongoing free API tier, so that path needs a paid key
-to test.
-
-### 4. Demo content
-
-Three real ANC6A docket items, deliberately left at three different points in
-their lifecycle so the demo shows the full range of what the plugin does —
-one fully answered (comments off, because the real record only has aggregate
-counts, not theme-level breakdowns), one under board review, and one open for
-live public comment. See `public-docket-project-context.md` for the full
-sourcing and reasoning behind each choice — including where we explicitly
-used non-testimony placeholder text rather than ever inventing what a
-resident might have said.
-
----
-
-## Repo structure
-
-```
-public-docket/            the plugin
-anc6a-demo-theme/          the demo theme
-blueprint.json              WordPress Playground blueprint (boots the demo)
-public-docket-project-context.md   full build history / decisions log
-README.md                   this file
-HOW-TO-GUIDE.md              install guide for organizations trying this
-```
-
----
-
 ## Future vision: an ingestion plugin
 
 ### The problem
@@ -183,6 +93,96 @@ verify at a glance instead of re-reading the whole source document.
   archive instead of one page's static text? (See the "Knowledge & Context"
   discussion in the project history — this is the natural next step once
   there's more than one Agendas page's worth of content to search.)
+
+---
+
+## What's built today
+
+### 1. Public Docket (the plugin) — `public-docket/`
+
+A generalized, many-item version of an earlier single-item pilot called
+HearBack. Every docket item is independent — a commission can have any number
+open for comment at once, and not every item needs to end in an up-or-down
+vote.
+
+- **Three content types**: a Docket Item (the public-facing question), Themes
+  (what admins group similar comments into), and Submissions (individual
+  resident comments, private until an admin publishes the synthesis).
+- **4-stage public timeline**, computed automatically from timestamps: *Open
+  for input → Synthesis published → Board reviewing → Outcome.* Items that
+  don't need public comment (purely informational postings) skip straight to
+  showing the outcome.
+- **Configurable outcome vocabulary** — no hardcoded Proceed/Do-not-proceed;
+  admins define their own outcome options under Settings, each tagged with a
+  tone (positive/neutral/negative) so the public page still gets a sensible
+  accent color.
+- **One-page admin Workspace** — edit an item's details, manage its themes,
+  sort submissions into them, and publish, all with a single Save button.
+- **Built for future automation, already**: every decision field is exposed
+  over the REST API, each item carries a `source` (manual vs. scraped) and an
+  `external_reference` (a case/license number) so a future ingestion tool can
+  recognize "this is the same matter resurfacing" instead of creating
+  duplicates, and anything created programmatically lands as WordPress's
+  native **Pending** status — invisible to the public until a human approves
+  it. This groundwork is what the ingestion plugin above builds on.
+- Spam protection (honeypot + nonce), no login required to comment, email
+  never shown publicly.
+
+Shortcodes: `[public_docket]` (archive listing), `[public_docket_item
+id="123"]` (embed one item elsewhere).
+
+### 2. Demo theme — `anc6a-demo-theme/`
+
+A minimal theme reproducing ANC6A's real header/nav/footer around the
+plugin's content, styled from an approved design mockup (Lora/Lato type,
+green-and-gold ANC6A palette). The plugin itself only renders docket
+*content* — a theme (or a page template in a client's existing site) supplies
+the surrounding chrome.
+
+### 3. Chatbot integration (AI Engine)
+
+The [AI Engine](https://wordpress.org/plugins/ai-engine/) plugin is installed
+and its chatbot widget is placed on the **Agendas** page specifically (not
+site-wide), so residents can ask questions about what's been discussed at
+past meetings. The Agendas page itself is seeded with the real September 10,
+2026 ANC6A agenda (sourced directly from
+[anc6a.org](https://anc6a.org/agendas/)), including case numbers, addresses,
+and committee recommendations, verbatim.
+
+**Current limitation:** the chatbot's API key is never stored in this repo or
+the Blueprint (a public repo is not a safe place for a live key) — you add
+your own key live in the running Playground instance. In our own testing with
+a Gemini free-tier key inside WordPress Playground specifically, currently
+valid Gemini models return an empty response through AI Engine's newer
+"Interactions" API integration, while the direct Gemini API itself works
+fine — this looks like a sandbox/plugin compatibility gap rather than an
+account problem, and may not reproduce on a real WordPress host. OpenAI does
+not offer a meaningful ongoing free API tier, so that path needs a paid key
+to test.
+
+### 4. Demo content
+
+Three real ANC6A docket items, deliberately left at three different points in
+their lifecycle so the demo shows the full range of what the plugin does —
+one fully answered (comments off, because the real record only has aggregate
+counts, not theme-level breakdowns), one under board review, and one open for
+live public comment. See `public-docket-project-context.md` for the full
+sourcing and reasoning behind each choice — including where we explicitly
+used non-testimony placeholder text rather than ever inventing what a
+resident might have said.
+
+---
+
+## Repo structure
+
+```
+public-docket/            the plugin
+anc6a-demo-theme/          the demo theme
+blueprint.json              WordPress Playground blueprint (boots the demo)
+public-docket-project-context.md   full build history / decisions log
+README.md                   this file
+HOW-TO-GUIDE.md              install guide for organizations trying this
+```
 
 ---
 
