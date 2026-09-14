@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Lato:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; background:#e9e6e0; }
+  body { font-family:Lato, Arial, sans-serif; color:#22303a; -webkit-font-smoothing:antialiased; }
+  a { color:#2a6b4a; text-decoration:underline; }
+  a:hover { color:#a1571a; }
+  *:focus-visible { outline:2px solid #a1571a; outline-offset:2px; }
+  ::selection { background:#f2e3c3; }
+</style>
+</helmet>
+<div style="min-height:100vh; background:#e9e6e0; padding:0 0 48px">
+
+  <div style="background:#ffffff; borderBottom:1px solid #cfcac1">
+    <div style="maxWidth:1040px; margin:0 auto; padding:18px 24px; display:flex; alignItems:center; gap:18px; flexWrap:wrap">
+      <img src="uploads/anc.jpg" alt="Advisory Neighborhood Commission 6A seal" style="width:74px; height:70px; objectFit:contain; display:block; flexShrink:0">
+      <div style="flexGrow:1; minWidth:0">
+        <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:25px; lineHeight:1.15; color:#1e4628">Advisory Neighborhood Commission 6A</div>
+        <div style="fontSize:12.5px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginTop:5px">Capitol Hill &middot; Ward 6 &middot; Washington, DC</div>
+      </div>
+      <div style="fontSize:13px; color:#6b6a64; lineHeight:1.5; textAlign:right">Public meetings<br><strong style="color:#22303a">2nd Thursday, 7:00 pm</strong></div>
+    </div>
+  </div>
+
+  <div style="height:6px; background:#ffc942"></div>
+  <div style="background:#1e4628">
+    <div style="maxWidth:1040px; margin:0 auto; padding:0 24px; display:flex; flexWrap:wrap; gap:0">
+      <div style="padding:12px 16px; fontSize:13.5px; color:#cfe0d2">Commissioners</div>
+      <div style="padding:12px 16px; fontSize:13.5px; color:#cfe0d2">Committees</div>
+      <div style="padding:12px 16px; fontSize:13.5px; color:#cfe0d2">Agendas</div>
+      <div style="padding:12px 16px; fontSize:13.5px; color:#cfe0d2">Minutes / Reports</div>
+      <div style="padding:12px 16px; fontSize:13.5px; color:#1e4628; background:#ffc942; fontWeight:700">Docket</div>
+      <div style="padding:12px 16px; fontSize:13.5px; color:#cfe0d2">Community Calendar</div>
+      <div style="padding:12px 16px; fontSize:13.5px; color:#cfe0d2">Contact Us</div>
+    </div>
+  </div>
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+  <div style="maxWidth:1040px; margin:0 auto; padding:0 24px">
+    <div style="background:#ffffff; border:1px solid #cfcac1; borderTop:none; padding:40px 48px 48px">
+
+      <div style="fontSize:12.5px; color:#6b6a64; marginBottom:22px">Home &rsaquo; <span style="color:#22303a">Public docket</span></div>
+
+      <h1 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:36px; lineHeight:1.15; margin:0 0 14px; color:#1e4628">Public docket</h1>
+      <p style="fontSize:16.5px; lineHeight:1.65; margin:0 0 8px; maxWidth:660px; color:#3c4a54">Every matter the Commission takes up is tracked here from the day it opens for public input to the day an official response is recorded. Each entry shows where the matter stands right now and who is responsible for answering it.</p>
+      <p style="fontSize:14px; lineHeight:1.6; margin:0; maxWidth:660px; color:#6b6a64">Updated Friday, September 11, 2026. Questions about this record: <a href="#">6A04@anc.dc.gov</a></p>
+
+      <div style="height:2px; background:#1e4628; margin:30px 0 0"></div>
+
+      <div style="display:flex; alignItems:baseline; gap:16px; flexWrap:wrap; padding:14px 0; borderBottom:1px solid #e2ded6">
+        <span style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64">Showing</span>
+        <span style="fontSize:14px; color:#22303a">All 6 matters</span>
+        <span style="fontSize:14px; color:#6b6a64">&middot;</span>
+        <span style="fontSize:14px"><a href="#">Open for input (2)</a></span>
+        <span style="fontSize:14px"><a href="#">Awaiting response (2)</a></span>
+        <span style="fontSize:14px"><a href="#">Answered (2)</a></span>
+      </div>
+
+      <div style="display:flex; flexDirection:column">
+
+        <div onClick="{{ openDetail }}" style="display:flex; flexWrap:wrap; gap:32px; padding:26px 0; borderBottom:1px solid #e2ded6; cursor:pointer" style-hover="background:#fbfaf8">
+          <div style="minWidth:0; flex:1 1 320px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:7px">Transportation &amp; Public Space &middot; 26&#8209;14</div>
+            <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:22px; lineHeight:1.3; margin:0 0 9px"><a href="#" style="color:#1e4628; textDecoration:none" style-hover="color:#a1571a; textDecoration:underline">Should the Commission support DDOT&rsquo;s protected bike lane on 15th Street NE?</a></h2>
+            <p style="fontSize:15.5px; lineHeight:1.6; margin:0; color:#3c4a54">DDOT has proposed a curb-protected bike lane between Independence Avenue and Benning Road. Building it would remove about 34 on-street parking spaces. The Commission has to say yes, no, or not yet before DDOT&rsquo;s design is locked.</p>
+          </div>
+          <div style="flex:0 1 210px; minWidth:180px">
+            <div style="borderLeft:4px solid #a1571a; paddingLeft:12px">
+              <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:16px; color:#a1571a; lineHeight:1.3">Board reviewing</div>
+              <div style="fontSize:13px; color:#6b6a64; marginTop:5px; lineHeight:1.5">Response due<br>October 8, 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flexWrap:wrap; gap:32px; padding:26px 0; borderBottom:1px solid #e2ded6">
+          <div style="minWidth:0; flex:1 1 320px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:7px">Grants &amp; Budget &middot; 26&#8209;13</div>
+            <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:22px; lineHeight:1.3; margin:0 0 9px"><a href="#" style="color:#1e4628; textDecoration:none" style-hover="color:#a1571a; textDecoration:underline">How should the Commission award its remaining $18,400 in grant funds this year?</a></h2>
+            <p style="fontSize:15.5px; lineHeight:1.6; margin:0; color:#3c4a54">Eleven organizations applied and four can be funded. Residents are being asked what the money should buy &mdash; youth programs, food assistance, tree care, or block-level safety projects.</p>
+          </div>
+          <div style="flex:0 1 210px; minWidth:180px">
+            <div style="borderLeft:4px solid #a1571a; paddingLeft:12px">
+              <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:16px; color:#a1571a; lineHeight:1.3">Open for input</div>
+              <div style="fontSize:13px; color:#6b6a64; marginTop:5px; lineHeight:1.5">Comment by<br>September 26, 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flexWrap:wrap; gap:32px; padding:26px 0; borderBottom:1px solid #e2ded6">
+          <div style="minWidth:0; flex:1 1 320px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:7px">Alcohol Beverage Licensing &middot; 26&#8209;12</div>
+            <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:22px; lineHeight:1.3; margin:0 0 9px"><a href="#" style="color:#1e4628; textDecoration:none" style-hover="color:#a1571a; textDecoration:underline">Should the Commission protest the extended sidewalk-caf&eacute; hours at 1201 H Street NE?</a></h2>
+            <p style="fontSize:15.5px; lineHeight:1.6; margin:0; color:#3c4a54">The applicant wants outdoor service until midnight on Fridays and Saturdays, two hours later than its current license allows. Neighbors on the 1200 block of Linden Court are the closest residents.</p>
+          </div>
+          <div style="flex:0 1 210px; minWidth:180px">
+            <div style="borderLeft:4px solid #2a6b4a; paddingLeft:12px">
+              <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:16px; color:#2a6b4a; lineHeight:1.3">Synthesis published</div>
+              <div style="fontSize:13px; color:#6b6a64; marginTop:5px; lineHeight:1.5">Response due<br>October 8, 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flexWrap:wrap; gap:32px; padding:26px 0; borderBottom:1px solid #e2ded6">
+          <div style="minWidth:0; flex:1 1 320px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:7px">Transportation &amp; Public Space &middot; 26&#8209;09</div>
+            <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:22px; lineHeight:1.3; margin:0 0 9px"><a href="#" style="color:#1e4628; textDecoration:none" style-hover="color:#a1571a; textDecoration:underline">Should the Commission ask DDOT for speed humps on the 700 and 800 blocks of 10th Street NE?</a></h2>
+            <p style="fontSize:15.5px; lineHeight:1.6; margin:0; color:#3c4a54">Residents reported cars using the blocks as a cut-through from Maryland Avenue. The Commission voted to send DDOT a formal request; DDOT has acknowledged it and scheduled a study.</p>
+          </div>
+          <div style="flex:0 1 210px; minWidth:180px">
+            <div style="borderLeft:4px solid #2f5d43; paddingLeft:12px">
+              <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:16px; color:#2f5d43; lineHeight:1.3">Answered</div>
+              <div style="fontSize:13px; color:#6b6a64; marginTop:5px; lineHeight:1.5">Responded<br>July 9, 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flexWrap:wrap; gap:32px; padding:26px 0; borderBottom:1px solid #e2ded6">
+          <div style="minWidth:0; flex:1 1 320px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:7px">Zoning &middot; 26&#8209;07</div>
+            <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:22px; lineHeight:1.3; margin:0 0 9px"><a href="#" style="color:#1e4628; textDecoration:none" style-hover="color:#a1571a; textDecoration:underline">Should the Commission support a rear-addition variance at 1234 Maryland Avenue NE?</a></h2>
+            <p style="fontSize:15.5px; lineHeight:1.6; margin:0; color:#3c4a54">The owner asked the Board of Zoning Adjustment for relief from lot-occupancy limits. Two adjacent households raised concerns about light and alley access; the architect revised the plans twice.</p>
+          </div>
+          <div style="flex:0 1 210px; minWidth:180px">
+            <div style="borderLeft:4px solid #2f5d43; paddingLeft:12px">
+              <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:16px; color:#2f5d43; lineHeight:1.3">Answered</div>
+              <div style="fontSize:13px; color:#6b6a64; marginTop:5px; lineHeight:1.5">Responded<br>May 14, 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flexWrap:wrap; gap:32px; padding:26px 0; borderBottom:1px solid #e2ded6">
+          <div style="minWidth:0; flex:1 1 320px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:7px">Community Outreach &middot; 26&#8209;06</div>
+            <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:22px; lineHeight:1.3; margin:0 0 9px"><a href="#" style="color:#1e4628; textDecoration:none" style-hover="color:#a1571a; textDecoration:underline">Should trash and recycling pickup on the 600 block of E Street NE move from Tuesday to Thursday?</a></h2>
+            <p style="fontSize:15.5px; lineHeight:1.6; margin:0; color:#3c4a54">The Department of Public Works offered the block a schedule swap to reduce conflicts with street sweeping. The change affects 41 households and cannot be made house by house.</p>
+          </div>
+          <div style="flex:0 1 210px; minWidth:180px">
+            <div style="borderLeft:4px solid #a1571a; paddingLeft:12px">
+              <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:16px; color:#a1571a; lineHeight:1.3">Open for input</div>
+              <div style="fontSize:13px; color:#6b6a64; marginTop:5px; lineHeight:1.5">Comment by<br>October 3, 2026</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="marginTop:34px; padding:22px 26px; background:#f4f2ee; border:1px solid #dcd7ce">
+        <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:18px; color:#1e4628; marginBottom:7px">Is something missing from this list?</div>
+        <p style="fontSize:15px; lineHeight:1.6; margin:0; color:#3c4a54; maxWidth:620px">Any resident of 6A may ask the Commission to take up a matter. Write to your commissioner or raise it during the public comment period at the start of the monthly meeting.</p>
+      </div>
+
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+  <div style="maxWidth:1040px; margin:0 auto; padding:0 24px">
+    <div style="background:#ffffff; border:1px solid #cfcac1; borderTop:none">
+
+      <div style="padding:32px 48px 0">
+        <div style="fontSize:12.5px; color:#6b6a64; marginBottom:22px">Home &rsaquo; <a href="#" onClick="{{ openList }}">Public docket</a> &rsaquo; <span style="color:#22303a">Matter 26&#8209;14</span></div>
+        <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:10px">Matter 26&#8209;14 &middot; Transportation &amp; Public Space Committee</div>
+      </div>
+
+      <div style="padding:0 48px 30px">
+        <div style="fontSize:12px; letterSpacing:0.11em; textTransform:uppercase; color:#a1571a; fontWeight:700; marginBottom:10px">The question</div>
+        <h1 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:34px; lineHeight:1.25; margin:0; color:#1e4628; maxWidth:880px; textWrap:pretty">Should the Commission support DDOT&rsquo;s protected bike lane on 15th Street NE, which would remove about 34 on-street parking spaces?</h1>
+
+        <div style="marginTop:26px; display:flex; flexWrap:wrap; gap:0; borderTop:2px solid #1e4628; borderBottom:1px solid #dcd7ce">
+          <div style="padding:16px 28px 16px 0; borderRight:1px solid #dcd7ce; paddingRight:28px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:5px">Owns the response</div>
+            <div style="fontSize:16px; color:#22303a; lineHeight:1.45"><strong>Commissioner Dana Whitfield</strong><br><span style="color:#3c4a54">Single Member District 6A04 &middot; Committee Chair</span></div>
+          </div>
+          <div style="padding:16px 28px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:5px">Response due</div>
+            <div style="fontSize:16px; color:#22303a; lineHeight:1.45"><strong>Thursday, October 8, 2026</strong><br><span style="color:#3c4a54">At the regular monthly meeting, 7:00 pm</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#1e4628; padding:30px 48px 34px">
+        <div style="display:flex; alignItems:baseline; justifyContent:space-between; flexWrap:wrap; gap:12px; marginBottom:22px">
+          <div style="fontSize:12px; letterSpacing:0.11em; textTransform:uppercase; color:#b6d0bd; fontWeight:700">Where this matter stands</div>
+          <div style="fontSize:13.5px; color:#e7e0cd">Stage 3 of 4 &middot; opened June 12, 2026</div>
+        </div>
+
+        <div style="display:grid; gridTemplateColumns:repeat(auto-fit, minmax(180px, 1fr)); gap:26px 0">
+
+          <div style="position:relative; paddingRight:14px">
+            <div style="height:10px; background:#ffc942; marginBottom:16px"></div>
+            <div style="display:flex; alignItems:center; gap:10px; marginBottom:10px">
+              <div style="width:30px; height:30px; background:#ffc942; color:#1e4628; display:flex; alignItems:center; justifyContent:center; fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:15px; flexShrink:0">1</div>
+              <div style="fontSize:11.5px; letterSpacing:0.09em; textTransform:uppercase; color:#ffc942; fontWeight:700">Complete</div>
+            </div>
+            <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; lineHeight:1.25; color:#ffffff; marginBottom:6px">Open for input</div>
+            <div style="fontSize:13.5px; lineHeight:1.5; color:#bcd4c3">June 12 &ndash; August 7, 2026<br>142 comments received</div>
+          </div>
+
+          <div style="position:relative; paddingRight:14px">
+            <div style="height:10px; background:#ffc942; marginBottom:16px"></div>
+            <div style="display:flex; alignItems:center; gap:10px; marginBottom:10px">
+              <div style="width:30px; height:30px; background:#ffc942; color:#1e4628; display:flex; alignItems:center; justifyContent:center; fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:15px; flexShrink:0">2</div>
+              <div style="fontSize:11.5px; letterSpacing:0.09em; textTransform:uppercase; color:#ffc942; fontWeight:700">Complete</div>
+            </div>
+            <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; lineHeight:1.25; color:#ffffff; marginBottom:6px">Synthesis published</div>
+            <div style="fontSize:13.5px; lineHeight:1.5; color:#bcd4c3">August 21, 2026<br>Four themes, posted below</div>
+          </div>
+
+          <div style="position:relative; paddingRight:14px">
+            <div style="height:10px; background:#ffffff; marginBottom:16px"></div>
+            <div style="display:flex; alignItems:center; gap:10px; marginBottom:10px">
+              <div style="width:30px; height:30px; background:#ffffff; color:#1e4628; display:flex; alignItems:center; justifyContent:center; fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:15px; flexShrink:0; boxShadow:0 0 0 4px rgba(255,255,255,0.28)">3</div>
+              <div style="fontSize:11.5px; letterSpacing:0.09em; textTransform:uppercase; color:#1e4628; fontWeight:700; background:#ffc942; padding:4px 8px">Happening now</div>
+            </div>
+            <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; lineHeight:1.25; color:#ffffff; marginBottom:6px">Board reviewing</div>
+            <div style="fontSize:13.5px; lineHeight:1.5; color:#ffffff">Since August 28, 2026<br>Committee recommendation drafted &mdash; comment is still open</div>
+          </div>
+
+          <div style="position:relative">
+            <div style="height:10px; background:rgba(255,255,255,0.16); marginBottom:16px"></div>
+            <div style="display:flex; alignItems:center; gap:10px; marginBottom:10px">
+              <div style="width:30px; height:30px; border:2px solid rgba(255,255,255,0.35); color:#93b39c; display:flex; alignItems:center; justifyContent:center; fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:15px; flexShrink:0; boxSizing:border-box">4</div>
+              <div style="fontSize:11.5px; letterSpacing:0.09em; textTransform:uppercase; color:#93b39c; fontWeight:700">Upcoming</div>
+            </div>
+            <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; lineHeight:1.25; color:#93b39c; marginBottom:6px">Official response</div>
+            <div style="fontSize:13.5px; lineHeight:1.5; color:#b0cbb8">Expected October 8, 2026<br>Recorded vote of the full commission</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="padding:42px 48px 0; display:grid; gridTemplateColumns:minmax(0,1fr); gap:0">
+        <div style="display:flex; flexWrap:wrap; gap:44px; alignItems:flex-start">
+          <div style="minWidth:0; flex:1 1 440px">
+
+            <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:27px; lineHeight:1.2; margin:0 0 8px; color:#1e4628">What we heard</h2>
+            <p style="fontSize:15.5px; lineHeight:1.65; margin:0 0 4px; color:#3c4a54; maxWidth:640px">142 comments arrived between June 12 and August 7 &mdash; by email, at two committee meetings, and on paper forms left at the Sherwood Recreation Center. Staff grouped them into four themes. Names are withheld; the full unedited record is available on request.</p>
+            <div style="height:2px; background:#1e4628; margin:22px 0 0"></div>
+
+            <div style="padding:24px 0; borderBottom:1px solid #e2ded6">
+              <div style="display:flex; alignItems:baseline; gap:12px; flexWrap:wrap; marginBottom:8px">
+                <h3 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; margin:0; color:#22303a">Traffic safety</h3>
+                <span style="fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64">Raised in 88 comments</span>
+              </div>
+              <p style="fontSize:15.5px; lineHeight:1.65; margin:0 0 16px; color:#3c4a54; maxWidth:640px">The most common theme by a wide margin. Residents described near-misses at the 15th and A Street NE intersection and cited the two crashes involving cyclists in the past three years. Parents of school-age children wrote most often.</p>
+              <div style="display:flex; flexDirection:column; gap:12px; maxWidth:600px">
+                <blockquote style="margin:0; padding:14px 18px; background:#f4f2ee; borderLeft:4px solid #1e4628; fontFamily:Lora, Georgia, serif; fontStyle:italic; fontSize:16px; lineHeight:1.55; color:#22303a">&ldquo;Placeholder quote. A short anonymized excerpt from a resident comment would appear here, two or three lines at most.&rdquo;<span style="display:block; fontFamily:Lato, sans-serif; fontStyle:normal; fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64; marginTop:9px">Anonymized resident comment</span></blockquote>
+                <blockquote style="margin:0; padding:14px 18px; background:#f4f2ee; borderLeft:4px solid #1e4628; fontFamily:Lora, Georgia, serif; fontStyle:italic; fontSize:16px; lineHeight:1.55; color:#22303a">&ldquo;Placeholder quote. A second excerpt on the same theme would sit here, chosen to show a different way residents put it.&rdquo;<span style="display:block; fontFamily:Lato, sans-serif; fontStyle:normal; fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64; marginTop:9px">Anonymized resident comment</span></blockquote>
+              </div>
+            </div>
+
+            <div style="padding:24px 0; borderBottom:1px solid #e2ded6">
+              <div style="display:flex; alignItems:baseline; gap:12px; flexWrap:wrap; marginBottom:8px">
+                <h3 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; margin:0; color:#22303a">Parking loss</h3>
+                <span style="fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64">Raised in 61 comments</span>
+              </div>
+              <p style="fontSize:15.5px; lineHeight:1.65; margin:0 0 16px; color:#3c4a54; maxWidth:640px">The strongest objection. Households without off-street parking, and residents who described a disability or care-giving arrangement, said the 34 removed spaces would fall hardest on them. Several asked for a resident-only block instead.</p>
+              <div style="display:flex; flexDirection:column; gap:12px; maxWidth:600px">
+                <blockquote style="margin:0; padding:14px 18px; background:#f4f2ee; borderLeft:4px solid #a1571a; fontFamily:Lora, Georgia, serif; fontStyle:italic; fontSize:16px; lineHeight:1.55; color:#22303a">&ldquo;Placeholder quote. An excerpt illustrating the objection would appear here, in the resident&rsquo;s own words.&rdquo;<span style="display:block; fontFamily:Lato, sans-serif; fontStyle:normal; fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64; marginTop:9px">Anonymized resident comment</span></blockquote>
+              </div>
+            </div>
+
+            <div style="padding:24px 0; borderBottom:1px solid #e2ded6">
+              <div style="display:flex; alignItems:baseline; gap:12px; flexWrap:wrap; marginBottom:8px">
+                <h3 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; margin:0; color:#22303a">Cost and timing</h3>
+                <span style="fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64">Raised in 29 comments</span>
+              </div>
+              <p style="fontSize:15.5px; lineHeight:1.65; margin:0 0 16px; color:#3c4a54; maxWidth:640px">Residents asked what the project costs, whether it competes with the long-delayed sidewalk repairs on 12th Street, and how long 15th Street would be torn up. A number of comments were not objections so much as requests for a schedule.</p>
+              <div style="display:flex; flexDirection:column; gap:12px; maxWidth:600px">
+                <blockquote style="margin:0; padding:14px 18px; background:#f4f2ee; borderLeft:4px solid #1e4628; fontFamily:Lora, Georgia, serif; fontStyle:italic; fontSize:16px; lineHeight:1.55; color:#22303a">&ldquo;Placeholder quote. An excerpt showing a request for information rather than an objection would appear here.&rdquo;<span style="display:block; fontFamily:Lato, sans-serif; fontStyle:normal; fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64; marginTop:9px">Anonymized resident comment</span></blockquote>
+              </div>
+            </div>
+
+            <div style="padding:24px 0 30px; borderBottom:1px solid #e2ded6">
+              <div style="display:flex; alignItems:baseline; gap:12px; flexWrap:wrap; marginBottom:8px">
+                <h3 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; margin:0; color:#22303a">Business access</h3>
+                <span style="fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64">Raised in 17 comments</span>
+              </div>
+              <p style="fontSize:15.5px; lineHeight:1.65; margin:0 0 16px; color:#3c4a54; maxWidth:640px">Owners of nearby businesses and several delivery drivers wrote about loading. The concern was less about customer parking than about where a truck stops at seven in the morning.</p>
+              <div style="display:flex; flexDirection:column; gap:12px; maxWidth:600px">
+                <blockquote style="margin:0; padding:14px 18px; background:#f4f2ee; borderLeft:4px solid #1e4628; fontFamily:Lora, Georgia, serif; fontStyle:italic; fontSize:16px; lineHeight:1.55; color:#22303a">&ldquo;Placeholder quote. An excerpt naming a specific, workable fix would appear here.&rdquo;<span style="display:block; fontFamily:Lato, sans-serif; fontStyle:normal; fontSize:12.5px; letterSpacing:0.06em; textTransform:uppercase; color:#6b6a64; marginTop:9px">Anonymized business comment</span></blockquote>
+              </div>
+            </div>
+
+            <div style="paddingTop:38px">
+              <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:27px; lineHeight:1.2; margin:0 0 8px; color:#1e4628">Official response</h2>
+              <p style="fontSize:14px; lineHeight:1.6; margin:0 0 22px; color:#6b6a64; maxWidth:640px">Recommended by the Transportation &amp; Public Space Committee on August 28, 2026. It becomes the Commission&rsquo;s official response when the full commission votes on October 8.</p>
+
+              <div style="border:2px solid #1e4628">
+                <div style="background:#1e4628; padding:18px 24px; display:flex; alignItems:center; gap:16px; flexWrap:wrap">
+                  <div style="background:#ffc942; color:#1e4628; padding:8px 16px; fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:21px; letterSpacing:0.02em">Proceed</div>
+                  <div style="fontSize:13.5px; color:#cfe0d2; lineHeight:1.5">Support the project, with two conditions<br>Committee vote: 4 in favor, 1 opposed, 0 abstaining</div>
+                </div>
+                <div style="padding:24px">
+                  <p style="fontSize:16px; lineHeight:1.7; margin:0 0 14px; color:#22303a; maxWidth:640px">The safety record on this corridor is the deciding fact. Two crashes involving cyclists in three years, on a street that two schools sit beside, is a pattern the Commission cannot answer with paint. The committee finds that a curb-protected lane addresses the harm residents described most often and most urgently.</p>
+                  <p style="fontSize:16px; lineHeight:1.7; margin:0; color:#22303a; maxWidth:640px">The parking objection is real and is not dismissed. The committee therefore conditions its support on two things: that DDOT designate at least three accessible parking spaces per block between Independence and H Street, and that one marked loading zone be added on each commercial block. Without both conditions the committee&rsquo;s recommendation reverts to <em>Not yet</em>.</p>
+                </div>
+              </div>
+
+              <div style="marginTop:34px; position:relative; background:#fdf7e0; border:3px solid #1e4628; borderTop:10px solid #ffc942; padding:30px 30px 28px">
+                <div style="position:absolute; top:-14px; left:26px; background:#1e4628; color:#ffc942; padding:6px 16px; fontSize:12.5px; letterSpacing:0.14em; textTransform:uppercase; fontWeight:700">Next step</div>
+                <div style="display:grid; gridTemplateColumns:repeat(auto-fit, minmax(260px,1fr)); gap:28px; alignItems:start">
+                  <div style="minWidth:0">
+                    <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:25px; lineHeight:1.3; color:#1e4628; margin:0 0 10px; textWrap:pretty">The full commission votes on this recommendation at the October 8 public meeting.</div>
+                    <p style="fontSize:15.5px; lineHeight:1.65; margin:0 0 16px; color:#3c4a54">Public comment is taken at the top of the agenda, two minutes per speaker, no sign-up required. Written comment is accepted until 5:00 pm the day before. Commissioner Whitfield will read the two conditions aloud before the vote so they are recorded verbatim.</p>
+                    <div style="display:flex; gap:12px; flexWrap:wrap">
+                      <a href="#" style="background:#1e4628; color:#ffffff; padding:11px 20px; fontSize:14.5px; fontWeight:700; textDecoration:none; display:inline-block" style-hover="background:#1e4628; color:#ffffff">Add this meeting to your calendar</a>
+                      <a href="#" style="border:2px solid #1e4628; color:#1e4628; padding:9px 20px; fontSize:14.5px; fontWeight:700; textDecoration:none; display:inline-block" style-hover="background:#f7ecc9; color:#1e4628">Read the draft resolution (PDF)</a>
+                    </div>
+                  </div>
+                  <div style="borderLeft:2px solid #e8c97a; paddingLeft:22px; maxWidth:320px">
+                    <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#7a6a3c; marginBottom:6px">Date</div>
+                    <div style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:20px; color:#1e4628; lineHeight:1.25; marginBottom:14px">Thu, Oct 8<br>7:00 pm</div>
+                    <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#7a6a3c; marginBottom:6px">Where</div>
+                    <div style="fontSize:14.5px; color:#3c4a54; lineHeight:1.5">Zoom &mdash; access details on the Community Calendar</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <aside style="borderLeft:1px solid #dcd7ce; paddingLeft:28px; flex:1 1 220px; maxWidth:280px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:10px">On this page</div>
+            <div style="display:flex; flexDirection:column; gap:8px; fontSize:14.5px; marginBottom:26px">
+              <a href="#" style="textDecoration:none; color:#2a6b4a" style-hover="color:#a1571a; textDecoration:underline">What we heard</a>
+              <a href="#" style="textDecoration:none; color:#2a6b4a" style-hover="color:#a1571a; textDecoration:underline">Official response</a>
+              <a href="#" style="textDecoration:none; color:#2a6b4a" style-hover="color:#a1571a; textDecoration:underline">Next step</a>
+              <a href="#" style="textDecoration:none; color:#2a6b4a" style-hover="color:#a1571a; textDecoration:underline">Public comment</a>
+            </div>
+            <div style="height:1px; background:#dcd7ce; marginBottom:22px"></div>
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:10px">The record</div>
+            <div style="display:flex; flexDirection:column; gap:10px; fontSize:14.5px; lineHeight:1.5; marginBottom:26px">
+              <a href="#">DDOT concept drawings, June 2026</a>
+              <a href="#">Committee minutes, August 28</a>
+              <a href="#">Full comment record (142 items)</a>
+              <a href="#">Crash data, MPD First District</a>
+            </div>
+            <div style="height:1px; background:#dcd7ce; marginBottom:22px"></div>
+            <div style="fontSize:14px; lineHeight:1.6; color:#3c4a54">Something in this summary wrong or missing? Write to <a href="#">6A04@anc.dc.gov</a> and it will be corrected in the record.</div>
+          </aside>
+        </div>
+      </div>
+
+      <div style="marginTop:44px; borderTop:2px solid #1e4628; background:#f4f2ee; padding:38px 48px 44px">
+        <div style="maxWidth:680px">
+          <h2 style="fontFamily:Lora, Georgia, serif; fontWeight:600; fontSize:27px; lineHeight:1.2; margin:0 0 8px; color:#1e4628">Add a public comment</h2>
+          <p style="fontSize:15.5px; lineHeight:1.65; margin:0 0 4px; color:#3c4a54">Comment stays open until the October 8 vote. Everything except the comment itself is optional &mdash; you may comment anonymously. Comments are read by the responsible commissioner and entered into the public record.</p>
+
+          <div style="marginTop:26px; border:1px dashed #a9a294; background:#ffffff; padding:26px 24px">
+            <div style="fontSize:12px; letterSpacing:0.09em; textTransform:uppercase; color:#6b6a64; marginBottom:14px">Recent comments</div>
+            <div style="fontFamily:Lora, Georgia, serif; fontStyle:italic; fontSize:17px; lineHeight:1.6; color:#6b6a64">This is where a public comment would go if a resident had submitted one.</div>
+          </div>
+
+          <div style="marginTop:28px; display:flex; flexDirection:column; gap:20px">
+            <div>
+              <label style="display:block; fontSize:14.5px; fontWeight:700; color:#22303a; marginBottom:7px">Your comment <span style="color:#a1571a">(required)</span></label>
+              <div style="fontSize:13.5px; color:#6b6a64; marginBottom:8px">Plain language is fine. There is no length limit, but shorter comments are more often quoted in the synthesis.</div>
+              <textarea rows="5" placeholder="What should the Commission know before it votes?" style="width:100%; boxSizing:border-box; fontFamily:Lato, sans-serif; fontSize:15.5px; lineHeight:1.6; color:#22303a; padding:12px 14px; border:1px solid #a9a294; background:#ffffff; borderRadius:0; resize:vertical"></textarea>
+            </div>
+            <div style="display:grid; gridTemplateColumns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px">
+              <div>
+                <label style="display:block; fontSize:14.5px; fontWeight:700; color:#22303a; marginBottom:7px">Name <span style="fontWeight:400; color:#6b6a64">(optional)</span></label>
+                <input type="text" placeholder="First and last, or initials" style="width:100%; boxSizing:border-box; fontFamily:Lato, sans-serif; fontSize:15.5px; color:#22303a; padding:11px 14px; border:1px solid #a9a294; background:#ffffff; borderRadius:0">
+              </div>
+              <div>
+                <label style="display:block; fontSize:14.5px; fontWeight:700; color:#22303a; marginBottom:7px">Email <span style="fontWeight:400; color:#6b6a64">(optional)</span></label>
+                <input type="email" placeholder="Only used to reply to you" style="width:100%; boxSizing:border-box; fontFamily:Lato, sans-serif; fontSize:15.5px; color:#22303a; padding:11px 14px; border:1px solid #a9a294; background:#ffffff; borderRadius:0">
+              </div>
+              <div>
+                <label style="display:block; fontSize:14.5px; fontWeight:700; color:#22303a; marginBottom:7px">Neighborhood or block <span style="fontWeight:400; color:#6b6a64">(optional)</span></label>
+                <input type="text" placeholder="Optional" style="width:100%; boxSizing:border-box; fontFamily:Lato, sans-serif; fontSize:15.5px; color:#22303a; padding:11px 14px; border:1px solid #a9a294; background:#ffffff; borderRadius:0">
+              </div>
+            </div>
+            <label style="display:flex; alignItems:flex-start; gap:12px; padding:16px 18px; background:#ffffff; border:1px solid #dcd7ce; cursor:pointer">
+              <input type="checkbox" style="width:19px; height:19px; marginTop:2px; accentColor:#1e4628; flexShrink:0">
+              <span style="fontSize:14.5px; lineHeight:1.6; color:#3c4a54">I understand this comment becomes part of the public record and may be quoted anonymously in the Commission&rsquo;s written synthesis.</span>
+            </label>
+            <div style="display:flex; alignItems:center; gap:18px; flexWrap:wrap">
+              <button type="button" style="background:#1e4628; color:#ffffff; border:none; borderRadius:0; padding:14px 26px; fontFamily:Lato, sans-serif; fontSize:15.5px; fontWeight:700; cursor:pointer" style-hover="background:#123018">Submit comment</button>
+              <span style="fontSize:13.5px; color:#6b6a64">You will see your comment in the record within one business day.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:26px 48px 34px; borderTop:1px solid #dcd7ce">
+        <a href="#" onClick="{{ openList }}" style="fontSize:15px; fontWeight:700">&larr; Back to the docket</a>
+      </div>
+
+    </div>
+  </div>
+  </sc-if>
+
+  <div style="maxWidth:1040px; margin:0 auto; padding:22px 24px 0; display:flex; justifyContent:space-between; gap:16px; flexWrap:wrap; fontSize:13px; color:#6b6a64">
+    <div>&copy; 2026 Advisory Neighborhood Commission 6A</div>
+    <div>Records kept under D.C. Official Code &sect; 1&#8209;309.11</div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { page: 'list' };
+  go(page) {
+    return (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      this.setState({ page });
+      if (typeof window !== 'undefined') window.scrollTo(0, 0);
+    };
+  }
+  renderVals() {
+    return {
+      isList: this.state.page === 'list',
+      isDetail: this.state.page === 'detail',
+      openDetail: this.go('detail'),
+      openList: this.go('list')
+    };
+  }
+}
+</script>
+</body>
+</html>

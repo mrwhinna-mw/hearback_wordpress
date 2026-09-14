@@ -1,0 +1,62 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "Public Docket - ANC6A demo",
+    "description": "Live demo of the Public Docket plugin populated with real ANC6A September 2026 agenda items, at three different stages of the docket lifecycle."
+  },
+  "landingPage": "/docket/",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/mrwhinna-mw/hearback_wordpress",
+        "ref": "main",
+        "refType": "branch",
+        "path": "/anc6a-demo-theme"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/mrwhinna-mw/hearback_wordpress",
+        "ref": "main",
+        "refType": "branch",
+        "path": "/public-docket"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "ai-engine"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';\n<?php\n/**\n * Seeds the demo with three real items drawn from ANC6A's actual\n * September 2026 meeting agenda (anc6a.org), each left at a different\n * point in its lifecycle so the demo shows the full range of what the\n * plugin does. Two demo submissions on the Indochine item are\n * explicitly placeholder text, not invented testimony - see the\n * inline note below.\n */\n\n// --- Item 1: 1226 F Street NE - already answered, comments off ---\n// Real facts: BZA# 21475, third-story addition. 14 letters of\n// opposition and a posted yard sign; EDZ declined to take a position\n// pending negotiation; 8 neighbors met with the applicant Aug 18 with\n// no agreement; ANC6A voted to withhold support Sept 10, 2026.\n// Comments are off here because the real record only gives us\n// aggregate counts, not a theme-by-theme breakdown - showing invented\n// themes for real content would misrepresent what actually happened.\n$item1 = wp_insert_post( array(\n\t'post_type'    => 'hb_decision',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'Third-story addition at 1226 F Street NE',\n\t'post_content' => 'The applicant proposed a third-story addition and lot-occupancy relief. The application drew 14 letters of opposition and a posted yard sign from neighbors. EDZ asked the applicant to negotiate directly with neighbors rather than take a position immediately. On August 18, the applicant met with 8 neighbors; no agreement was reached.',\n) );\nupdate_post_meta( $item1, '_hb_decision_question', 'Should ANC6A support a third-story addition and lot-occupancy relief at 1226 F Street NE?' );\nupdate_post_meta( $item1, '_hb_comments_enabled', 0 );\nupdate_post_meta( $item1, '_hb_response_owner_role', 'EDZ Committee Chair' );\nupdate_post_meta( $item1, '_hb_response_status', 'do_not_proceed' );\nupdate_post_meta( $item1, '_hb_response_rationale', 'The committee found that the applicant and neighbors were unable to reach agreement after direct negotiation, and that the concerns raised about light and alley access were not resolved by the current plans.' );\nupdate_post_meta( $item1, '_hb_response_next_step', 'The Board of Zoning Adjustment hearing on this case is scheduled for September 16, 2026.' );\nupdate_post_meta( $item1, '_hb_response_published_at', '2026-09-10 20:00:00' );\nupdate_post_meta( $item1, '_hb_external_reference', 'BZA# 21475' );\nupdate_post_meta( $item1, '_hb_source', 'scraped' );\nupdate_post_meta( $item1, '_hb_source_url', 'https://anc6a.org/wp-content/uploads/ANCA0926.pdf' );\n\n// --- Item 2: Indochine Cuisine and Lounge liquor license - board reviewing ---\n// Real facts: ABRA-136346, new Class C Restaurant license, 1025 H St\n// NE. ANC6A's Sept 10 agenda recommended a conditional protest pending\n// settlement. Two themes below carry an explicit placeholder line, not\n// invented resident testimony, since the real record doesn't include\n// theme-level public comment - this demonstrates the \"What we heard\"\n// layout honestly rather than fabricating opinions.\n$item2 = wp_insert_post( array(\n\t'post_type'    => 'hb_decision',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'New liquor license for Indochine Cuisine and Lounge',\n\t'post_content' => 'Indochine Cuisine and Lounge, LLC has applied for a new Retailer\\'s Class C Restaurant license at 1025 H Street NE, 1st Floor.',\n) );\nupdate_post_meta( $item2, '_hb_decision_question', 'Should ANC6A protest the new Class C Restaurant license for Indochine Cuisine and Lounge at 1025 H Street NE?' );\nupdate_post_meta( $item2, '_hb_comments_enabled', 1 );\nupdate_post_meta( $item2, '_hb_response_owner_role', 'ABC Committee Chair' );\nupdate_post_meta( $item2, '_hb_comment_open_at', '2026-08-20 00:00:00' );\nupdate_post_meta( $item2, '_hb_response_by_date', '2026-10-08' );\nupdate_post_meta( $item2, '_hb_synthesis_published_at', '2026-09-05 12:00:00' );\nupdate_post_meta( $item2, '_hb_external_reference', 'ABRA-136346' );\nupdate_post_meta( $item2, '_hb_source', 'scraped' );\nupdate_post_meta( $item2, '_hb_source_url', 'https://anc6a.org/wp-content/uploads/ANCA0926.pdf' );\n\n$theme2a = wp_insert_post( array(\n\t'post_type'    => 'hb_theme',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'Hours and noise',\n\t'post_content' => 'Placeholder theme for demo purposes.',\n) );\nupdate_post_meta( $theme2a, '_hb_decision_id', $item2 );\n\n$theme2b = wp_insert_post( array(\n\t'post_type'    => 'hb_theme',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'Support for local business',\n\t'post_content' => 'Placeholder theme for demo purposes.',\n) );\nupdate_post_meta( $theme2b, '_hb_decision_id', $item2 );\n\nforeach ( array( $theme2a, $theme2b ) as $theme_id ) {\n\t$submission_id = wp_insert_post( array(\n\t\t'post_type'    => 'hb_submission',\n\t\t'post_status'  => 'publish',\n\t\t'post_title'   => 'Demo placeholder submission',\n\t\t'post_content' => 'This is where a public comment would go if a resident had submitted one.',\n\t) );\n\tupdate_post_meta( $submission_id, '_hb_decision_id', $item2 );\n\tupdate_post_meta( $submission_id, '_hb_theme_id', $theme_id );\n\tupdate_post_meta( $submission_id, '_hb_consent', 1 );\n\tupdate_post_meta( $submission_id, '_hb_featured', 1 );\n\tupdate_post_meta( $submission_id, '_hb_source', 'form' );\n}\n\n// --- Item 3: H Street BID letter - open for input ---\n// Real facts: Commissioner Shapiro's motion from the Sept 10, 2026\n// agenda, supporting formation of a Greater H Street BID.\n$item3 = wp_insert_post( array(\n\t'post_type'    => 'hb_decision',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'Letter supporting an H Street Business Improvement District',\n\t'post_content' => 'Commissioner Shapiro proposed that ANC6A send a letter to the Greater H Street BID Association, with copies to Councilmember Charles Allen, Deputy Mayor Nina Albert, and Director Rosemary-Suggs Evans, supporting the formation of an H Street Business Improvement District.',\n) );\nupdate_post_meta( $item3, '_hb_decision_question', 'Should ANC6A send a letter supporting formation of a Greater H Street Business Improvement District?' );\nupdate_post_meta( $item3, '_hb_comments_enabled', 1 );\nupdate_post_meta( $item3, '_hb_response_owner_name', 'Commissioner Shapiro' );\nupdate_post_meta( $item3, '_hb_comment_open_at', '2026-09-10 20:00:00' );\nupdate_post_meta( $item3, '_hb_response_by_date', '2026-10-08' );\nupdate_post_meta( $item3, '_hb_source', 'scraped' );\nupdate_post_meta( $item3, '_hb_source_url', 'https://anc6a.org/wp-content/uploads/ANCA0926.pdf' );\n\nupdate_option( 'blogname', 'Advisory Neighborhood Commission 6A' );\nupdate_option( 'blogdescription', 'Capitol Hill \u00b7 Ward 6 \u00b7 Washington, DC' );\n\n// Force pretty permalinks and flush rewrite rules so /docket/ resolves\n// correctly the first time the demo loads.\nupdate_option( 'permalink_structure', '/%postname%/' );\nflush_rewrite_rules();\n"
+    }
+  ]
+}
