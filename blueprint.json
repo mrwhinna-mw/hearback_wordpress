@@ -2,7 +2,8 @@
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "meta": {
     "title": "Public Docket - ANC6A demo",
-    "description": "Live demo of the Public Docket plugin populated with real ANC6A September 2026 agenda items, at three different stages of the docket lifecycle."
+    "description": "Live demo of the Public Docket plugin populated with real ANC6A September 2026 agenda items, at three different stages of the docket lifecycle.",
+    "author": "mrwhinna-mw"
   },
   "landingPage": "/docket/",
   "preferredVersions": {
