@@ -1,0 +1,24 @@
+.hb-workspace .hb-decision-switcher {
+	margin: 1em 0 1.5em;
+	padding: 1em;
+	background: #fff;
+	border: 1px solid #dcdcde;
+}
+.hb-workspace h2 {
+	margin-top: 2em;
+	padding-top: 1em;
+	border-top: 1px solid #dcdcde;
+}
+.hb-workspace .hb-workspace-status {
+	font-size: 1.05em;
+}
+.hb-theme-table td,
+.hb-submission-table td,
+.hb-theme-table th,
+.hb-submission-table th {
+	padding: 8px 10px;
+	vertical-align: middle;
+}
+.hb-add-theme-row td {
+	background: #f6f7f7;
+}
