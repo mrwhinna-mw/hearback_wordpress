@@ -1,0 +1,131 @@
+/*
+Theme Name: ANC6A Docket Demo
+Description: A minimal demo theme reproducing the ANC6A-style header, nav, and footer around the Public Docket plugin's content. Built for demo purposes, not a production ANC6A theme.
+Version: 0.1.0
+Author: Your Organization
+Text Domain: anc6a-demo
+*/
+
+:root {
+	--anc-green: #1e4628;
+	--anc-gold: #ffc942;
+	--anc-bg: #e9e6e0;
+	--anc-card: #ffffff;
+	--anc-border: #cfcac1;
+	--anc-text-muted: #6b6a64;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+	margin: 0;
+	padding: 0;
+	background: var(--anc-bg);
+}
+body {
+	font-family: 'Lato', Arial, sans-serif;
+	color: #22303a;
+	-webkit-font-smoothing: antialiased;
+}
+a { color: #2a6b4a; }
+a:hover { color: #a1571a; }
+
+.anc-wrap {
+	max-width: 1040px;
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+.anc-header {
+	background: #ffffff;
+	border-bottom: 1px solid var(--anc-border);
+}
+.anc-header__inner {
+	max-width: 1040px;
+	margin: 0 auto;
+	padding: 18px 24px;
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	flex-wrap: wrap;
+}
+.anc-header__seal {
+	width: 62px;
+	height: 58px;
+	object-fit: contain;
+	flex-shrink: 0;
+}
+.anc-header__name {
+	font-family: 'Lora', Georgia, serif;
+	font-weight: 600;
+	font-size: 24px;
+	line-height: 1.15;
+	color: var(--anc-green);
+}
+.anc-header__sub {
+	font-size: 12px;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--anc-text-muted);
+	margin-top: 4px;
+}
+.anc-header__meeting {
+	font-size: 13px;
+	color: var(--anc-text-muted);
+	line-height: 1.5;
+	text-align: right;
+	margin-left: auto;
+}
+
+.anc-accent-bar { height: 6px; background: var(--anc-gold); }
+
+.anc-nav {
+	background: var(--anc-green);
+}
+.anc-nav__inner {
+	max-width: 1040px;
+	margin: 0 auto;
+	padding: 0 24px;
+	display: flex;
+	flex-wrap: wrap;
+}
+.anc-nav a {
+	display: block;
+	padding: 12px 16px;
+	font-size: 13.5px;
+	color: #cfe0d2;
+	text-decoration: none;
+}
+.anc-nav a:hover { color: #ffffff; }
+.anc-nav a.is-active {
+	color: var(--anc-green);
+	background: var(--anc-gold);
+	font-weight: 700;
+}
+
+.anc-content {
+	max-width: 1040px;
+	margin: 0 auto;
+	padding: 0 24px 48px;
+}
+.anc-card {
+	background: var(--anc-card);
+	border: 1px solid var(--anc-border);
+	border-top: none;
+	padding: 40px 48px 48px;
+}
+@media (max-width: 600px) {
+	.anc-card { padding: 28px 20px 32px; }
+}
+
+.anc-footer {
+	max-width: 1040px;
+	margin: 0 auto;
+	padding: 22px 24px 30px;
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+	font-size: 13px;
+	color: var(--anc-text-muted);
+}
