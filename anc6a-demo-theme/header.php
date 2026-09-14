@@ -26,7 +26,7 @@
 	<div class="anc-nav__inner">
 		<a href="#"><?php esc_html_e( 'Commissioners', 'anc6a-demo' ); ?></a>
 		<a href="#"><?php esc_html_e( 'Committees', 'anc6a-demo' ); ?></a>
-		<a href="#"><?php esc_html_e( 'Agendas', 'anc6a-demo' ); ?></a>
+		<a href="<?php echo esc_url( home_url( '/agendas/' ) ); ?>" class="<?php echo is_page( 'agendas' ) ? 'is-active' : ''; ?>"><?php esc_html_e( 'Agendas', 'anc6a-demo' ); ?></a>
 		<a href="#"><?php esc_html_e( 'Minutes / Reports', 'anc6a-demo' ); ?></a>
 		<a href="<?php echo esc_url( home_url( '/docket/' ) ); ?>" class="<?php echo is_post_type_archive( 'hb_decision' ) || is_singular( 'hb_decision' ) ? 'is-active' : ''; ?>"><?php esc_html_e( 'Docket', 'anc6a-demo' ); ?></a>
 		<a href="#"><?php esc_html_e( 'Community Calendar', 'anc6a-demo' ); ?></a>
