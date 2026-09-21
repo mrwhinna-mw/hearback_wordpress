@@ -4,10 +4,12 @@ This guide is for anyone on a neighborhood commission, civic association, or
 similar local government body who wants to try this out — no coding
 background assumed. It walks through the three pieces that work together:
 
-1. **Public Docket** — the plugin that runs your public comment process
-2. **AI Engine** — the chatbot residents can ask questions
-3. **Agenda Ingestion** *(coming soon)* — upload your existing agendas and
-   minutes and have the site build itself from them
+1. **Public Docket** — runs your public comment process
+2. **Docket Ingest** — upload the agendas and minutes you already produce,
+   and get draft docket items to review instead of typing them in by hand
+3. **AI Engine** — a free WordPress plugin that connects your site to an AI
+   provider. Docket Ingest needs it to read your documents, and it also
+   powers an optional chatbot residents can ask questions
 
 ---
 
@@ -20,10 +22,19 @@ running. Open this link in your browser:
 
 This runs a complete, real WordPress site *inside your browser tab* — it's
 free, requires no account, and nothing you do there affects any real
-website. It resets when you close the tab, so it's purely for exploring:
-click around the Docket page, submit a test comment, look at the Agendas
-page. When your organization is ready to actually use this, you'd install it
-on a real WordPress site instead (see below).
+website. Click around the Docket page, submit a test comment, and look at the
+Agendas page.
+
+Everything you do in the demo disappears when you close the tab or leave the
+page. If you lose it by accident, the **Playgrounds** button in the toolbar
+at the bottom can restore a recent session.
+
+**Trying document ingestion in the demo** needs an AI key (see "Getting an AI
+key" below). Once you have one, follow step 3 of the install instructions
+inside the demo — it's already set up for Gemini. You can test with a real
+ANC 6A agenda: download
+[anc6a-2026-09-10-agenda.txt](https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/test-fixtures/anc6a-2026-09-10-agenda.txt)
+and upload it.
 
 ---
 
@@ -44,22 +55,49 @@ deciding on:
 - Not every posting needs public comment — purely informational items can
   skip straight to showing an outcome.
 
-### AI Engine (the chatbot)
+### Docket Ingest
 
-A general-purpose AI chatbot plugin. In this demo it's placed on the Agendas
-page so residents can ask things like "what happened with the liquor license
-on H Street?" It needs an API key from an AI provider (OpenAI, Google
-Gemini, Anthropic, and others are supported) — more on that below.
+Instead of retyping every agenda item into the site, you upload the agenda,
+minutes, or transcript you already produce. Docket Ingest has AI read it and
+pull out each item residents could comment on — the topic, any case or
+license number, the address, and the committee's recommendation.
 
-### Agenda Ingestion *(not built yet — see the README's Future Vision
-section for the technical plan)*
+**Nothing is published automatically.** You get a review screen listing
+every item it found, each with an exact quote from your document so you can
+check it against the original. Items already on your docket (matched by case
+number) are flagged so you don't create duplicates. You pick which ones to
+keep, they're saved as drafts, and a person approves each one before it goes
+public.
 
-The long-term goal: instead of your staff manually typing every agenda item
-into the site, you'd upload the PDF agenda (or minutes, or a meeting
-transcript) you already produce, and the plugin would draft the docket items
-and agenda page content for you — leaving a human to review and approve
-before anything goes public. This guide will be updated with install/setup
-steps once that piece exists.
+What it can't do yet:
+
+- **PDF files.** For now, open the PDF, copy its text, and save it as a .txt
+  or Word (.docx) file. Old-style .doc Word files need the same treatment.
+- **Build your Agendas page.** It creates docket items only; an Agendas page
+  is still a manual step (see step 5 below).
+
+### AI Engine and the chatbot
+
+AI Engine is the bridge between your site and an AI provider. Docket Ingest
+uses it to read documents. It also offers a chatbot — in the demo it's placed
+on the Agendas page so residents can ask things like "what happened with the
+liquor license on H Street?" The chatbot is optional; you can use Docket
+Ingest without ever putting a chatbot on your site.
+
+---
+
+## Getting an AI key
+
+Both Docket Ingest and the chatbot need an API key from an AI provider:
+
+- **Google Gemini** — currently has a free tier, and is the easiest no-cost
+  way to try this. Free keys can be slowed or paused when Google is busy.
+- **OpenAI** — does not offer a meaningful free ongoing tier; you'll need to
+  add billing.
+- **Anthropic (Claude)** and others are also supported.
+
+Treat the key like a password: never put it in a document, email, or public
+file.
 
 ---
 
@@ -81,40 +119,83 @@ WP Engine, Bluehost, etc.):
      item — details, themes, submissions, and publishing — from one place.
    - Visit `/docket/` on your site to see the public listing.
 
-2. **Install a theme (optional)**
+2. **Install AI Engine**
+   - Install it from the WordPress Plugin directory (*Plugins → Add New*,
+     search "AI Engine").
+   - Go to **Meow Apps → AI Engine → Settings → AI**, and paste your key
+     into the matching provider card.
+   - **If you're using Gemini:** on that same screen, in the **General**
+     column, tick **"Use Standard API."** Without it, Gemini returns empty
+     replies. (The demo turns this on for you; a real site doesn't.)
+
+3. **Install and use Docket Ingest**
+   - Upload the `docket-ingest/` folder to `wp-content/plugins/` the same way
+     as Public Docket, and activate it. It needs Public Docket and AI Engine
+     active, and will tell you if either is missing.
+   - Go to **Public Docket → Ingest Document** and fill in:
+     - **AI environment ID** — a short code AI Engine gives each provider you
+       set up, like `isfwfzxv`. AI Engine doesn't show this code on any of
+       its screens, which is the roughest edge of the current version; a
+       dropdown is planned. Until then, ask whoever manages your site to run
+       this on the server, which lists each environment's name and code
+       without revealing your key:
+       ```
+       wp eval 'foreach ( get_option( "mwai_options" )["ai_envs"] as $e ) { echo $e["name"] . " - " . $e["id"] . PHP_EOL; }'
+       ```
+       **In the demo**, there's no server to ask — instead, in the toolbar at
+       the bottom open **Dev Tools → Terminal**, make sure **PHP** is
+       selected, paste this, and click **Run**:
+       ```php
+       foreach ( get_option( 'mwai_options' )['ai_envs'] as $e ) { echo $e['name'] . ' - ' . $e['id'] . "\n"; }
+       ```
+     - **Model** — the name of a current model from your provider, e.g.
+       `gemini-flash-lite-latest` for Gemini. Providers retire models often;
+       if one stops working, the error usually names its replacement.
+   - Choose your document and click **Analyze Document**.
+   - On the review screen, read each item. **Check the "Drafted question"
+     especially** — it's the only part the AI writes itself rather than
+     copying from your document. Untick anything you don't want, then click
+     **Create Selected as Pending**.
+   - Open **Public Docket → Workspace** to edit and publish each draft. Each
+     one has an **"Ingested From Document"** panel showing the exact quote it
+     came from.
+
+4. **Add the chatbot (optional)**
+   - In AI Engine, go to the **Chatbots** tab and confirm the "Default"
+     chatbot is set to a current model for your provider — its default can
+     name a model that doesn't exist or has been retired.
+   - Add the chatbot to a page using its shortcode (shown at the top of the
+     Chatbots tab, e.g. `[mwai_chatbot id="default"]`). We recommend placing
+     it on whichever page has the context you want it answering about,
+     rather than site-wide, so its answers stay relevant.
+
+5. **Populate your Agendas page**
+   - Create a page with your meeting's real agenda content (date, time, each
+     item, case numbers, recommendations). Keep to what's actually in your
+     published agenda or minutes — don't have the chatbot or a person invent
+     details that aren't in the source record.
+
+6. **Install a theme (optional)**
    - The `anc6a-demo-theme/` folder is a minimal example theme. You likely
      want your organization's *own* theme/branding rather than this one —
      Public Docket's content will render inside whatever theme you're
      already using. Use the demo theme only as a reference for what
      header/nav markup around the plugin's content can look like.
 
-3. **Install AI Engine (if you want the chatbot)**
-   - Install AI Engine from the WordPress Plugin directory (*Plugins → Add
-     New*, search "AI Engine").
-   - Get an API key from an AI provider. Options and what they cost:
-     - **OpenAI** — does not offer a meaningful free ongoing tier; you'll
-       need to add billing.
-     - **Google Gemini** — currently has a free tier for API access, and is
-       the easiest no-cost way to try this.
-     - **Anthropic (Claude)** and others are also supported.
-   - In your WordPress admin, go to **Meow Apps → AI Engine → Settings →
-     AI**, and paste your key into the matching provider card.
-   - Go to the **Chatbots** tab, and confirm the "Default" chatbot is set to
-     a valid, currently-supported model for your provider — *provider model
-     names and availability change often*; if the chatbot responds with a
-     generic "I couldn't produce a response" error, that's usually a sign
-     the selected model needs updating, not a problem with your key.
-   - Add the chatbot to a page using its shortcode (shown at the top of the
-     Chatbots tab, e.g. `[mwai_chatbot id="default"]`) — we recommend
-     placing it on whichever page has the context you want it answering
-     about, rather than site-wide, so its answers stay relevant.
+---
 
-4. **Populate your Agendas page**
-   - Until the ingestion plugin exists, this is a manual step: create a page
-     with your meeting's real agenda content (date, time, each item, case
-     numbers, recommendations). Keep to what's actually in your published
-     agenda or minutes — don't have the chatbot or a person invent details
-     that aren't in the source record.
+## When something goes wrong
+
+These are the errors we actually ran into while building this, and what
+they mean:
+
+| What you see | What it means | What to do |
+|---|---|---|
+| "The model 'gpt-…' is not available" (while using Gemini) | No AI environment was chosen, so AI Engine fell back to a default OpenAI one | Fill in the AI environment ID on the Ingest Document page |
+| "This model is no longer available to new users…" | Your provider retired that model | Switch to the replacement named in the message |
+| "This model is currently experiencing high demand" | Your provider is busy — common on free keys | Wait a minute and retry, or try a "lite" model |
+| "The AI returned an empty reply" | Usually Gemini without "Use Standard API" turned on | Tick it in AI Engine → Settings → AI → General |
+| The chatbot says "Sorry, I couldn't produce a response" | Usually the chatbot's model setting is invalid | Check the model in AI Engine's Chatbots tab, and the Gemini setting above |
 
 ---
 
@@ -125,10 +206,12 @@ content.** Real resident comments are the only comments that appear as
 "what we heard." Real case numbers, real recommendations, real dates. Where
 a demo needed placeholder content (to show what a feature looks like without
 real data available yet), it says so explicitly rather than presenting
-invented text as if a resident said it. If you adopt this for your own
-organization, we'd encourage keeping that same discipline — especially once
-AI-assisted agenda ingestion is involved, where an approval step by a human
-before anything publishes isn't optional.
+invented text as if a resident said it.
+
+Docket Ingest is built the same way: every item comes with an exact quote
+from your document, the one AI-written field is labeled as such, and nothing
+reaches the public without a person approving it. If you adopt this, please
+keep that approval step real — read the quotes, don't just click through.
 
 ---
 
