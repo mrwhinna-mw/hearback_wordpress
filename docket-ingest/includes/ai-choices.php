@@ -68,10 +68,14 @@ function di_models_for_env( $env, $options ) {
 			continue;
 		}
 
+		// Detected from the ID, not AI Engine's 'latest' tag: that tag marks
+		// true -latest aliases for Google but merely "newest model" for
+		// OpenAI and Anthropic, whose tagged models are fixed and can still
+		// be retired.
 		$models[ $id ] = array(
 			'id'     => $id,
 			'name'   => isset( $m['name'] ) && '' !== $m['name'] ? (string) $m['name'] : $id,
-			'latest' => in_array( 'latest', $tags, true ),
+			'latest' => '-latest' === substr( $id, -7 ),
 		);
 	}
 
