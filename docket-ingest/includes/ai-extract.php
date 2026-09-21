@@ -17,7 +17,8 @@ You are extracting agenda items from a local government meeting document
 (an agenda, minutes, or meeting transcript) so they can be published for
 public comment.
 
-Return a JSON object shaped like:
+Reply with raw JSON only - no markdown code fences, no commentary before
+or after. Return a JSON object shaped like:
 {"items":[{"title":"","question":"","context":"","external_reference":null,"address":null,"recommendation":null,"source_quote":""}]}
 
 Rules, in order of importance:
@@ -49,13 +50,23 @@ EOT;
  * @return array|WP_Error List of normalized item arrays.
  */
 function di_extract_items( $text ) {
-	if ( ! class_exists( 'Meow_MWAI_API' ) ) {
+	if ( ! class_exists( 'Meow_MWAI_Query_Text' ) ) {
 		return new WP_Error( 'di_no_ai_engine', __( 'AI Engine is not active, so the document cannot be analyzed.', 'docket-ingest' ) );
 	}
 
-	global $mwai;
-	if ( ! isset( $mwai ) || ! is_object( $mwai ) ) {
+	global $mwai_core;
+	if ( ! isset( $mwai_core ) || ! is_object( $mwai_core ) ) {
 		return new WP_Error( 'di_no_ai_engine', __( 'AI Engine is active but did not initialize. Try reloading, or check its settings.', 'docket-ingest' ) );
+	}
+
+	$env_id = get_option( 'di_env_id', '' );
+	$model  = get_option( 'di_model', '' );
+
+	// Without an explicit environment, AI Engine falls back to its default
+	// one, which it auto-creates as OpenAI - on a Gemini-only site that
+	// surfaces as a baffling "model gpt-... is not available" error.
+	if ( empty( $env_id ) ) {
+		return new WP_Error( 'di_no_env', __( 'Choose an AI environment first. Its ID is listed under AI Engine > Settings > AI.', 'docket-ingest' ) );
 	}
 
 	$truncated = false;
@@ -64,30 +75,41 @@ function di_extract_items( $text ) {
 		$truncated = true;
 	}
 
-	// simpleJsonQuery falls back to a hardcoded OpenAI model when neither a
-	// model nor an environment is given, which fails outright on a
-	// Gemini-only or Anthropic-only site. Passing whatever the admin
-	// selected keeps the call on their own provider.
-	$params = array();
-	$env_id = get_option( 'di_env_id', '' );
-	$model  = get_option( 'di_model', '' );
-	if ( ! empty( $env_id ) ) {
-		$params['envId'] = $env_id;
-	}
-	if ( ! empty( $model ) ) {
-		$params['model'] = $model;
-	}
-
+	// Built directly rather than via $mwai->simpleJsonQuery(): that helper
+	// json_decodes internally and returns only the result, so when a model
+	// wraps its JSON in ```json fences (Gemini does, even in JSON mode) the
+	// raw text is already lost and there is nothing left to clean up.
 	try {
-		$result = $mwai->simpleJsonQuery( di_extraction_prompt( $text ), null, null, $params );
+		$query = new Meow_MWAI_Query_Text( di_extraction_prompt( $text ) );
+		$query->set_env_id( $env_id );
+		if ( ! empty( $model ) ) {
+			$query->set_model( $model );
+		}
+		$query->set_response_format( 'json' );
+		$reply = $mwai_core->run_query( $query );
 	} catch ( Exception $e ) {
 		return new WP_Error( 'di_ai_failed', $e->getMessage() );
 	}
 
-	if ( empty( $result ) || ! is_array( $result ) ) {
+	$raw = isset( $reply->result ) ? (string) $reply->result : '';
+
+	if ( '' === trim( $raw ) ) {
 		return new WP_Error(
 			'di_ai_empty',
-			__( 'The AI returned nothing usable. If you are using Gemini, try enabling "Use Standard API" under AI Engine > Settings > AI, which switches Gemini off its newer Interactions API.', 'docket-ingest' )
+			__( 'The AI returned an empty reply. If you are using Gemini, try enabling "Use Standard API" under AI Engine > Settings > AI, which switches Gemini off its newer Interactions API.', 'docket-ingest' )
+		);
+	}
+
+	$result = di_decode_json_reply( $raw );
+
+	if ( ! is_array( $result ) ) {
+		return new WP_Error(
+			'di_ai_bad_json',
+			sprintf(
+				/* translators: %s: start of the model's reply */
+				__( 'The AI replied, but not with valid JSON, so nothing could be extracted. Start of its reply: %s', 'docket-ingest' ),
+				mb_substr( $raw, 0, 300 )
+			)
 		);
 	}
 
@@ -95,8 +117,8 @@ function di_extract_items( $text ) {
 	$raw_items = isset( $result['items'] ) && is_array( $result['items'] ) ? $result['items'] : $result;
 
 	$items = array();
-	foreach ( $raw_items as $raw ) {
-		$item = di_normalize_item( $raw );
+	foreach ( $raw_items as $raw_item ) {
+		$item = di_normalize_item( $raw_item );
 		if ( ! empty( $item['title'] ) ) {
 			$items[] = $item;
 		}
@@ -111,6 +133,37 @@ function di_extract_items( $text ) {
 	}
 
 	return $items;
+}
+
+/**
+ * Models don't reliably return bare JSON even when asked: Gemini wraps it
+ * in markdown fences, others add a sentence before or after. Try the
+ * clean cases first, then fall back to the outermost {...} or [...] span.
+ *
+ * @return array|null
+ */
+function di_decode_json_reply( $raw ) {
+	$raw = trim( (string) $raw );
+
+	if ( preg_match( '/^```(?:json)?\s*(.*?)\s*```$/s', $raw, $m ) ) {
+		$raw = $m[1];
+	}
+
+	$decoded = json_decode( $raw, true );
+	if ( is_array( $decoded ) ) {
+		return $decoded;
+	}
+
+	$start = strcspn( $raw, '{[' );
+	$end   = max( (int) strrpos( $raw, '}' ), (int) strrpos( $raw, ']' ) );
+	if ( $start < strlen( $raw ) && $end > $start ) {
+		$decoded = json_decode( substr( $raw, $start, $end - $start + 1 ), true );
+		if ( is_array( $decoded ) ) {
+			return $decoded;
+		}
+	}
+
+	return null;
 }
 
 /**
