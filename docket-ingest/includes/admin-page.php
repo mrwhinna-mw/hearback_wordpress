@@ -80,32 +80,144 @@ function di_render_upload_form( $error = '' ) {
 					<p class="description"><?php esc_html_e( 'Optional. Where this document is published, recorded on every item it creates.', 'docket-ingest' ); ?></p>
 				</td>
 			</tr>
-			<tr>
-				<th scope="row"><label for="di_env_id"><?php esc_html_e( 'AI environment ID', 'docket-ingest' ); ?></label></th>
-				<td>
-					<input type="text" name="di_env_id" id="di_env_id" class="regular-text" value="<?php echo esc_attr( get_option( 'di_env_id', '' ) ); ?>">
-					<p class="description"><?php esc_html_e( 'Optional but recommended. From AI Engine > Settings > AI. Without it, AI Engine falls back to an OpenAI model, which fails on a Gemini-only site.', 'docket-ingest' ); ?></p>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row"><label for="di_model"><?php esc_html_e( 'Model', 'docket-ingest' ); ?></label></th>
-				<td>
-					<input type="text" name="di_model" id="di_model" class="regular-text" value="<?php echo esc_attr( get_option( 'di_model', '' ) ); ?>" placeholder="gemini-flash-latest">
-					<p class="description"><?php esc_html_e( 'Optional. Leave blank to use the environment default.', 'docket-ingest' ); ?></p>
-				</td>
-			</tr>
+			<?php di_render_ai_rows(); ?>
 		</table>
 		<?php submit_button( __( 'Analyze Document', 'docket-ingest' ) ); ?>
 	</form>
 	<?php
 }
 
+/**
+ * Environment and model dropdowns. AI Engine never displays an
+ * environment's ID, so asking admins to type one meant sending them to a
+ * terminal; picking by name removes that step entirely.
+ */
+function di_render_ai_rows() {
+	$envs = di_environments();
+
+	if ( empty( $envs ) ) {
+		?>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'AI provider', 'docket-ingest' ); ?></th>
+			<td>
+				<p><strong><?php esc_html_e( 'No AI provider is set up yet.', 'docket-ingest' ); ?></strong>
+				<?php esc_html_e( 'Add an API key under Meow Apps > AI Engine > Settings > AI, then come back to this page.', 'docket-ingest' ); ?></p>
+			</td>
+		</tr>
+		<?php
+		return;
+	}
+
+	$env_id     = di_selected_env_id( $envs );
+	$env_models = array();
+	$models_js  = array();
+	foreach ( $envs as $env ) {
+		$models_js[ $env['id'] ] = $env['models'];
+		if ( $env['id'] === $env_id ) {
+			$env_models = $env['models'];
+		}
+	}
+
+	$saved_model = get_option( 'di_model', '' );
+	$model_ids   = wp_list_pluck( $env_models, 'id' );
+	$use_custom  = empty( $env_models ) || ( '' !== $saved_model && ! in_array( $saved_model, $model_ids, true ) );
+	$selected    = in_array( $saved_model, $model_ids, true ) ? $saved_model : ( $env_models ? $env_models[0]['id'] : '' );
+	?>
+	<tr>
+		<th scope="row"><label for="di_env_id"><?php esc_html_e( 'AI provider', 'docket-ingest' ); ?></label></th>
+		<td>
+			<select name="di_env_id" id="di_env_id">
+				<?php foreach ( $envs as $env ) : ?>
+					<option value="<?php echo esc_attr( $env['id'] ); ?>" <?php selected( $env['id'], $env_id ); ?>>
+						<?php
+						echo esc_html(
+							$env['name'] . ' (' . di_provider_label( $env['type'] ) . ')'
+							. ( $env['has_key'] ? '' : ' - ' . __( 'no API key added', 'docket-ingest' ) )
+						);
+						?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+			<p class="description"><?php esc_html_e( 'The AI connections set up in Meow Apps > AI Engine > Settings > AI.', 'docket-ingest' ); ?></p>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row"><label for="di_model"><?php esc_html_e( 'Model', 'docket-ingest' ); ?></label></th>
+		<td>
+			<select name="di_model" id="di_model">
+				<?php foreach ( $env_models as $model ) : ?>
+					<option value="<?php echo esc_attr( $model['id'] ); ?>" <?php selected( ! $use_custom && $model['id'] === $selected ); ?>>
+						<?php
+						echo esc_html(
+							$model['latest']
+								/* translators: %s: model name */
+								? sprintf( __( '%s (always latest)', 'docket-ingest' ), $model['name'] )
+								: $model['name']
+						);
+						?>
+					</option>
+				<?php endforeach; ?>
+				<option value="__custom__" <?php selected( $use_custom ); ?>><?php esc_html_e( 'Other - type a model name', 'docket-ingest' ); ?></option>
+			</select>
+			<input type="text" name="di_model_custom" id="di_model_custom" class="regular-text"
+				value="<?php echo esc_attr( $use_custom ? $saved_model : '' ); ?>"
+				placeholder="<?php esc_attr_e( 'e.g. gemini-flash-lite-latest', 'docket-ingest' ); ?>"
+				style="<?php echo $use_custom ? '' : 'display:none;'; ?>margin-top:6px;">
+			<p class="description" id="di_model_empty" style="<?php echo empty( $env_models ) ? '' : 'display:none;'; ?>">
+				<?php esc_html_e( 'AI Engine has no model list for this provider yet. Open the provider in AI Engine\'s settings to refresh it, or type a model name.', 'docket-ingest' ); ?>
+			</p>
+			<p class="description"><?php esc_html_e( '"Always latest" models follow the provider\'s newest release, so they are the least likely to be retired.', 'docket-ingest' ); ?></p>
+		</td>
+	</tr>
+	<script>
+	( function () {
+		var models = <?php echo wp_json_encode( $models_js, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?>;
+		var labels = <?php echo wp_json_encode( array( 'latest' => __( '%s (always latest)', 'docket-ingest' ), 'other' => __( 'Other - type a model name', 'docket-ingest' ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?>;
+		var env = document.getElementById( 'di_env_id' );
+		var model = document.getElementById( 'di_model' );
+		var custom = document.getElementById( 'di_model_custom' );
+		var empty = document.getElementById( 'di_model_empty' );
+
+		function syncCustom() {
+			custom.style.display = model.value === '__custom__' ? '' : 'none';
+		}
+
+		// Options are rebuilt rather than hidden: Safari ignores display:none
+		// on <option>, so hiding would leave other providers' models selectable.
+		env.addEventListener( 'change', function () {
+			var list = models[ env.value ] || [];
+			model.innerHTML = '';
+			list.forEach( function ( m ) {
+				var o = document.createElement( 'option' );
+				o.value = m.id;
+				o.textContent = m.latest ? labels.latest.replace( '%s', m.name ) : m.name;
+				model.appendChild( o );
+			} );
+			var other = document.createElement( 'option' );
+			other.value = '__custom__';
+			other.textContent = labels.other;
+			model.appendChild( other );
+			model.value = list.length ? list[0].id : '__custom__';
+			empty.style.display = list.length ? 'none' : '';
+			syncCustom();
+		} );
+		model.addEventListener( 'change', syncCustom );
+	} )();
+	</script>
+	<?php
+}
+
 function di_handle_upload() {
 	check_admin_referer( 'di_upload' );
 
-	// Remembered so the next upload doesn't have to retype them.
+	$model = sanitize_text_field( wp_unslash( $_POST['di_model'] ?? '' ) );
+	if ( '__custom__' === $model ) {
+		$model = sanitize_text_field( wp_unslash( $_POST['di_model_custom'] ?? '' ) );
+	}
+
+	// Remembered so the next upload starts with the same choices.
 	update_option( 'di_env_id', sanitize_text_field( wp_unslash( $_POST['di_env_id'] ?? '' ) ) );
-	update_option( 'di_model', sanitize_text_field( wp_unslash( $_POST['di_model'] ?? '' ) ) );
+	update_option( 'di_model', $model );
 
 	if ( empty( $_FILES['di_file']['tmp_name'] ) || ! is_uploaded_file( $_FILES['di_file']['tmp_name'] ) ) {
 		di_render_upload_form( __( 'No file was received.', 'docket-ingest' ) );

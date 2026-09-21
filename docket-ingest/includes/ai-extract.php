@@ -66,7 +66,7 @@ function di_extract_items( $text ) {
 	// one, which it auto-creates as OpenAI - on a Gemini-only site that
 	// surfaces as a baffling "model gpt-... is not available" error.
 	if ( empty( $env_id ) ) {
-		return new WP_Error( 'di_no_env', __( 'Choose an AI environment first. Its ID is listed under AI Engine > Settings > AI.', 'docket-ingest' ) );
+		return new WP_Error( 'di_no_env', __( 'Choose an AI provider on this page first. If the list is empty, add an API key under Meow Apps > AI Engine > Settings > AI.', 'docket-ingest' ) );
 	}
 
 	$truncated = false;
