@@ -284,14 +284,16 @@ function di_render_review( $items, $source_url, $source_file ) {
 					<td>
 						<strong><?php echo esc_html( $item['title'] ); ?></strong>
 						<?php if ( $existing ) : ?>
-							<span class="dashicons dashicons-warning"></span>
+							<br><span class="dashicons dashicons-warning"></span>
 							<em><?php
 							printf(
-								/* translators: %s: link to existing item */
-								esc_html__( 'Already exists as %s — unchecked by default.', 'docket-ingest' ),
-								'#' . esc_html( $existing )
+								/* translators: 1: existing item's title, 2: its case number as stored */
+								esc_html__( 'Already on the docket as "%1$s" (%2$s) — unchecked by default.', 'docket-ingest' ),
+								esc_html( get_the_title( $existing ) ),
+								esc_html( get_post_meta( $existing, '_hb_external_reference', true ) )
 							);
 							?></em>
+							<a href="<?php echo esc_url( get_edit_post_link( $existing ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'docket-ingest' ); ?></a>
 						<?php endif; ?>
 						<?php if ( ! empty( $item['question'] ) ) : ?>
 							<p><em><?php esc_html_e( 'Drafted question:', 'docket-ingest' ); ?></em> <?php echo esc_html( $item['question'] ); ?></p>

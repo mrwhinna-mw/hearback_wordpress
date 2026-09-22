@@ -4,34 +4,54 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Finds an existing docket item for the same real-world matter.
- * Public Docket stores a case/license number in _hb_external_reference
- * precisely so a second upload mentioning "BZA# 21475" updates nothing
- * and creates nothing, instead of silently duplicating the item.
+ * Reduces a case or license number to a comparable key. Official
+ * documents write the same case inconsistently - ANC 6A's committee
+ * agendas say "BZA 21475" where the full commission says "BZA# 21475" -
+ * so an exact comparison splits one case into two docket items.
+ */
+function di_normalize_reference( $reference ) {
+	$reference = strtoupper( (string) $reference );
+	$reference = preg_replace( '/\b(CASE|NO|NUMBER)\b/', '', $reference );
+	return preg_replace( '/[^A-Z0-9]/', '', $reference );
+}
+
+/**
+ * Finds an existing docket item for the same real-world matter, matching
+ * case numbers regardless of formatting. Returns the oldest match, i.e.
+ * the original item rather than any duplicate made before this existed.
+ *
+ * Compares against every item's stored number at lookup time instead of a
+ * precomputed key, because items created by hand or by Public Docket
+ * itself would never have one.
  */
 function di_find_existing( $external_reference ) {
-	if ( '' === trim( (string) $external_reference ) ) {
+	$key = di_normalize_reference( $external_reference );
+	if ( '' === $key ) {
 		return 0;
 	}
 
-	$found = get_posts(
-		array(
-			'post_type'        => 'hb_decision',
-			'post_status'      => array( 'publish', 'pending', 'draft', 'future', 'private' ),
-			'posts_per_page'   => 1,
-			'fields'           => 'ids',
-			'suppress_filters' => false,
-			'meta_query'       => array(
-				array(
-					'key'     => '_hb_external_reference',
-					'value'   => $external_reference,
-					'compare' => '=',
-				),
-			),
+	global $wpdb;
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT pm.post_id, pm.meta_value
+			FROM {$wpdb->postmeta} pm
+			INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+			WHERE pm.meta_key = %s
+			AND p.post_type = %s
+			AND p.post_status NOT IN ( 'trash', 'auto-draft' )
+			ORDER BY pm.post_id ASC",
+			'_hb_external_reference',
+			'hb_decision'
 		)
 	);
 
-	return empty( $found ) ? 0 : (int) $found[0];
+	foreach ( $rows as $row ) {
+		if ( di_normalize_reference( $row->meta_value ) === $key ) {
+			return (int) $row->post_id;
+		}
+	}
+
+	return 0;
 }
 
 function di_compose_content( $item ) {
