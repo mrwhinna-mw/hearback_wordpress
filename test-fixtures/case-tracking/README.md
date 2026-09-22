@@ -33,15 +33,17 @@ some of these documents will run into.
 
 ## What the current version does
 
-Docket Ingest v1 **prevents exact duplicates but doesn't track updates.** When
-an extracted item's case number exactly matches one already on the docket,
-it's marked "Already exists" in the review table and left unchecked — and the
-new details from that document are dropped. Expect to see:
+Docket Ingest **recognizes repeat cases but doesn't track updates.** When an
+extracted item's case number matches one already on the docket — ignoring
+differences like `BZA 21475` vs `BZA# 21475` — the review table names the
+existing item, shows how its case number was written, and leaves the new one
+unchecked. But the new details from that document are dropped. Expect to see:
 
-- **1226 F Street ends up as two separate items.** Docs 1 and 3 write
-  `BZA 21475`; the seeded item and doc 4 write `BZA# 21475`. Matching is exact,
-  so upload 1 creates a second 1226 F Street item instead of recognizing the
-  existing one. From then on, each copy catches its own spelling.
+- **1226 F Street is recognized across all three documents.** Docs 1 and 3
+  write `BZA 21475`; the seeded item and doc 4 write `BZA# 21475`. Each upload
+  should say it's already on the docket as "Third-story addition at 1226 F
+  Street NE (BZA# 21475)." *(Before this was fixed, upload 1 created a second
+  1226 F Street item.)*
 - **Updates are lost.** When 628 15th Street reappears in doc 3, the hearing
   continuation isn't added to the item. Same for 800 10th Street's outcome in
   doc 4, and 1226 F Street's postponed hearing.
@@ -54,8 +56,8 @@ new details from that document are dropped. Expect to see:
 
 AI extraction varies somewhat between runs: it may skip items it judges
 procedural (presentations, "comments due" notes), and could occasionally
-reformat a case number despite being told not to. The matching behavior above
-assumes case numbers are copied as written.
+reformat a case number despite being told not to — which matching now
+tolerates, as long as the prefix and number themselves are right.
 
 ## What "tracking" should do
 
@@ -63,7 +65,7 @@ These documents double as the acceptance test for tracking updates across
 documents. It should:
 
 1. **Recognize the same matter despite formatting.** `BZA 21475`,
-   `BZA# 21475`, and `BZA #21475` are one case.
+   `BZA# 21475`, and `BZA #21475` are one case. *Done.*
 2. **Keep what's new instead of dropping it.** When a document mentions an
    existing item, show its new details beside what's already on the item, and
    let the reviewer add them as a dated update — with the source quote, like

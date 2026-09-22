@@ -172,7 +172,9 @@ its own data under a separate `_di_` prefix.
   has configured there.
 - A **review table** shows every extracted item with its verbatim source
   quote. Items whose case number is already on the docket are flagged and
-  unchecked; the admin picks which to create.
+  unchecked — matched regardless of formatting, since official documents
+  write the same case as both `BZA 21475` and `BZA# 21475` — and the table
+  names the existing item they matched. The admin picks which to create.
 - Selected items are created as **Pending**, then reviewed and published in
   Public Docket's existing Workspace. An **"Ingested From Document"** panel
   on each item's edit screen shows the source quote, file, and a link to the
