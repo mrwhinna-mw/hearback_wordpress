@@ -76,7 +76,10 @@ since an agenda never contains one — is labeled as AI-drafted.
   Archived minutes, or other bodies' documents, may be scanned images and
   would need an OCR fallback.
 - **Meetings and Case Threads.** Today each extracted item becomes a single
-  docket item. The relational model prototyped in
+  docket item, and a later document mentioning the same case is only flagged
+  as a duplicate — its new details are dropped. `test-fixtures/case-tracking/`
+  is a set of four real agendas that follow five cases across meetings, with
+  written acceptance criteria for tracking them properly. The relational model prototyped in
   `anc6a_civic_engagement_database.xlsx` (Committees → Meetings →
   Agenda_Items → Case_Threads) would let one matter like "1226 F Street NE"
   be tracked across several meetings over months, and would give addresses
@@ -180,12 +183,12 @@ its own data under a separate `_di_` prefix.
 1. Add your API key in **Meow Apps → AI Engine → Settings → AI**. For
    Gemini, the demo already turns on **"Use Standard API"** at boot — AI
    Engine's default Gemini route returned empty replies in testing.
-2. On the Ingest Document page, enter your **AI environment ID** and a
-   current **model** name. AI Engine doesn't display environment IDs in its
-   own screens, so for now they have to be looked up (see the how-to guide);
-   replacing this field with a dropdown is planned.
+2. On the Ingest Document page, pick your provider and a model from the
+   dropdowns. Models marked "(always latest)" follow the provider's newest
+   release, so they're the least likely to be retired.
 3. Upload `test-fixtures/anc6a-2026-09-10-agenda.txt` to see it work on a
-   real ANC6A agenda.
+   real ANC6A agenda. To test how it handles the same case across several
+   meetings, see `test-fixtures/case-tracking/`.
 
 ### 3. Demo theme — `anc6a-demo-theme/`
 

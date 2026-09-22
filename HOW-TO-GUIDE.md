@@ -34,7 +34,10 @@ key" below). Once you have one, follow step 3 of the install instructions
 inside the demo — it's already set up for Gemini. You can test with a real
 ANC 6A agenda: download
 [anc6a-2026-09-10-agenda.txt](https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/test-fixtures/anc6a-2026-09-10-agenda.txt)
-and upload it.
+and upload it. There's also a
+[set of four real agendas](https://github.com/mrwhinna-mw/hearback_wordpress/tree/main/test-fixtures/case-tracking)
+that follow the same cases across several meetings, with notes on what to
+look for.
 
 ---
 
@@ -132,25 +135,14 @@ WP Engine, Bluehost, etc.):
    - Upload the `docket-ingest/` folder to `wp-content/plugins/` the same way
      as Public Docket, and activate it. It needs Public Docket and AI Engine
      active, and will tell you if either is missing.
-   - Go to **Public Docket → Ingest Document** and fill in:
-     - **AI environment ID** — a short code AI Engine gives each provider you
-       set up, like `isfwfzxv`. AI Engine doesn't show this code on any of
-       its screens, which is the roughest edge of the current version; a
-       dropdown is planned. Until then, ask whoever manages your site to run
-       this on the server, which lists each environment's name and code
-       without revealing your key:
-       ```
-       wp eval 'foreach ( get_option( "mwai_options" )["ai_envs"] as $e ) { echo $e["name"] . " - " . $e["id"] . PHP_EOL; }'
-       ```
-       **In the demo**, there's no server to ask — instead, in the toolbar at
-       the bottom open **Dev Tools → Terminal**, make sure **PHP** is
-       selected, paste this, and click **Run**:
-       ```php
-       foreach ( get_option( 'mwai_options' )['ai_envs'] as $e ) { echo $e['name'] . ' - ' . $e['id'] . "\n"; }
-       ```
-     - **Model** — the name of a current model from your provider, e.g.
-       `gemini-flash-lite-latest` for Gemini. Providers retire models often;
-       if one stops working, the error usually names its replacement.
+   - Go to **Public Docket → Ingest Document** and choose:
+     - **AI provider** — the connection you set up in AI Engine, e.g.
+       "Gemini (Google Gemini)". Ignore any marked "no API key added"; AI
+       Engine creates an empty OpenAI one on its own.
+     - **Model** — pick one from the list. Models marked "(always latest)"
+       follow your provider's newest release, so they're the least likely to
+       be retired. If the one you want isn't listed, choose **Other** and type
+       its name.
    - Choose your document and click **Analyze Document**.
    - On the review screen, read each item. **Check the "Drafted question"
      especially** — it's the only part the AI writes itself rather than
@@ -191,7 +183,7 @@ they mean:
 
 | What you see | What it means | What to do |
 |---|---|---|
-| "The model 'gpt-…' is not available" (while using Gemini) | No AI environment was chosen, so AI Engine fell back to a default OpenAI one | Fill in the AI environment ID on the Ingest Document page |
+| "The model 'gpt-…' is not available" (while using Gemini) | The AI provider dropdown is set to AI Engine's empty OpenAI connection | Choose your own provider in the AI provider dropdown |
 | "This model is no longer available to new users…" | Your provider retired that model | Switch to the replacement named in the message |
 | "This model is currently experiencing high demand" | Your provider is busy — common on free keys | Wait a minute and retry, or try a "lite" model |
 | "The AI returned an empty reply" | Usually Gemini without "Use Standard API" turned on | Tick it in AI Engine → Settings → AI → General |
