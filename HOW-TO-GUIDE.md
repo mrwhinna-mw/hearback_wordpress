@@ -121,10 +121,12 @@ If you already have a WordPress site (self-hosted, or via a host like
 WP Engine, Bluehost, etc.):
 
 1. **Install Public Docket**
-   - Download or clone this repo, then upload the `public-docket/` folder to
-     `wp-content/plugins/` on your site (or zip it and use *Plugins → Add
-     New → Upload Plugin*).
-   - Activate it from your WordPress admin's Plugins screen.
+   - Download
+     [public-docket.zip](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest/download/public-docket.zip)
+     from the latest release.
+   - In your WordPress admin, go to *Plugins → Add New → Upload Plugin*,
+     choose the file, and click Install Now.
+   - Activate it.
    - Go to **Public Docket → Settings** and review the outcome options
      (Proceed / Do not proceed / Not yet, by default — fully editable to
      match how your organization actually talks).
@@ -143,8 +145,9 @@ WP Engine, Bluehost, etc.):
      replies. (The demo turns this on for you; a real site doesn't.)
 
 3. **Install and use Docket Ingest**
-   - Upload the `docket-ingest/` folder to `wp-content/plugins/` the same way
-     as Public Docket, and activate it. It needs Public Docket and AI Engine
+   - Download
+     [docket-ingest.zip](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest/download/docket-ingest.zip)
+     and install it the same way. It needs Public Docket and AI Engine
      active, and will tell you if either is missing.
    - Go to **Public Docket → Ingest Document** and choose:
      - **AI provider** — the connection you set up in AI Engine, e.g.

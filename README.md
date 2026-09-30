@@ -16,6 +16,14 @@ before committing engineering time to build it for real.
 
 **Try it live:** [playground.wordpress.net/?blueprint-url=...](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/blueprint.json) — runs entirely in your browser via [WordPress Playground](https://wordpress.github.io/wordpress-playground/), no hosting or install required.
 
+**Install on your own site:** download
+[public-docket.zip](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest/download/public-docket.zip)
+and
+[docket-ingest.zip](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest/download/docket-ingest.zip)
+from the [latest release](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest),
+then add them under *Plugins → Add New → Upload Plugin*. Step-by-step
+instructions are in [HOW-TO-GUIDE.md](HOW-TO-GUIDE.md).
+
 ---
 
 ## Vision: from meeting documents to a public docket
@@ -284,6 +292,11 @@ GITHUB-DESKTOP-BRANCHING-GUIDE.md  branching guide for GitHub Desktop
 - New Docket Ingest work happens on the `docket-ingest` branch and is tested
   with `blueprint-dev.json` before merging, so the public demo on `main`
   stays working.
+- The download links point at the newest GitHub release, so publishing a new
+  release means re-zipping both plugin folders from current `main` — each zip
+  must contain the plugin folder itself at its root, or WordPress refuses it.
+  Until a release is published those links 404, while the Playground demo
+  always runs the latest `main`.
 - All UI work intentionally stays in PHP/CSS files, not the WordPress
   block/page editor.
 - See `public-docket-project-context.md` for the full history: every bug hit
