@@ -19,7 +19,11 @@ public comment.
 
 Reply with raw JSON only - no markdown code fences, no commentary before
 or after. Return a JSON object shaped like:
-{"items":[{"title":"","question":"","context":"","external_reference":null,"address":null,"recommendation":null,"source_quote":""}]}
+{"meeting_date":null,"items":[{"title":"","question":"","context":"","external_reference":null,"address":null,"recommendation":null,"source_quote":""}]}
+
+"meeting_date" is the date of the meeting this document is for, copied
+from the document itself and written as YYYY-MM-DD. Use null if the
+document does not state one. Do not guess it from anything else.
 
 Rules, in order of importance:
 1. NEVER invent, infer, or embellish. If the document does not state
@@ -47,9 +51,17 @@ EOT;
 }
 
 /**
- * @return array|WP_Error List of normalized item arrays.
+ * Sends one prompt to whichever provider the admin selected and returns
+ * the decoded JSON.
+ *
+ * Built directly rather than via $mwai->simpleJsonQuery(): that helper
+ * json_decodes internally and returns only the result, so when a model
+ * wraps its JSON in ```json fences (Gemini does, even in JSON mode) the
+ * raw text is already lost and there is nothing left to clean up.
+ *
+ * @return array|WP_Error
  */
-function di_extract_items( $text ) {
+function di_run_json_query( $prompt ) {
 	if ( ! class_exists( 'Meow_MWAI_Query_Text' ) ) {
 		return new WP_Error( 'di_no_ai_engine', __( 'AI Engine is not active, so the document cannot be analyzed.', 'docket-ingest' ) );
 	}
@@ -69,18 +81,8 @@ function di_extract_items( $text ) {
 		return new WP_Error( 'di_no_env', __( 'Choose an AI provider on this page first. If the list is empty, add an API key under Meow Apps > AI Engine > Settings > AI.', 'docket-ingest' ) );
 	}
 
-	$truncated = false;
-	if ( strlen( $text ) > DI_MAX_CHARS ) {
-		$text      = substr( $text, 0, DI_MAX_CHARS );
-		$truncated = true;
-	}
-
-	// Built directly rather than via $mwai->simpleJsonQuery(): that helper
-	// json_decodes internally and returns only the result, so when a model
-	// wraps its JSON in ```json fences (Gemini does, even in JSON mode) the
-	// raw text is already lost and there is nothing left to clean up.
 	try {
-		$query = new Meow_MWAI_Query_Text( di_extraction_prompt( $text ) );
+		$query = new Meow_MWAI_Query_Text( $prompt );
 		$query->set_env_id( $env_id );
 		if ( ! empty( $model ) ) {
 			$query->set_model( $model );
@@ -113,6 +115,31 @@ function di_extract_items( $text ) {
 		);
 	}
 
+	return $result;
+}
+
+/**
+ * @return array|WP_Error List of normalized item arrays. The document's
+ *                        own date, when it states one, rides along on the
+ *                        first item as _meeting_date so updates can be
+ *                        dated by meeting rather than by upload day.
+ */
+function di_extract_items( $text ) {
+	$truncated = false;
+	if ( strlen( $text ) > DI_MAX_CHARS ) {
+		$text      = substr( $text, 0, DI_MAX_CHARS );
+		$truncated = true;
+	}
+
+	$result = di_run_json_query( di_extraction_prompt( $text ) );
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+
+	$meeting_date = isset( $result['meeting_date'] ) && is_string( $result['meeting_date'] )
+		? sanitize_text_field( $result['meeting_date'] )
+		: '';
+
 	// Accept both {"items":[...]} and a bare [...] - models drift on this.
 	$raw_items = isset( $result['items'] ) && is_array( $result['items'] ) ? $result['items'] : $result;
 
@@ -127,6 +154,8 @@ function di_extract_items( $text ) {
 	if ( empty( $items ) ) {
 		return new WP_Error( 'di_no_items', __( 'No commentable agenda items were found in that document.', 'docket-ingest' ) );
 	}
+
+	$items[0]['_meeting_date'] = $meeting_date;
 
 	if ( $truncated ) {
 		$items[0]['_truncated'] = true;

@@ -24,6 +24,7 @@ require_once DI_PATH . 'includes/extract-text.php';
 require_once DI_PATH . 'includes/ai-extract.php';
 require_once DI_PATH . 'includes/ai-choices.php';
 require_once DI_PATH . 'includes/create-items.php';
+require_once DI_PATH . 'includes/updates.php';
 require_once DI_PATH . 'includes/admin-page.php';
 require_once DI_PATH . 'includes/meta-box.php';
 

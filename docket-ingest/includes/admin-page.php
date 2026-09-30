@@ -238,22 +238,98 @@ function di_handle_upload() {
 		return;
 	}
 
-	di_render_review( $items, esc_url_raw( wp_unslash( $_POST['di_source_url'] ?? '' ) ), $original_name );
+	$sorted = di_sort_items( $items );
+
+	di_render_review(
+		$sorted,
+		esc_url_raw( wp_unslash( $_POST['di_source_url'] ?? '' ) ),
+		$original_name
+	);
 }
 
-function di_render_review( $items, $source_url, $source_file ) {
-	$truncated = ! empty( $items[0]['_truncated'] );
+/**
+ * Splits what the document contains into items that are new to the docket
+ * and updates to items already on it, asking the AI what each repeat
+ * mention actually adds.
+ */
+function di_sort_items( $items ) {
+	$meeting_date = isset( $items[0]['_meeting_date'] ) ? $items[0]['_meeting_date'] : '';
+
+	$new         = array();
+	$updates     = array();
+	$unchanged   = array();
+	$comparisons = 0;
+
+	foreach ( $items as $item ) {
+		$existing = di_find_existing( $item['external_reference'] );
+
+		if ( ! $existing ) {
+			$new[] = $item;
+			continue;
+		}
+
+		if ( $comparisons >= DI_MAX_UPDATE_COMPARISONS ) {
+			$unchanged[] = array(
+				'title'    => $item['title'],
+				'existing' => $existing,
+				'note'     => __( 'Not compared - this document mentions more existing items than one upload checks.', 'docket-ingest' ),
+			);
+			continue;
+		}
+
+		++$comparisons;
+		$update = di_extract_update( $existing, $item, $meeting_date );
+
+		// A failed comparison shouldn't lose the whole upload; the item is
+		// simply reported as already on the docket, uncompared.
+		if ( is_wp_error( $update ) ) {
+			$unchanged[] = array(
+				'title'    => $item['title'],
+				'existing' => $existing,
+				'note'     => sprintf(
+					/* translators: %s: error message */
+					__( 'Could not compare against the existing item: %s', 'docket-ingest' ),
+					$update->get_error_message()
+				),
+			);
+			continue;
+		}
+
+		if ( $update['has_update'] ) {
+			$updates[] = $update;
+		} else {
+			$unchanged[] = array(
+				'title'    => $item['title'],
+				'existing' => $existing,
+				'note'     => __( 'Already on the docket; nothing new in this document.', 'docket-ingest' ),
+			);
+		}
+	}
+
+	return array(
+		'new'       => $new,
+		'updates'   => $updates,
+		'unchanged' => $unchanged,
+		'truncated' => ! empty( $items[0]['_truncated'] ),
+	);
+}
+
+function di_render_review( $sorted, $source_url, $source_file ) {
+	$items     = $sorted['new'];
+	$updates   = $sorted['updates'];
+	$unchanged = $sorted['unchanged'];
 	?>
 	<p>
 		<?php
 		printf(
-			/* translators: %d: number of items */
-			esc_html( _n( '%d item found. Review it, then create the ones you want.', '%d items found. Review them, then create the ones you want.', count( $items ), 'docket-ingest' ) ),
-			count( $items )
+			/* translators: 1: number of new items, 2: number of updates */
+			esc_html__( 'This document has %1$s and %2$s.', 'docket-ingest' ),
+			esc_html( sprintf( _n( '%d new item', '%d new items', count( $items ), 'docket-ingest' ), count( $items ) ) ),
+			esc_html( sprintf( _n( '%d update to an existing item', '%d updates to existing items', count( $updates ), 'docket-ingest' ), count( $updates ) ) )
 		);
 		?>
 	</p>
-	<?php if ( $truncated ) : ?>
+	<?php if ( $sorted['truncated'] ) : ?>
 		<div class="notice notice-warning"><p><?php esc_html_e( 'The document was long and only its first part was analyzed. Split it and upload the rest separately.', 'docket-ingest' ); ?></p></div>
 	<?php endif; ?>
 	<div class="notice notice-info">
@@ -265,60 +341,160 @@ function di_render_review( $items, $source_url, $source_file ) {
 		<input type="hidden" name="di_source_url" value="<?php echo esc_attr( $source_url ); ?>">
 		<input type="hidden" name="di_source_file" value="<?php echo esc_attr( $source_file ); ?>">
 		<input type="hidden" name="di_items" value="<?php echo esc_attr( wp_json_encode( $items ) ); ?>">
+		<input type="hidden" name="di_updates" value="<?php echo esc_attr( wp_json_encode( $updates ) ); ?>">
 
-		<table class="widefat striped">
-			<thead>
-				<tr>
-					<th style="width:2.5em;"><?php esc_html_e( 'Add', 'docket-ingest' ); ?></th>
-					<th><?php esc_html_e( 'Item', 'docket-ingest' ); ?></th>
-					<th><?php esc_html_e( 'Verbatim from document', 'docket-ingest' ); ?></th>
-				</tr>
-			</thead>
-			<tbody>
-			<?php foreach ( $items as $i => $item ) : ?>
-				<?php $existing = di_find_existing( $item['external_reference'] ); ?>
-				<tr>
-					<td>
-						<input type="checkbox" name="di_selected[]" value="<?php echo esc_attr( $i ); ?>" <?php checked( ! $existing ); ?>>
-					</td>
-					<td>
-						<strong><?php echo esc_html( $item['title'] ); ?></strong>
-						<?php if ( $existing ) : ?>
-							<br><span class="dashicons dashicons-warning"></span>
-							<em><?php
-							printf(
-								/* translators: 1: existing item's title, 2: its case number as stored */
-								esc_html__( 'Already on the docket as "%1$s" (%2$s) — unchecked by default.', 'docket-ingest' ),
-								esc_html( get_the_title( $existing ) ),
-								esc_html( get_post_meta( $existing, '_hb_external_reference', true ) )
-							);
-							?></em>
-							<a href="<?php echo esc_url( get_edit_post_link( $existing ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'docket-ingest' ); ?></a>
-						<?php endif; ?>
-						<?php if ( ! empty( $item['question'] ) ) : ?>
-							<p><em><?php esc_html_e( 'Drafted question:', 'docket-ingest' ); ?></em> <?php echo esc_html( $item['question'] ); ?></p>
-						<?php endif; ?>
-						<p>
-							<?php if ( ! empty( $item['external_reference'] ) ) : ?>
-								<code><?php echo esc_html( $item['external_reference'] ); ?></code>
+		<?php if ( ! empty( $updates ) ) : ?>
+			<h2><?php esc_html_e( 'Updates to items already on the docket', 'docket-ingest' ); ?></h2>
+			<table class="widefat striped">
+				<thead>
+					<tr>
+						<th style="width:2.5em;"><?php esc_html_e( 'Apply', 'docket-ingest' ); ?></th>
+						<th><?php esc_html_e( 'What this document adds', 'docket-ingest' ); ?></th>
+						<th><?php esc_html_e( 'Verbatim from document', 'docket-ingest' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+				foreach ( $updates as $i => $update ) :
+					$has_conflicts  = ! empty( $update['conflicts'] );
+					$existing_step  = get_post_meta( $update['existing_id'], '_hb_response_next_step', true );
+					$is_published   = 'publish' === get_post_status( $update['existing_id'] );
+					?>
+					<tr>
+						<td>
+							<input type="checkbox" name="di_update_selected[]" value="<?php echo esc_attr( $i ); ?>" <?php checked( ! $has_conflicts ); ?>>
+						</td>
+						<td>
+							<strong><?php echo esc_html( $update['title'] ); ?></strong>
+							<a href="<?php echo esc_url( get_edit_post_link( $update['existing_id'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'docket-ingest' ); ?></a>
+							<p><?php echo esc_html( $update['summary'] ); ?></p>
+
+							<?php if ( ! empty( $update['next_step'] ) ) : ?>
+								<p>
+									<label>
+										<input type="checkbox" name="di_update_nextstep[]" value="<?php echo esc_attr( $i ); ?>" <?php checked( '' === $existing_step ); ?>>
+										<?php
+										printf(
+											/* translators: %s: the proposed next step */
+											esc_html__( 'Set "Next step" to: %s', 'docket-ingest' ),
+											'<em>' . esc_html( $update['next_step'] ) . '</em>'
+										);
+										?>
+									</label>
+									<?php if ( '' !== $existing_step ) : ?>
+										<br><span class="dashicons dashicons-warning"></span>
+										<em><?php
+										printf(
+											/* translators: %s: the next step already written on the item */
+											esc_html__( 'This would replace what someone already wrote: "%s"', 'docket-ingest' ),
+											esc_html( $existing_step )
+										);
+										?></em>
+									<?php endif; ?>
+								</p>
 							<?php endif; ?>
-							<?php if ( ! empty( $item['address'] ) ) : ?>
-								<?php echo esc_html( $item['address'] ); ?>
+
+							<?php if ( $has_conflicts ) : ?>
+								<div class="notice notice-warning inline" style="margin:8px 0;padding:6px 10px;">
+									<p style="margin:0 0 4px;"><strong><?php esc_html_e( 'This document contradicts what is already recorded — unchecked by default.', 'docket-ingest' ); ?></strong></p>
+									<ul style="list-style:disc;margin:0 0 0 1.4em;">
+										<?php foreach ( $update['conflicts'] as $conflict ) : ?>
+											<li>
+												<?php echo esc_html( $conflict['detail'] ); ?> —
+												<?php
+												printf(
+													/* translators: 1: value already on the item, 2: value in the new document */
+													esc_html__( 'recorded: "%1$s"; this document: "%2$s"', 'docket-ingest' ),
+													esc_html( $conflict['already_recorded'] ),
+													esc_html( $conflict['newer_document'] )
+												);
+												?>
+												<?php if ( ! empty( $conflict['quote'] ) ) : ?>
+													<br><em>&ldquo;<?php echo esc_html( $conflict['quote'] ); ?>&rdquo;</em>
+												<?php endif; ?>
+											</li>
+										<?php endforeach; ?>
+									</ul>
+								</div>
 							<?php endif; ?>
-						</p>
-					</td>
-					<td style="max-width:28em;">
-						<?php if ( ! empty( $item['source_quote'] ) ) : ?>
-							<blockquote style="margin:0;font-style:italic;"><?php echo esc_html( $item['source_quote'] ); ?></blockquote>
-						<?php else : ?>
-							<em><?php esc_html_e( 'No quote provided — verify this one manually.', 'docket-ingest' ); ?></em>
-						<?php endif; ?>
-					</td>
-				</tr>
-			<?php endforeach; ?>
-			</tbody>
-		</table>
-		<?php submit_button( __( 'Create Selected as Pending', 'docket-ingest' ) ); ?>
+
+							<?php if ( $is_published ) : ?>
+								<p class="description"><?php esc_html_e( 'This item is public — an applied update appears on the site immediately.', 'docket-ingest' ); ?></p>
+							<?php endif; ?>
+						</td>
+						<td style="max-width:28em;">
+							<?php if ( ! empty( $update['quote'] ) ) : ?>
+								<blockquote style="margin:0;font-style:italic;"><?php echo esc_html( $update['quote'] ); ?></blockquote>
+							<?php else : ?>
+								<em><?php esc_html_e( 'No quote provided — verify this one manually.', 'docket-ingest' ); ?></em>
+							<?php endif; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			</table>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $items ) ) : ?>
+			<h2><?php esc_html_e( 'New items', 'docket-ingest' ); ?></h2>
+			<table class="widefat striped">
+				<thead>
+					<tr>
+						<th style="width:2.5em;"><?php esc_html_e( 'Add', 'docket-ingest' ); ?></th>
+						<th><?php esc_html_e( 'Item', 'docket-ingest' ); ?></th>
+						<th><?php esc_html_e( 'Verbatim from document', 'docket-ingest' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php foreach ( $items as $i => $item ) : ?>
+					<tr>
+						<td>
+							<input type="checkbox" name="di_selected[]" value="<?php echo esc_attr( $i ); ?>" checked>
+						</td>
+						<td>
+							<strong><?php echo esc_html( $item['title'] ); ?></strong>
+							<?php if ( ! empty( $item['question'] ) ) : ?>
+								<p><em><?php esc_html_e( 'Drafted question:', 'docket-ingest' ); ?></em> <?php echo esc_html( $item['question'] ); ?></p>
+							<?php endif; ?>
+							<p>
+								<?php if ( ! empty( $item['external_reference'] ) ) : ?>
+									<code><?php echo esc_html( $item['external_reference'] ); ?></code>
+								<?php endif; ?>
+								<?php if ( ! empty( $item['address'] ) ) : ?>
+									<?php echo esc_html( $item['address'] ); ?>
+								<?php endif; ?>
+							</p>
+						</td>
+						<td style="max-width:28em;">
+							<?php if ( ! empty( $item['source_quote'] ) ) : ?>
+								<blockquote style="margin:0;font-style:italic;"><?php echo esc_html( $item['source_quote'] ); ?></blockquote>
+							<?php else : ?>
+								<em><?php esc_html_e( 'No quote provided — verify this one manually.', 'docket-ingest' ); ?></em>
+							<?php endif; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			</table>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $unchanged ) ) : ?>
+			<h2><?php esc_html_e( 'Mentioned, but nothing to do', 'docket-ingest' ); ?></h2>
+			<ul style="list-style:disc;margin-left:2em;">
+				<?php foreach ( $unchanged as $skip ) : ?>
+					<li>
+						<strong><?php echo esc_html( $skip['title'] ); ?></strong> — <?php echo esc_html( $skip['note'] ); ?>
+						<a href="<?php echo esc_url( get_edit_post_link( $skip['existing'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'docket-ingest' ); ?></a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		<?php endif; ?>
+
+		<?php if ( empty( $items ) && empty( $updates ) ) : ?>
+			<p><?php esc_html_e( 'Nothing to add or update from this document.', 'docket-ingest' ); ?></p>
+		<?php else : ?>
+			<?php submit_button( __( 'Apply Selected', 'docket-ingest' ) ); ?>
+		<?php endif; ?>
 	</form>
 	<?php
 }
@@ -332,11 +508,16 @@ function di_handle_create() {
 		return;
 	}
 
-	$selected = isset( $_POST['di_selected'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['di_selected'] ) ) : array();
-	if ( empty( $selected ) ) {
-		di_render_upload_form( __( 'No items were selected, so nothing was created.', 'docket-ingest' ) );
+	$selected        = isset( $_POST['di_selected'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['di_selected'] ) ) : array();
+	$update_selected = isset( $_POST['di_update_selected'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['di_update_selected'] ) ) : array();
+
+	if ( empty( $selected ) && empty( $update_selected ) ) {
+		di_render_upload_form( __( 'Nothing was selected, so nothing was changed.', 'docket-ingest' ) );
 		return;
 	}
+
+	$source_url  = esc_url_raw( wp_unslash( $_POST['di_source_url'] ?? '' ) );
+	$source_file = sanitize_file_name( wp_unslash( $_POST['di_source_file'] ?? '' ) );
 
 	// Re-sanitize: this came back through the browser and is untrusted again.
 	$items = array();
@@ -346,16 +527,95 @@ function di_handle_create() {
 		}
 	}
 
-	$result = di_create_items(
-		$items,
-		esc_url_raw( wp_unslash( $_POST['di_source_url'] ?? '' ) ),
-		sanitize_file_name( wp_unslash( $_POST['di_source_file'] ?? '' ) )
-	);
+	$result = di_create_items( $items, $source_url, $source_file );
+
+	$result['updated']       = array();
+	$result['update_errors'] = array();
+
+	if ( ! empty( $update_selected ) ) {
+		$raw_updates  = json_decode( wp_unslash( $_POST['di_updates'] ?? '[]' ), true );
+		$next_step_on = isset( $_POST['di_update_nextstep'] )
+			? array_map( 'intval', (array) wp_unslash( $_POST['di_update_nextstep'] ) )
+			: array();
+
+		foreach ( $update_selected as $index ) {
+			if ( ! isset( $raw_updates[ $index ] ) || ! is_array( $raw_updates[ $index ] ) ) {
+				continue;
+			}
+			$update  = di_normalize_update( $raw_updates[ $index ] );
+			$applied = di_apply_update(
+				$update,
+				in_array( $index, $next_step_on, true ),
+				$source_file,
+				$source_url
+			);
+
+			if ( is_wp_error( $applied ) ) {
+				$result['update_errors'][] = $applied->get_error_message();
+			} else {
+				$result['updated'][] = $update;
+			}
+		}
+	}
 
 	di_render_result( $result );
 }
 
+/**
+ * Updates make the same round trip through the browser as items do, so
+ * they get the same treatment on the way back: nothing is trusted.
+ */
+function di_normalize_update( $raw ) {
+	$text = function ( $key ) use ( $raw ) {
+		return isset( $raw[ $key ] ) && is_string( $raw[ $key ] ) ? sanitize_textarea_field( $raw[ $key ] ) : '';
+	};
+
+	$conflicts = array();
+	if ( ! empty( $raw['conflicts'] ) && is_array( $raw['conflicts'] ) ) {
+		foreach ( $raw['conflicts'] as $conflict ) {
+			if ( is_array( $conflict ) && ! empty( $conflict['detail'] ) ) {
+				$conflicts[] = array_map( 'sanitize_text_field', array_filter( $conflict, 'is_string' ) );
+			}
+		}
+	}
+
+	return array(
+		'existing_id'  => isset( $raw['existing_id'] ) ? (int) $raw['existing_id'] : 0,
+		'title'        => $text( 'title' ),
+		'summary'      => $text( 'summary' ),
+		'quote'        => $text( 'quote' ),
+		'next_step'    => $text( 'next_step' ),
+		'meeting_date' => $text( 'meeting_date' ),
+		'conflicts'    => $conflicts,
+	);
+}
+
 function di_render_result( $result ) {
+	if ( ! empty( $result['updated'] ) ) {
+		echo '<div class="notice notice-success"><p>' . esc_html(
+			sprintf(
+				/* translators: %d: number of items updated */
+				_n( '%d item updated.', '%d items updated.', count( $result['updated'] ), 'docket-ingest' ),
+				count( $result['updated'] )
+			)
+		) . '</p></div>';
+
+		echo '<ul style="list-style:disc;margin-left:2em;">';
+		foreach ( $result['updated'] as $update ) {
+			printf(
+				'<li><a href="%s">%s</a> — %s</li>',
+				esc_url( get_edit_post_link( $update['existing_id'] ) ),
+				esc_html( $update['title'] ),
+				esc_html( $update['summary'] )
+			);
+		}
+		echo '</ul>';
+	}
+
+	foreach ( isset( $result['update_errors'] ) ? $result['update_errors'] : array() as $error ) {
+		printf( '<div class="notice notice-error"><p>%s</p></div>', esc_html( $error ) );
+	}
+
 	if ( ! empty( $result['created'] ) ) {
 		echo '<div class="notice notice-success"><p>' . esc_html(
 			sprintf(

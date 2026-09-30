@@ -22,11 +22,12 @@ function di_add_meta_box() {
 add_action( 'add_meta_boxes', 'di_add_meta_box' );
 
 function di_render_meta_box( $post ) {
-	$quote = get_post_meta( $post->ID, '_di_source_quote', true );
-	$file  = get_post_meta( $post->ID, '_di_source_file', true );
-	$when  = get_post_meta( $post->ID, '_di_ingested_at', true );
+	$quote   = get_post_meta( $post->ID, '_di_source_quote', true );
+	$file    = get_post_meta( $post->ID, '_di_source_file', true );
+	$when    = get_post_meta( $post->ID, '_di_ingested_at', true );
+	$updates = di_get_updates( $post->ID );
 
-	if ( ! $quote && ! $file && ! $when ) {
+	if ( ! $quote && ! $file && ! $when && ! $updates ) {
 		echo '<p>' . esc_html__( 'This item was created by hand, not ingested from a document.', 'docket-ingest' ) . '</p>';
 		return;
 	}
@@ -59,5 +60,39 @@ function di_render_meta_box( $post ) {
 				$when
 			)
 		) . '</p>';
+	}
+
+	if ( empty( $updates ) ) {
+		return;
+	}
+
+	echo '<hr><p><strong>' . esc_html__( 'Updates from later documents:', 'docket-ingest' ) . '</strong></p>';
+
+	foreach ( $updates as $update ) {
+		echo '<p style="margin-bottom:4px;"><strong>' . esc_html( $update['date'] ) . '</strong><br>'
+			. esc_html( $update['summary'] ) . '</p>';
+
+		if ( ! empty( $update['quote'] ) ) {
+			echo '<blockquote style="margin:0 0 6px;padding:6px;background:#f6f7f7;border-left:3px solid #c3c4c7;font-style:italic;">'
+				. esc_html( $update['quote'] ) . '</blockquote>';
+		}
+		if ( ! empty( $update['conflicts'] ) ) {
+			echo '<p class="description">' . esc_html(
+				sprintf(
+					/* translators: %d: number of conflicting details */
+					_n( 'Applied despite %d conflicting detail.', 'Applied despite %d conflicting details.', count( $update['conflicts'] ), 'docket-ingest' ),
+					count( $update['conflicts'] )
+				)
+			) . '</p>';
+		}
+		if ( ! empty( $update['source_file'] ) ) {
+			echo '<p class="description">' . esc_html(
+				sprintf(
+					/* translators: %s: file name */
+					__( 'From %s', 'docket-ingest' ),
+					$update['source_file']
+				)
+			) . '</p>';
+		}
 	}
 }
