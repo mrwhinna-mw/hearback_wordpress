@@ -33,26 +33,29 @@ some of these documents will run into.
 
 ## What the current version does
 
-Docket Ingest **recognizes repeat cases but doesn't track updates.** When an
-extracted item's case number matches one already on the docket — ignoring
-differences like `BZA 21475` vs `BZA# 21475` — the review table names the
-existing item, shows how its case number was written, and leaves the new one
-unchecked. But the new details from that document are dropped. Expect to see:
+Docket Ingest **recognizes repeat cases and offers their updates for
+approval.** The review screen splits into "Updates to items already on the
+docket" and "New items". Expect to see:
 
-- **1226 F Street is recognized across all three documents.** Docs 1 and 3
-  write `BZA 21475`; the seeded item and doc 4 write `BZA# 21475`. Each upload
-  should say it's already on the docket as "Third-story addition at 1226 F
-  Street NE (BZA# 21475)." *(Before this was fixed, upload 1 created a second
-  1226 F Street item.)*
-- **Updates are lost.** When 628 15th Street reappears in doc 3, the hearing
-  continuation isn't added to the item. Same for 800 10th Street's outcome in
-  doc 4, and 1226 F Street's postponed hearing.
-- **The 1331 North Carolina conflict goes unnoticed.** Doc 2 is marked as a
-  duplicate, so nobody is told the two documents disagree about the posting
-  date.
-- **H Street BID is never matched.** With no case number, there's nothing to
-  compare, so any items the AI extracts about it are offered as new —
-  potentially duplicating the seeded BID letter item.
+- **1226 F Street recognized across all three documents.** Docs 1 and 3 write
+  `BZA 21475`; the seeded item and doc 4 write `BZA# 21475`. Matching ignores
+  that difference.
+- **Its story accumulating.** Doc 3 should offer an update along the lines of
+  the hearing being postponed from September 2 to September 16, and doc 4 the
+  commission withholding support. Applying them adds dated lines to the one
+  item.
+- **"Next step" offered, not forced.** Where a document names a future date,
+  you can tick to set the item's Next step. That tick is pre-set only when
+  the field is empty; if someone already wrote one, you'll see what would be
+  replaced.
+- **The 1331 North Carolina conflict surfaced.** Doc 2 says notice was posted
+  March 30 where doc 1 said May 30. That row should be marked as a
+  contradiction, showing both dates, and left unticked.
+- **No outcome written.** Doc 4's "withhold support" is a proposed motion, so
+  it should appear as narrative, never as the item's Outcome.
+- **H Street BID still not matched.** With no case number there's nothing to
+  compare, so items about it are offered as new — potentially duplicating the
+  seeded BID letter item. That's the next gap to close.
 
 AI extraction varies somewhat between runs: it may skip items it judges
 procedural (presentations, "comments due" notes), and could occasionally
@@ -69,9 +72,9 @@ documents. It should:
 2. **Keep what's new instead of dropping it.** When a document mentions an
    existing item, show its new details beside what's already on the item, and
    let the reviewer add them as a dated update — with the source quote, like
-   everything else.
+   everything else. *Done.*
 3. **Surface conflicts rather than picking a side.** For 1331 North Carolina,
-   show both posting dates and let a person decide.
+   show both posting dates and let a person decide. *Done.*
 4. **Suggest, never auto-merge, when there's no case number.** For H Street
    BID, propose likely matches by address or topic for a person to confirm.
 5. **Not match on Square and Lot alone.** In these official documents, both
@@ -79,7 +82,8 @@ documents. It should:
    "Square 1035, Lot 065" — almost certainly an error in the source records.
    Matching on those would merge two unrelated cases.
 6. **Record provenance for every update:** which document, which meeting,
-   and the exact quote it came from.
+   and the exact quote it came from. *Done — shown in the "Ingested From
+   Document" panel on the item's edit screen.*
 
 ## Sources
 

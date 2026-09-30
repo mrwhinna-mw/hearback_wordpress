@@ -67,10 +67,21 @@ license number, the address, and the committee's recommendation.
 
 **Nothing is published automatically.** You get a review screen listing
 every item it found, each with an exact quote from your document so you can
-check it against the original. Items already on your docket (matched by case
-number) are flagged so you don't create duplicates. You pick which ones to
-keep, they're saved as drafts, and a person approves each one before it goes
-public.
+check it against the original. You pick which ones to keep, they're saved as
+drafts, and a person approves each one before it goes public.
+
+It also **follows a case across meetings.** When a document covers something
+already on your docket — matched by case number, however it's written — you
+don't get a duplicate. Instead the review screen shows what that document
+*adds*: "BZA hearing postponed to September 16," say, with the sentence it
+came from. Tick it and a dated line is added to that item, and you can set
+its "Next step" at the same time. If the new document contradicts what's
+recorded, both versions are shown and the row is left unticked for you to
+decide.
+
+One thing it deliberately won't do is record an outcome. A recommendation on
+an agenda is a proposed motion, not a decision — the vote happens at the
+meeting — so outcomes stay a human's job.
 
 What it can't do yet:
 

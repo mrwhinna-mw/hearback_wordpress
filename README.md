@@ -47,11 +47,21 @@ How the pieces fit:
    with status **Pending** and `_hb_source = 'scraped'`. Nothing reaches the
    public site without a human approving it. *Built.*
 4. **Match, don't duplicate.** Before creating anything, check the item's case
-   number against existing items; a re-uploaded "BZA# 21475" is flagged as
-   already on the docket instead of being created twice. *Built.*
-5. **Review in the existing Workspace.** Pending items appear in Public
+   number against existing items — ignoring formatting, since official
+   documents write the same case as both "BZA 21475" and "BZA# 21475".
+   *Built.*
+5. **Track what later documents add.** When a document mentions a case
+   already on the docket, ask the AI what it adds or changes, and offer it as
+   a one-click update: a dated line on the item, a verbatim quote, and
+   optionally its "Next step". Contradictions are shown with both values and
+   left unchecked. *Built.*
+6. **Review in the existing Workspace.** Pending items appear in Public
    Docket's Workspace alongside published ones, where an admin edits anything
    the AI got wrong and publishes. *Built — Public Docket needed no changes.*
+
+Updates never touch an item's **Outcome**. An agenda's "Recommendation: ANC 6A
+withhold support" is a proposed motion, not a decision — writing it as an
+outcome would have the public page announce a vote that hasn't happened.
 
 ### Why the approval gate is non-negotiable
 
@@ -75,16 +85,19 @@ since an agenda never contains one — is labeled as AI-drafted.
   real selectable text, so a text-extraction step would handle them well.
   Archived minutes, or other bodies' documents, may be scanned images and
   would need an OCR fallback.
-- **Meetings and Case Threads.** Today each extracted item becomes a single
-  docket item, and a later document mentioning the same case is only flagged
-  as a duplicate — its new details are dropped. `test-fixtures/case-tracking/`
-  is a set of four real agendas that follow five cases across meetings, with
-  written acceptance criteria for tracking them properly. The relational model prototyped in
+- **Matters without a case number.** Updates are matched on a case or license
+  number. Something like the H Street BID letter, which has none, can't be
+  recognized across documents yet; the next step is suggesting likely matches
+  by address or topic for a person to confirm — never merging automatically.
+  `test-fixtures/case-tracking/` holds four real agendas that follow five
+  cases across meetings, with acceptance criteria for this.
+- **Meetings and Case Threads.** Each extracted item is still a standalone
+  docket item carrying its updates. The relational model prototyped in
   `anc6a_civic_engagement_database.xlsx` (Committees → Meetings →
-  Agenda_Items → Case_Threads) would let one matter like "1226 F Street NE"
-  be tracked across several meetings over months, and would give addresses
-  and committee recommendations first-class fields — Public Docket currently
-  has none, so Docket Ingest folds them into the item's text.
+  Agenda_Items → Case_Threads) would additionally model the meetings
+  themselves, and give addresses and committee recommendations first-class
+  fields — Public Docket has none, so Docket Ingest folds them into the
+  item's text.
 - **Generated Agendas pages.** Build each meeting's Agendas page from the
   upload too, so the chatbot's context grows with every meeting instead of
   covering one hardcoded month.
@@ -179,6 +192,11 @@ its own data under a separate `_di_` prefix.
   Public Docket's existing Workspace. An **"Ingested From Document"** panel
   on each item's edit screen shows the source quote, file, and a link to the
   original.
+- When a document covers a case already on the docket, the review screen
+  offers an **update** instead: what this document adds, its quote, and
+  optionally its "Next step". Applying it appends a dated line to the item
+  and records the provenance in that same panel. Contradictions between the
+  document and the item are listed with both values and left unchecked.
 
 **Requires** Public Docket and AI Engine to be active. To use it in the demo:
 
