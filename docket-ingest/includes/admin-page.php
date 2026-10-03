@@ -98,9 +98,9 @@ function di_render_upload_form( $error = '' ) {
 }
 
 /**
- * Environment and model dropdowns. AI Engine never displays an
- * environment's ID, so asking admins to type one meant sending them to a
- * terminal; picking by name removes that step entirely.
+ * Environment and model dropdowns, so a provider is picked by name rather
+ * than by copying the ID AI Engine tucks inside a collapsed panel on its
+ * own settings screen.
  */
 function di_render_ai_rows() {
 	$envs = di_environments();

@@ -30,8 +30,9 @@ page. If you lose it by accident, the **Playgrounds** button in the toolbar
 at the bottom can restore a recent session.
 
 **Trying document ingestion in the demo** needs an AI key (see "Getting an AI
-key" below). Once you have one, follow step 3 of the install instructions
-inside the demo — it's already set up for Gemini. You can test with a real
+key" below). Once you have one, the
+[illustrated walkthrough](#walkthrough-try-the-whole-thing-in-the-demo) takes
+you through it screen by screen. You can test with a real
 ANC 6A agenda: download
 [anc6a-2026-09-10-agenda.txt](https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/test-fixtures/anc6a-2026-09-10-agenda.txt)
 and upload it. There's also a
@@ -112,6 +113,174 @@ Both Docket Ingest and the chatbot need an API key from an AI provider:
 
 Treat the key like a password: never put it in a document, email, or public
 file.
+
+---
+
+## Walkthrough: try the whole thing in the demo
+
+About fifteen minutes, start to finish. You need the free Gemini key from
+above. Nothing here touches a real website — everything runs inside your
+browser tab and disappears when you close it.
+
+### Part 1 — Open the demo
+
+**1. Open the project page on GitHub.**
+
+![The project page on GitHub](docs/images/step-01-open-repo.png)
+
+**2. Click the `playground.wordpress.net` link near the top of that page.**
+A complete WordPress site builds itself inside your browser. Give it about
+thirty seconds — you'll land on the Public Docket page with three example
+items.
+
+![Clicking the demo link in the README](docs/images/step-02-launch-demo.png)
+
+**3. Click the address box in the dark toolbar at the bottom.** This is the
+demo's own address bar, not your browser's.
+
+![The demo's address box in the bottom toolbar](docs/images/step-03-address-bar.png)
+
+**4. Choose "Dashboard" from the list that appears.** That takes you behind
+the scenes, to the WordPress admin area where staff work.
+
+![Choosing Dashboard from the menu](docs/images/step-04-dashboard.png)
+
+### Part 2 — Connect your AI key
+
+**5. In the left-hand menu, click "Meow Apps", then "AI Engine".** Meow Apps
+is the company that makes the AI Engine plugin, which is the bridge between
+this site and Google's AI.
+
+![The AI Engine link in the sidebar](docs/images/step-05-ai-engine.png)
+
+**6. Click the "Settings" tab, then the "AI" tab beneath it.**
+
+![The Settings tab in AI Engine](docs/images/step-06-settings-tab.png)
+
+**7. Find the box headed "Environments for AI" and click the Name field.**
+An "environment" is just one connection to one AI company.
+
+![The Name field under Environments for AI](docs/images/step-07-name-field.png)
+
+**8. Type `Gemini`** — this is only a label, so you can recognize it later.
+
+**9. Open the "Type" dropdown and choose "Google".** This tells it which
+company's AI you're connecting to.
+
+![The Type dropdown](docs/images/step-10-type-dropdown.png)
+
+![Choosing Google](docs/images/step-11-choose-google.png)
+
+**10. Click the "API Key" field and paste your Gemini key.** It shows as
+dots, which is normal — it's hidden on purpose.
+
+![The API Key field](docs/images/step-12-api-key-field.png)
+
+**11. Click "Refresh Models".** This asks Google which AI models your key is
+allowed to use, and fills in the list. Without this the model menus stay
+empty.
+
+![The Refresh Models button](docs/images/step-14-refresh-models.png)
+
+**12. Scroll down to "Default Environments for AI" and open the Model
+dropdown.**
+
+![The default model dropdown](docs/images/step-15-default-model.png)
+
+**13. Choose a "Flash" or "Flash-Lite" model.** These are the quick,
+inexpensive ones, and they handle reading documents perfectly well.
+
+![Choosing Gemini Flash-Lite](docs/images/step-16-choose-model.png)
+
+### Part 3 — Upload a meeting document
+
+**14. In the left menu, click "Public Docket", then "Ingest Document".**
+
+![The Ingest Document menu item](docs/images/step-17-ingest-menu.png)
+
+**15. Click "Choose File" and pick a meeting agenda.** If you don't have one
+handy, download a real ANC 6A agenda from the
+[test documents](https://github.com/mrwhinna-mw/hearback_wordpress/tree/main/test-fixtures/case-tracking)
+first. Plain text (`.txt`) and Word (`.docx`) files work; PDFs don't yet, so
+open the PDF, copy the text, and save it as a text file.
+
+![The Choose File button](docs/images/step-18-choose-file.png)
+
+**16. Check the AI provider and Model boxes below.** They should already say
+Gemini and the model you picked earlier.
+
+![The provider and model dropdowns](docs/images/step-20-pick-model.png)
+
+**17. Click "Analyze Document" and wait a few seconds.** The AI is reading
+the document now. Nothing has been saved to the site yet.
+
+![The Analyze Document button](docs/images/step-22-analyze.png)
+
+### Part 4 — Check what it found
+
+This screen is a proposal, not a result. Nothing is saved until you click the
+button at the bottom, and nothing becomes public even then.
+
+**18. Read the "Updates to items already on the docket" section first.**
+These are cases the site already knows about, where this document adds
+something new — a hearing being rescheduled, for instance. The quote on the
+right is copied word for word from your document, so you can check it.
+
+![An update with its Next step checkbox](docs/images/step-23-next-step-tick.png)
+
+**19. Tick the updates you want to apply.** If a box is already ticked and
+mentions replacing something, read it carefully first — that means a person
+had already written that field by hand.
+
+![Ticking an update to apply](docs/images/step-24-apply-update.png)
+
+**20. Then look at "New items".** These are matters the site hasn't seen
+before. Each shows a "Drafted question" — the one piece of text the AI wrote
+itself rather than copied, so give it a read. Untick anything you don't want.
+
+![Ticking a new item](docs/images/step-25-tick-new-item.png)
+
+**21. Click "Apply Selected".** The new items are saved as drafts and the
+updates are added. Still nothing is public.
+
+![The Apply Selected button](docs/images/step-26-apply-selected.png)
+
+### Part 5 — Review and publish
+
+**22. Click "Review in Workspace".** The Workspace is where you check and
+finish an item before residents see it.
+
+![The Review in Workspace button](docs/images/step-27-review-workspace.png)
+
+**23. Decide whether this item should collect public comments.** Leave it on
+for anything you want feedback on; turn it off for notices that are purely
+informational.
+
+![The Collect public comments checkbox](docs/images/step-29-collect-comments.png)
+
+**24. Leave "Outcome" alone until a decision has actually been made.** An
+agenda only ever contains a *proposed* motion — the vote happens at the
+meeting. Setting an outcome early would tell residents something was decided
+when it wasn't.
+
+![The Outcome dropdown](docs/images/step-31-outcome.png)
+
+**25. When the item looks right, tick "Make this item public when saving".**
+Until you do, it stays a draft that only staff can see.
+
+![The make public checkbox](docs/images/step-32-make-public.png)
+
+**26. Click "Save everything".** That's it — the item is now live on the
+public docket page.
+
+![The Save everything button](docs/images/step-33-save-everything.png)
+
+**27. Use the dropdown at the top to switch to the next item** and repeat.
+
+![The item switcher at the top of the Workspace](docs/images/step-34-item-switcher.png)
+
+To publish several at once instead, go to **All Docket Items**, tick the ones
+you want, and choose **Bulk actions → Edit → Status: Published**.
 
 ---
 

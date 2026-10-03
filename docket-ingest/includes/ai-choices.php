@@ -91,9 +91,13 @@ function di_models_for_env( $env, $options ) {
 }
 
 /**
- * Every environment configured in AI Engine, keyed ones first. Reads
- * get_all_options() rather than the raw mwai_options row: the per-type
- * model lists (ai_engines) are assembled at runtime and are not stored.
+ * Every environment configured in AI Engine, keyed ones first, so an admin
+ * can pick a provider by name. AI Engine does print the raw ID ("The envId
+ * is: ...") inside a collapsed panel on its settings screen, but copying a
+ * random string between two screens is a poor thing to ask of anyone.
+ *
+ * Reads get_all_options() rather than the raw mwai_options row: the
+ * per-type model lists (ai_engines) are assembled at runtime, not stored.
  */
 function di_environments() {
 	global $mwai_core;
