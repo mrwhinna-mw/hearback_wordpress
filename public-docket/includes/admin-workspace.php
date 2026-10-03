@@ -77,11 +77,21 @@ function hb_render_workspace_page() {
 		return;
 	}
 
-	echo '<form method="get" class="hb-decision-switcher">';
+	// Each option carries its own absolute URL and switching navigates
+	// straight to it. Submitting a form with no action instead makes the
+	// browser rebuild the address from the current one, which drops
+	// post_type in some environments and lands on a bare
+	// "page=hb-workspace" that WordPress cannot resolve - the submenu is
+	// registered under edit.php?post_type=hb_decision, so it reports
+	// "Cannot load hb-workspace." The submit button keeps it working
+	// without JavaScript.
+	$workspace_url = admin_url( 'edit.php?post_type=hb_decision&page=hb-workspace' );
+
+	echo '<form method="get" class="hb-decision-switcher" action="' . esc_url( admin_url( 'edit.php' ) ) . '">';
 	echo '<input type="hidden" name="post_type" value="hb_decision" />';
 	echo '<input type="hidden" name="page" value="hb-workspace" />';
 	echo '<label for="hb-decision-select"><strong>' . esc_html__( 'Item:', 'hearback-cabinet' ) . '</strong></label> ';
-	echo '<select id="hb-decision-select" name="decision_id" onchange="this.form.submit()">';
+	echo '<select id="hb-decision-select" name="decision_id" onchange="var u=this.options[this.selectedIndex].getAttribute(\'data-url\'); if(u){window.location.href=u;}else{this.form.submit();}">';
 	foreach ( $decisions as $d ) {
 		$title = $d->post_title ? $d->post_title : __( '(untitled)', 'hearback-cabinet' );
 		if ( 'publish' !== $d->post_status ) {
@@ -89,13 +99,15 @@ function hb_render_workspace_page() {
 			$title = sprintf( __( '%1$s (%2$s)', 'hearback-cabinet' ), $title, get_post_status_object( $d->post_status )->label );
 		}
 		printf(
-			'<option value="%d" %s>%s</option>',
+			'<option value="%d" data-url="%s" %s>%s</option>',
 			(int) $d->ID,
+			esc_url( add_query_arg( 'decision_id', (int) $d->ID, $workspace_url ) ),
 			selected( $current_id, $d->ID, false ),
 			esc_html( $title )
 		);
 	}
 	echo '</select>';
+	echo ' <button type="submit" class="button">' . esc_html__( 'Go', 'hearback-cabinet' ) . '</button>';
 	echo ' <a href="' . esc_url( admin_url( 'post-new.php?post_type=hb_decision' ) ) . '" class="button">' . esc_html__( '+ New item', 'hearback-cabinet' ) . '</a>';
 	echo '</form>';
 
