@@ -4,7 +4,7 @@ Tags: civic engagement, public comment, local government, feedback
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,11 @@ also consider adding Akismet (bundled with WordPress) if spam becomes
 an issue.
 
 == Changelog ==
+
+= 0.3.0 =
+* The Workspace can now publish an item directly, instead of sending you
+  to the post editor just to change its status. Appears only for items
+  that are not public yet, and only for users who can publish.
 
 = 0.2.0 =
 * Renamed from HearBack Cabinet / "Decision" to Public Docket / "Docket

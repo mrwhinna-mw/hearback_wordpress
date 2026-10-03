@@ -81,6 +81,16 @@ function di_render_upload_form( $error = '' ) {
 				</td>
 			</tr>
 			<?php di_render_ai_rows(); ?>
+			<tr>
+				<th scope="row"><label for="di_extra_instructions"><?php esc_html_e( 'Extra instructions', 'docket-ingest' ); ?></label></th>
+				<td>
+					<textarea name="di_extra_instructions" id="di_extra_instructions" rows="3" class="large-text"
+						placeholder="<?php esc_attr_e( 'e.g. Our case numbers look like ZC-2026-14. Treat liquor licence items as commentable even when listed under consent.', 'docket-ingest' ); ?>"><?php echo esc_textarea( get_option( 'di_extra_instructions', '' ) ); ?></textarea>
+					<p class="description">
+						<?php esc_html_e( 'Optional, remembered between uploads. Added to the instructions the AI is given when reading documents — useful for how your organization words things. It cannot override the built-in rules that stop the AI inventing details or requiring a verbatim quote.', 'docket-ingest' ); ?>
+					</p>
+				</td>
+			</tr>
 		</table>
 		<?php submit_button( __( 'Analyze Document', 'docket-ingest' ) ); ?>
 	</form>
@@ -218,6 +228,10 @@ function di_handle_upload() {
 	// Remembered so the next upload starts with the same choices.
 	update_option( 'di_env_id', sanitize_text_field( wp_unslash( $_POST['di_env_id'] ?? '' ) ) );
 	update_option( 'di_model', $model );
+	update_option(
+		'di_extra_instructions',
+		mb_substr( sanitize_textarea_field( wp_unslash( $_POST['di_extra_instructions'] ?? '' ) ), 0, 2000 )
+	);
 
 	if ( empty( $_FILES['di_file']['tmp_name'] ) || ! is_uploaded_file( $_FILES['di_file']['tmp_name'] ) ) {
 		di_render_upload_form( __( 'No file was received.', 'docket-ingest' ) );

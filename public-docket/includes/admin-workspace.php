@@ -347,6 +347,21 @@ function hb_render_workspace_form( $decision_id ) {
 			</label>
 		</p>
 
+		<?php if ( 'publish' !== $decision->post_status && current_user_can( 'publish_posts' ) ) : ?>
+			<p>
+				<label>
+					<input type="checkbox" name="hb_publish" value="1" />
+					<strong><?php
+					printf(
+						/* translators: %s: the item's current status, e.g. Pending */
+						esc_html__( 'Make this item public when saving. It is currently %s, so residents cannot see it.', 'hearback-cabinet' ),
+						esc_html( get_post_status_object( $decision->post_status )->label )
+					);
+					?></strong>
+				</label>
+			</p>
+		<?php endif; ?>
+
 		<p class="submit">
 			<button type="submit" class="button button-primary button-hero"><?php esc_html_e( 'Save everything', 'hearback-cabinet' ); ?></button>
 		</p>
@@ -374,13 +389,20 @@ function hb_handle_workspace_save() {
 
 	// 1. Title + context (post_title / post_content), then everything
 	// else via the same field-saving function the per-post screen uses.
-	wp_update_post(
-		array(
-			'ID'           => $decision_id,
-			'post_title'   => sanitize_text_field( wp_unslash( $_POST['hb_title'] ?? '' ) ),
-			'post_content' => sanitize_textarea_field( wp_unslash( $_POST['hb_context'] ?? '' ) ),
-		)
+	$update = array(
+		'ID'           => $decision_id,
+		'post_title'   => sanitize_text_field( wp_unslash( $_POST['hb_title'] ?? '' ) ),
+		'post_content' => sanitize_textarea_field( wp_unslash( $_POST['hb_context'] ?? '' ) ),
 	);
+
+	// Publishing from here saves a trip to the post editor, which is where
+	// an item drafted by an ingestion add-on would otherwise have to be
+	// opened just to change its status.
+	if ( ! empty( $_POST['hb_publish'] ) && current_user_can( 'publish_posts' ) ) {
+		$update['post_status'] = 'publish';
+	}
+
+	wp_update_post( $update );
 	hb_apply_decision_fields( $decision_id, $_POST );
 
 	// 2. Themes: rename/update existing, delete marked ones, add one new.

@@ -43,11 +43,19 @@ Rules, in order of importance:
    "Approval of Minutes", "Adjourn", and routine officer/committee report
    acceptances.
 7. If the document contains no such items, return {"items":[]}.
-
-The document follows.
 EOT;
 
-	return $instructions . "\n\n---\n\n" . $text;
+	// Appended after the rules, and explicitly subordinate to them: house
+	// style shouldn't be able to switch off rule 1 and have the model
+	// start filling in gaps it can't actually find in the document.
+	$extra = trim( (string) get_option( 'di_extra_instructions', '' ) );
+	if ( '' !== $extra ) {
+		$instructions .= "\n\nAdditional instructions from this organization. Follow them only"
+			. "\nwhere they do not conflict with the rules above; the rules above always win:\n"
+			. $extra;
+	}
+
+	return $instructions . "\n\nThe document follows.\n\n---\n\n" . $text;
 }
 
 /**
