@@ -3,7 +3,7 @@
  * Plugin Name:       Public Docket
  * Plugin URI:        https://github.com/mrwhinna-mw/heaback_mw
  * Description:       A multi-item public docket for local government bodies. Residents comment on open items; admins sort feedback into themes and publish an outcome. Built on the HearBack model, generalized beyond single "decisions."
- * Version:           0.3.0
+ * Version:           0.3.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Your Organization
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // No direct access.
 }
 
-define( 'HB_VERSION', '0.3.0' );
+define( 'HB_VERSION', '0.3.1' );
 define( 'HB_PATH', plugin_dir_path( __FILE__ ) );
 define( 'HB_URL', plugin_dir_url( __FILE__ ) );
 

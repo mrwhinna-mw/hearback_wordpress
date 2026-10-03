@@ -4,7 +4,7 @@ Tags: civic engagement, public comment, local government, feedback
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,11 @@ also consider adding Akismet (bundled with WordPress) if spam becomes
 an issue.
 
 == Changelog ==
+
+= 0.3.1 =
+* Fixed: switching items in the Workspace could fail with "Cannot load
+  hb-workspace." The item list now links to each item's full address
+  instead of letting the browser rebuild it.
 
 = 0.3.0 =
 * The Workspace can now publish an item directly, instead of sending you
