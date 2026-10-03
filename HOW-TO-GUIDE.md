@@ -162,9 +162,17 @@ WP Engine, Bluehost, etc.):
      especially** — it's the only part the AI writes itself rather than
      copying from your document. Untick anything you don't want, then click
      **Create Selected as Pending**.
-   - Open **Public Docket → Workspace** to edit and publish each draft. Each
-     one has an **"Ingested From Document"** panel showing the exact quote it
-     came from.
+   - Optionally use **Extra instructions** to tell the AI about your own
+     conventions (for example, "our case numbers look like ZC-2026-14"). It's
+     remembered between uploads, and can't override the rules that stop the
+     AI inventing details.
+   - Open **Public Docket → Workspace** to check each draft. When it looks
+     right, tick **"Make this item public when saving"** and click Save
+     everything — that publishes it without going near the post editor. Each
+     draft has an **"Ingested From Document"** panel showing the exact quote
+     it came from.
+   - To publish several at once, go to **All Docket Items**, tick them, and
+     choose **Bulk actions → Edit → Status: Published**.
 
 4. **Add the chatbot (optional)**
    - In AI Engine, go to the **Chatbots** tab and confirm the "Default"

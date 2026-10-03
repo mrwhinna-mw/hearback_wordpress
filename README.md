@@ -165,7 +165,9 @@ vote.
   tone (positive/neutral/negative) so the public page still gets a sensible
   accent color.
 - **One-page admin Workspace** — edit an item's details, manage its themes,
-  sort submissions into them, and publish, all with a single Save button.
+  sort submissions into them, publish the item itself, and publish its
+  outcome, all with a single Save button. Items drafted by Docket Ingest can
+  therefore be reviewed and made public without opening the post editor.
 - **Built for automation**: every decision field is exposed over the REST
   API, each item carries a `source` (manual vs. scraped) and an
   `external_reference` (a case/license number) so an ingestion tool can
@@ -200,6 +202,10 @@ its own data under a separate `_di_` prefix.
   Public Docket's existing Workspace. An **"Ingested From Document"** panel
   on each item's edit screen shows the source quote, file, and a link to the
   original.
+- An optional **Extra instructions** box passes your organization's own
+  specifics to the AI — local case-number formats, say. It's appended to the
+  built-in rules and explicitly subordinate to them, so it can't switch off
+  the no-invention rule or the verbatim-quote requirement.
 - When a document covers a case already on the docket, the review screen
   offers an **update** instead: what this document adds, its quote, and
   optionally its "Next step". Applying it appends a dated line to the item
