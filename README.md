@@ -14,6 +14,8 @@ This repo is a **working demo**, not yet a production deployment. It exists to
 show ANC6A (and other neighborhood commissions) what this could look like
 before committing engineering time to build it for real.
 
+**Project page:** [mrwhinna-mw.github.io/hearback_wordpress](https://mrwhinna-mw.github.io/hearback_wordpress/) — a one-page overview of what Public Docket does, for sharing with people who will not read a repo.
+
 **Try it live:** [playground.wordpress.net/?blueprint-url=...](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/blueprint.json) — runs entirely in your browser via [WordPress Playground](https://wordpress.github.io/wordpress-playground/), no hosting or install required.
 
 **Install on your own site:** download
