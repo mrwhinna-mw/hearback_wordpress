@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="HearBack">
+  <rect x="6" y="9" width="10" height="46" rx="5" fill="#031D42"/>
+  <rect x="48" y="9" width="10" height="46" rx="5" fill="#031D42"/>
+  <path d="M13 23h30v-6l11 9-11 9v-6H13z" fill="#DF8828"/>
+  <path d="M51 38H21v-6l-11 9 11 9v-6h30z" fill="#148BDC"/>
+</svg>

@@ -4,41 +4,50 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Public Docket — close the loop on public comment</title>
-<meta name="description" content="A WordPress plugin that posts the items before a board, gathers what residents think, and publishes what the board actually did.">
+<meta name="description" content="Public Docket is a WordPress plugin from the HearBack team: post the items before a board, gather what residents think, and publish what the board actually did.">
 <meta property="og:title" content="Public Docket">
-<meta property="og:description" content="Close the loop on public comment. A WordPress plugin for civic feedback.">
+<meta property="og:description" content="Close the loop on public comment. A WordPress plugin from the HearBack team.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='11' width='22' height='12' rx='3' fill='%2314213D'/%3E%3Crect x='6' y='17' width='52' height='40' rx='5' fill='%2314213D'/%3E%3Ccircle cx='32' cy='37' r='2.6' fill='%23EB6A21'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;family=Lora:wght@600&amp;display=swap">
+<link rel="icon" href="images/hearback-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700&amp;family=Lato:wght@400;700&amp;family=Lora:wght@600&amp;display=swap">
 <style>
 body{margin:0}
-a{color:#0E6F6A}a:hover{color:#0A524E}
+a{color:#015CAF}a:hover{color:#013F7A}
 figure{margin:0}
-.shot{width:100%;height:auto;display:block;border:1px solid #DCE2E9;border-radius:12px;box-shadow:0 12px 32px rgba(22,34,58,0.10)}
+.shot{width:100%;height:auto;display:block;border:1px solid #DCE2E9;border-radius:12px;box-shadow:0 12px 32px rgba(3,29,66,0.10)}
 .caption{margin:12px 2px 0;font-size:0.9rem;color:#5A6678}
+/* HearBack is the team's identity; the plugin names stay in the page copy */
+.wordmark{font-family:Archivo,'Helvetica Neue',sans-serif;font-weight:700;letter-spacing:-0.01em;line-height:1}
+.wordmark .hear{color:#031D42}
+.wordmark .back{color:#015CAF}
+.wordmark.reversed .hear{color:#FFFFFF}
+.wordmark.reversed .back{color:#4BA3EA}
+.tagline{font-size:0.8rem;color:#5A6678;letter-spacing:0.01em}
 </style>
 </head>
 <body>
-<div style="font-family: Lato, 'Helvetica Neue', sans-serif; color: #16223A; background: #FFFFFF; font-size: 1.0625rem; line-height: 1.6">
+<div style="font-family: Lato, 'Helvetica Neue', sans-serif; color: #031D42; background: #FFFFFF; font-size: 1.0625rem; line-height: 1.6">
 
 <header style="border-bottom: 1px solid #E3E7EC">
 <nav aria-label="Main" style="max-width: 1200px; margin: 0 auto; padding: 18px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
-<a href="#top" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #16223A">
-<svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true">
-<rect x="6" y="11" width="22" height="12" rx="3" fill="#14213D"></rect>
-<rect x="6" y="17" width="52" height="40" rx="5" fill="#14213D"></rect>
-<path d="M41 37 A9 9 0 1 1 38.36 30.64" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"></path>
-<polyline points="39.8,26.4 39.8,32.1 34.1,32.1" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
-<circle cx="32" cy="37" r="2.6" fill="#EB6A21"></circle>
+<a href="#top" style="display: flex; align-items: center; gap: 11px; text-decoration: none">
+<svg width="38" height="38" viewBox="0 0 64 64" aria-hidden="true">
+<rect x="6" y="9" width="10" height="46" rx="5" fill="#031D42"></rect>
+<rect x="48" y="9" width="10" height="46" rx="5" fill="#031D42"></rect>
+<path d="M13 23h30v-6l11 9-11 9v-6H13z" fill="#DF8828"></path>
+<path d="M51 38H21v-6l-11 9 11 9v-6h30z" fill="#148BDC"></path>
 </svg>
-<span style="font-family: Lora, Georgia, serif; font-weight: 600; font-size: 1.375rem">Public Docket</span>
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span class="wordmark" style="font-size: 1.5rem"><span class="hear">Hear</span><span class="back">Back</span></span>
+<span class="tagline">Public input. Visible response.</span>
+</span>
 </a>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; font-weight: 700; font-size: 0.95rem">
-<a href="#ingest" style="text-decoration: none; color: #16223A; padding: 10px 0">Where AI fits</a>
-<a href="#how" style="text-decoration: none; color: #16223A; padding: 10px 0">How it works</a>
-<a href="#features" style="text-decoration: none; color: #16223A; padding: 10px 0">Features</a>
-<a href="#orgs" style="text-decoration: none; color: #16223A; padding: 10px 0">For organizations</a>
-<a href="https://github.com/mrwhinna-mw/hearback_wordpress" style="text-decoration: none; color: #FFFFFF; background: #16223A; padding: 10px 18px; border-radius: 8px">GitHub</a>
+<a href="#ingest" style="text-decoration: none; color: #031D42; padding: 10px 0">Where AI fits</a>
+<a href="#how" style="text-decoration: none; color: #031D42; padding: 10px 0">How it works</a>
+<a href="#features" style="text-decoration: none; color: #031D42; padding: 10px 0">Features</a>
+<a href="#orgs" style="text-decoration: none; color: #031D42; padding: 10px 0">For organizations</a>
+<a href="https://github.com/mrwhinna-mw/hearback_wordpress" style="text-decoration: none; color: #FFFFFF; background: #031D42; padding: 10px 18px; border-radius: 8px">GitHub</a>
 </div>
 </nav>
 </header>
@@ -46,19 +55,19 @@ figure{margin:0}
 <section id="top" style="background: #F3F5F7">
 <div style="max-width: 1040px; margin: 0 auto; padding: 80px 24px 88px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 44px">
 <div style="max-width: 44rem; display: flex; flex-direction: column; align-items: center; gap: 22px">
-<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0E6F6A">A WordPress plugin for civic feedback</div>
+<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #015CAF">Public Docket &middot; a WordPress plugin from HearBack</div>
 <h1 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.08; letter-spacing: -0.5px">Close the loop on public comment.</h1>
 <p style="margin: 0; font-size: 1.2rem; color: #3D4A5C; max-width: 34rem">Public Docket gives your organization one place to post the items before a board, gather what residents think, and publish what the board actually did — one matter on one page, rather than buried somewhere in the meeting package.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; justify-content: center">
-<a href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/blueprint.json" style="text-decoration: none; background: #0E6F6A; color: #FFFFFF; font-weight: 700; padding: 14px 24px; border-radius: 8px">Try the live demo</a>
-<a href="https://github.com/mrwhinna-mw/hearback_wordpress" style="text-decoration: none; background: #FFFFFF; color: #16223A; font-weight: 700; padding: 13px 23px; border-radius: 8px; border: 1px solid #C5CDD8">View on GitHub</a>
+<a href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/blueprint.json" style="text-decoration: none; background: #015CAF; color: #FFFFFF; font-weight: 700; padding: 14px 24px; border-radius: 8px">Try the live demo</a>
+<a href="https://github.com/mrwhinna-mw/hearback_wordpress" style="text-decoration: none; background: #FFFFFF; color: #031D42; font-weight: 700; padding: 13px 23px; border-radius: 8px; border: 1px solid #C5CDD8">View on GitHub</a>
 </div>
 <p style="margin: 0; font-size: 0.9rem; color: #5A6678">The demo builds a complete WordPress site inside your browser tab. Nothing to install, nothing to sign up for.</p>
 </div>
 
 <div style="width: 100%; text-align: left">
 <figure>
-<video class="shot" controls playsinline preload="metadata" width="1920" height="1080" poster="images/walkthrough-poster.jpg" style="background: #16223A">
+<video class="shot" controls playsinline preload="metadata" width="1920" height="1080" poster="images/walkthrough-poster.jpg" style="background: #031D42">
 <source src="media/public-docket-walkthrough.mp4" type="video/mp4">
 <p style="padding: 16px">Your browser cannot play this video. <a href="media/public-docket-walkthrough.mp4">Download the walkthrough (MP4, 8&nbsp;MB)</a>.</p>
 </video>
@@ -68,7 +77,7 @@ figure{margin:0}
 </div>
 </section>
 
-<section style="background: #16223A; color: #FFFFFF">
+<section style="background: #031D42; color: #FFFFFF">
 <div style="max-width: 1040px; margin: 0 auto; padding: 88px 24px; display: flex; flex-direction: column; gap: 32px; align-items: center">
 <div style="display: flex; flex-direction: column; gap: 18px; text-align: center; align-items: center">
 <h2 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: clamp(1.9rem, 3.5vw, 2.75rem); line-height: 1.15">Nothing is hidden. It is just buried.</h2>
@@ -99,14 +108,14 @@ figure{margin:0}
 <div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-end; justify-content: space-between">
 <div style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 12px; max-width: 42rem">
-<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0E6F6A">Where the AI comes in</div>
+<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #015CAF">Where the AI comes in</div>
 <h2 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: clamp(1.9rem, 3.5vw, 2.75rem); line-height: 1.15">The sifting is the job. So that is the part we automated.</h2>
 <p style="margin: 0; color: #3D4A5C">Someone has to read the 108-page package and work out which items residents will care about. Upload it instead, and the AI does that first pass: it finds each matter, pulls the case number and address, and drafts a plain-language question. You read down the list and tick what to keep.</p>
 </div>
 <ul style="flex: 0 1 320px; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; color: #3D4A5C">
-<li><strong style="color: #16223A">Quotes its source.</strong> Every item shows the sentence it came from.</li>
-<li><strong style="color: #16223A">Tracks cases over time.</strong> A later agenda updates the item instead of duplicating it.</li>
-<li><strong style="color: #16223A">Flags contradictions.</strong> When two documents disagree, it says so and leaves the choice to you.</li>
+<li><strong style="color: #031D42">Quotes its source.</strong> Every item shows the sentence it came from.</li>
+<li><strong style="color: #031D42">Tracks cases over time.</strong> A later agenda updates the item instead of duplicating it.</li>
+<li><strong style="color: #031D42">Flags contradictions.</strong> When two documents disagree, it says so and leaves the choice to you.</li>
 </ul>
 </div>
 <figure>
@@ -147,22 +156,22 @@ figure{margin:0}
 <section id="how" style="background: #F3F5F7">
 <div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 48px">
 <div style="display: flex; flex-direction: column; gap: 12px; max-width: 40rem">
-<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0E6F6A">How it works</div>
+<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #015CAF">How it works</div>
 <h2 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: clamp(1.9rem, 3.5vw, 2.75rem); line-height: 1.15">Three steps, every item, out in the open.</h2>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px">
 <div style="background: #FFFFFF; display: flex; flex-direction: column; gap: 12px; padding: 28px; border: 1px solid #E3E7EC; border-radius: 14px">
-<div style="width: 44px; height: 44px; border-radius: 50%; background: #0E6F6A; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center">1</div>
+<div style="width: 44px; height: 44px; border-radius: 50%; background: #015CAF; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center">1</div>
 <h3 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: 1.4rem">Post the docket</h3>
 <p style="margin: 0; color: #3D4A5C">Add every item coming before your board, from votes to updates to open questions, each in its own drawer residents can browse.</p>
 </div>
 <div style="background: #FFFFFF; display: flex; flex-direction: column; gap: 12px; padding: 28px; border: 1px solid #E3E7EC; border-radius: 14px">
-<div style="width: 44px; height: 44px; border-radius: 50%; background: #0E6F6A; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center">2</div>
+<div style="width: 44px; height: 44px; border-radius: 50%; background: #015CAF; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center">2</div>
 <h3 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: 1.4rem">Gather comment</h3>
 <p style="margin: 0; color: #3D4A5C">Residents weigh in right on the item. Staff group submissions into themes so the board sees what people are actually saying.</p>
 </div>
 <div style="background: #FFFFFF; display: flex; flex-direction: column; gap: 12px; padding: 28px; border: 1px solid #E3E7EC; border-radius: 14px">
-<div style="width: 44px; height: 44px; border-radius: 50%; background: #0E6F6A; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center">3</div>
+<div style="width: 44px; height: 44px; border-radius: 50%; background: #015CAF; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center">3</div>
 <h3 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: 1.4rem">Publish the response</h3>
 <p style="margin: 0; color: #3D4A5C">Record the outcome and the reasoning. Residents see what was decided and how their input figured in.</p>
 </div>
@@ -173,37 +182,37 @@ figure{margin:0}
 <section id="features">
 <div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 48px">
 <div style="display: flex; flex-direction: column; gap: 12px; max-width: 40rem">
-<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0E6F6A">Features</div>
+<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #015CAF">Features</div>
 <h2 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: clamp(1.9rem, 3.5vw, 2.75rem); line-height: 1.15">Made for the way boards really work.</h2>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">
 <div style="background: #F3F5F7; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1"></rect><rect x="3" y="11" width="18" height="5" rx="1"></rect><path d="M3 20h18"></path></svg>
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1"></rect><rect x="3" y="11" width="18" height="5" rx="1"></rect><path d="M3 20h18"></path></svg>
 <h3 style="margin: 0; font-size: 1.15rem">A whole docket at once</h3>
 <p style="margin: 0; color: #3D4A5C">Run many items side by side instead of one feedback form per issue.</p>
 </div>
 <div style="background: #F3F5F7; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10"></path><path d="M4 12h16"></path><path d="M4 18h7"></path><circle cx="17" cy="6" r="2"></circle><circle cx="14" cy="18" r="2"></circle></svg>
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10"></path><path d="M4 12h16"></path><path d="M4 18h7"></path><circle cx="17" cy="6" r="2"></circle><circle cx="14" cy="18" r="2"></circle></svg>
 <h3 style="margin: 0; font-size: 1.15rem">Outcomes you define</h3>
 <p style="margin: 0; color: #3D4A5C">Set your own response options to match your process. Not every item ends in a vote.</p>
 </div>
 <div style="background: #F3F5F7; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 9v12"></path></svg>
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 9v12"></path></svg>
 <h3 style="margin: 0; font-size: 1.15rem">One Workspace for staff</h3>
 <p style="margin: 0; color: #3D4A5C">Items, themes, and submissions on a single admin screen, not scattered across menus.</p>
 </div>
 <div style="background: #F3F5F7; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path><path d="M8 11h8"></path><path d="M8 14h5"></path></svg>
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path><path d="M8 11h8"></path><path d="M8 14h5"></path></svg>
 <h3 style="margin: 0; font-size: 1.15rem">Comments grouped by theme</h3>
 <p style="margin: 0; color: #3D4A5C">Turn a pile of submissions into clear points the board can respond to.</p>
 </div>
 <div style="background: #F3F5F7; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18"></path><path d="M12 3a14 14 0 0 0 0 18"></path></svg>
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18"></path><path d="M12 3a14 14 0 0 0 0 18"></path></svg>
 <h3 style="margin: 0; font-size: 1.15rem">Lives on your own site</h3>
 <p style="margin: 0; color: #3D4A5C">Install it on the WordPress site you already run. Your data stays with you.</p>
 </div>
 <div style="background: #F3F5F7; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v4"></path><path d="M15 3v4"></path><rect x="6" y="7" width="12" height="7" rx="2"></rect><path d="M12 14v7"></path></svg>
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v4"></path><path d="M15 3v4"></path><rect x="6" y="7" width="12" height="7" rx="2"></rect><path d="M12 14v7"></path></svg>
 <h3 style="margin: 0; font-size: 1.15rem">Drafts items from your documents</h3>
 <p style="margin: 0; color: #3D4A5C">A companion plugin reads an agenda and drafts the docket, quoting its source. <a href="#ingest">See it above.</a></p>
 </div>
@@ -214,47 +223,61 @@ figure{margin:0}
 <section id="orgs" style="background: #F3F5F7">
 <div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-wrap: wrap; gap: 56px; align-items: flex-start">
 <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
-<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0E6F6A">For civic tech and nonprofits</div>
+<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #015CAF">For civic tech and nonprofits</div>
 <h2 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: clamp(1.9rem, 3.5vw, 2.75rem); line-height: 1.15">Hand it to a board. Watch the loop close.</h2>
 <p style="margin: 0; color: #3D4A5C">If you support neighborhood commissions, advisory boards, or community coalitions, Public Docket is a tool you can deploy for them on infrastructure they already understand, then customize, brand, and build on.</p>
 </div>
 <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; gap: 14px; align-items: flex-start">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>
 <div><strong>Proven on real agendas.</strong> The demo site runs on actual agenda items from DC Advisory Neighborhood Commission 6A.</div>
 </div>
 <div style="display: flex; gap: 14px; align-items: flex-start">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>
 <div><strong>Try before you install.</strong> Spin up the demo in your browser with WordPress Playground, no server needed.</div>
 </div>
 <div style="display: flex; gap: 14px; align-items: flex-start">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>
 <div><strong>Source on GitHub.</strong> Read the code, file issues, and contribute features your partners need.</div>
 </div>
 <div style="display: flex; gap: 14px; align-items: flex-start">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E6F6A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#015CAF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>
 <div><strong>Fits any process.</strong> Configurable outcomes mean it works for votes, recommendations, and informational items alike.</div>
 </div>
 </div>
 </div>
 </section>
 
-<section style="background: #0E6F6A; color: #FFFFFF">
+<section style="background: #015CAF; color: #FFFFFF">
 <div style="max-width: 900px; margin: 0 auto; padding: 88px 24px; display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center">
 <h2 style="margin: 0; font-family: Lora, Georgia, serif; font-weight: 600; font-size: clamp(1.9rem, 3.5vw, 2.75rem); line-height: 1.15">Bring Public Docket to your community.</h2>
-<p style="margin: 0; font-size: 1.15rem; color: #DDEFEC; max-width: 34rem">Explore the demo, install the plugin, or join the project.</p>
+<p style="margin: 0; font-size: 1.15rem; color: #CFE2F7; max-width: 34rem">Explore the demo, install the plugin, or join the project.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center">
-<a href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/blueprint.json" style="text-decoration: none; background: #FFFFFF; color: #0A524E; font-weight: 700; padding: 14px 24px; border-radius: 8px">Try the live demo</a>
+<a href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/mrwhinna-mw/hearback_wordpress/main/blueprint.json" style="text-decoration: none; background: #FFFFFF; color: #013F7A; font-weight: 700; padding: 14px 24px; border-radius: 8px">Try the live demo</a>
 <a href="https://github.com/mrwhinna-mw/hearback_wordpress" style="text-decoration: none; color: #FFFFFF; font-weight: 700; padding: 13px 23px; border-radius: 8px; border: 1px solid #FFFFFF">Contribute on GitHub</a>
 </div>
-<p style="margin: 0; font-size: 0.95rem; color: #DDEFEC">New to it? Start with the <a href="https://github.com/mrwhinna-mw/hearback_wordpress/blob/main/HOW-TO-GUIDE.md" style="color: #FFFFFF">step-by-step guide</a>.</p>
+<p style="margin: 0; font-size: 0.95rem; color: #CFE2F7">New to it? Start with the <a href="https://github.com/mrwhinna-mw/hearback_wordpress/blob/main/HOW-TO-GUIDE.md" style="color: #FFFFFF">step-by-step guide</a>.</p>
 </div>
 </section>
 
-<footer style="border-top: 1px solid #E3E7EC">
-<div style="max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 0.9rem; color: #5A6678">
-<span>Public Docket, a WordPress plugin for civic feedback.</span>
-<span><a href="https://github.com/mrwhinna-mw/hearback_wordpress">Source on GitHub</a> · <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPL v2 or later</a></span>
+<footer style="background: #031D42; color: #FFFFFF">
+<div style="max-width: 1200px; margin: 0 auto; padding: 48px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 32px">
+<div style="display: flex; align-items: center; gap: 13px">
+<svg width="46" height="46" viewBox="0 0 64 64" aria-hidden="true">
+<rect x="6" y="9" width="10" height="46" rx="5" fill="#FFFFFF"></rect>
+<rect x="48" y="9" width="10" height="46" rx="5" fill="#FFFFFF"></rect>
+<path d="M13 23h30v-6l11 9-11 9v-6H13z" fill="#DF8828"></path>
+<path d="M51 38H21v-6l-11 9 11 9v-6h30z" fill="#148BDC"></path>
+</svg>
+<span style="display: flex; flex-direction: column; gap: 3px">
+<span class="wordmark reversed" style="font-size: 1.75rem"><span class="hear">Hear</span><span class="back">Back</span></span>
+<span class="tagline" style="color: #C9D3E0">Public input. Visible response.</span>
+</span>
+</div>
+<div style="max-width: 30rem; font-size: 0.9rem; color: #C9D3E0; display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0">HearBack is the team behind two WordPress plugins: <strong style="color: #FFFFFF">Public Docket</strong>, the docket residents read and comment on, and <strong style="color: #FFFFFF">Docket Ingest</strong>, which drafts items from the documents a board already publishes.</p>
+<p style="margin: 0"><a href="https://github.com/mrwhinna-mw/hearback_wordpress" style="color: #FFFFFF">Source on GitHub</a> · <a href="https://www.gnu.org/licenses/gpl-2.0.html" style="color: #FFFFFF">GPL v2 or later</a></p>
+</div>
 </div>
 </footer>
 
