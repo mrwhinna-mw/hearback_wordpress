@@ -5,10 +5,10 @@ A WordPress plugin and live demo built for Advisory Neighborhood Commission 6A
 bodies handle public input: residents submit comments on an agenda item, and
 the only thing that ever comes back is minutes almost nobody reads. Public
 Docket gives every open item a public comment period, a themed synthesis of
-what residents said, and a dated outcome with a concrete next step. A
-companion plugin, Docket Ingest, drafts those items from the agendas and
-minutes a commission already produces, and an AI chatbot lets residents ask
-questions about past meetings.
+what residents said, and a dated outcome with a concrete next step. It can
+also draft those items from the agendas and minutes a commission already
+produces, and an AI chatbot lets residents ask questions about past
+meetings.
 
 This repo is a **working demo**, not yet a production deployment. It exists to
 show ANC6A (and other neighborhood commissions) what this could look like
@@ -20,10 +20,8 @@ before committing engineering time to build it for real.
 
 **Install on your own site:** download
 [public-docket.zip](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest/download/public-docket.zip)
-and
-[docket-ingest.zip](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest/download/docket-ingest.zip)
 from the [latest release](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest),
-then add them under *Plugins → Add New → Upload Plugin*. Step-by-step
+then add it under *Plugins → Add New → Upload Plugin*. Step-by-step
 instructions are in [HOW-TO-GUIDE.md](HOW-TO-GUIDE.md).
 
 ---
@@ -183,12 +181,13 @@ vote.
 Shortcodes: `[public_docket]` (archive listing), `[public_docket_item
 id="123"]` (embed one item elsewhere).
 
-### 2. Docket Ingest (the document plugin) — `docket-ingest/`
+### 2. Document ingest — `public-docket/includes/ingest/`
 
-A separate plugin that turns an uploaded agenda, minutes, or transcript into
-pending Public Docket items. It never modifies Public Docket's code; it only
-writes items through Public Docket's registered post type and fields, keeping
-its own data under a separate `_di_` prefix.
+The half of the plugin that turns an uploaded agenda, minutes, or transcript
+into pending docket items. It shipped as a separate plugin, Docket Ingest,
+until 0.4.0 and still behaves like a guest in its own house: it writes items
+only through the registered post type and fields, and keeps its own data
+under a separate `_di_` prefix. It loads in the admin only.
 
 - Upload **.txt, .md, or .docx** under **Public Docket → Ingest Document**.
   Word files are read natively, with no extra libraries. PDF and old-style
@@ -274,12 +273,12 @@ resident might have said.
 ## Repo structure
 
 ```
-public-docket/                     the Public Docket plugin
-docket-ingest/                     the Docket Ingest plugin
+public-docket/                     the plugin (docket + document ingest)
+  includes/ingest/                 the document-ingest half, admin only
 anc6a-demo-theme/                  the demo theme
+docs/                              the project landing page (GitHub Pages)
 test-fixtures/                     real ANC6A documents for testing ingestion
 blueprint.json                     Playground blueprint for the public demo
-blueprint-dev.json                 Playground blueprint for the docket-ingest dev branch
 public-docket-project-context.md   full build history / decisions log
 README.md                          this file
 HOW-TO-GUIDE.md                    install guide for organizations trying this
@@ -295,13 +294,15 @@ GITHUB-DESKTOP-BRANCHING-GUIDE.md  branching guide for GitHub Desktop
   "HearBack Cabinet" before being generalized and renamed to Public Docket.
   Renaming the identifiers themselves was judged not worth touching every
   file for a purely internal, no-user-visible benefit.
-- Docket Ingest keeps its own fields under `_di_` so Public Docket's schema
-  stays untouched.
-- New Docket Ingest work happens on the `docket-ingest` branch and is tested
-  with `blueprint-dev.json` before merging, so the public demo on `main`
-  stays working.
-- The download links point at the newest GitHub release, so publishing a new
-  release means re-zipping both plugin folders from current `main` — each zip
+- The ingest code keeps its own fields under `_di_` and its own `di_`
+  function prefix, so the docket's schema stays untouched and the two halves
+  remain easy to tell apart.
+- Ingest loads only when `is_admin()`, so nothing in it runs on a page view.
+- The plugin's text domain is `public-docket`, matching the directory slug.
+  Internal identifiers (`hb_decision`, `_hb_`, `di_`) are deliberately left
+  alone — renaming them buys nothing a user can see.
+- The download link points at the newest GitHub release, so publishing a new
+  release means re-zipping `public-docket/` from current `main` — the zip
   must contain the plugin folder itself at its root, or WordPress refuses it.
   Until a release is published those links 404, while the Playground demo
   always runs the latest `main`.

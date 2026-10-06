@@ -2,14 +2,14 @@
 
 This guide is for anyone on a neighborhood commission, civic association, or
 similar local government body who wants to try this out — no coding
-background assumed. It walks through the three pieces that work together:
+background assumed. It walks through the two plugins that work together:
 
-1. **Public Docket** — runs your public comment process
-2. **Docket Ingest** — upload the agendas and minutes you already produce,
-   and get draft docket items to review instead of typing them in by hand
-3. **AI Engine** — a free WordPress plugin that connects your site to an AI
-   provider. Docket Ingest needs it to read your documents, and it also
-   powers an optional chatbot residents can ask questions
+1. **Public Docket** — runs your public comment process, and can read the
+   agendas and minutes you already produce to draft docket items for you
+   instead of you typing them in by hand
+2. **AI Engine** — a separate free WordPress plugin that connects your site
+   to an AI provider. Public Docket needs it only for the document-reading
+   part, and it also powers an optional chatbot residents can ask questions
 
 ---
 
@@ -59,10 +59,10 @@ deciding on:
 - Not every posting needs public comment — purely informational items can
   skip straight to showing an outcome.
 
-### Docket Ingest
+### Reading your documents
 
 Instead of retyping every agenda item into the site, you upload the agenda,
-minutes, or transcript you already produce. Docket Ingest has AI read it and
+minutes, or transcript you already produce. Public Docket has AI read it and
 pull out each item residents could comment on — the topic, any case or
 license number, the address, and the committee's recommendation.
 
@@ -93,17 +93,17 @@ What it can't do yet:
 
 ### AI Engine and the chatbot
 
-AI Engine is the bridge between your site and an AI provider. Docket Ingest
+AI Engine is the bridge between your site and an AI provider. Public Docket
 uses it to read documents. It also offers a chatbot — in the demo it's placed
 on the Agendas page so residents can ask things like "what happened with the
-liquor license on H Street?" The chatbot is optional; you can use Docket
-Ingest without ever putting a chatbot on your site.
+liquor license on H Street?" The chatbot is optional; you can read documents
+without ever putting a chatbot on your site.
 
 ---
 
 ## Getting an AI key
 
-Both Docket Ingest and the chatbot need an API key from an AI provider:
+Both document reading and the chatbot need an API key from an AI provider:
 
 - **Google Gemini** — currently has a free tier, and is the easiest no-cost
   way to try this. Free keys can be slowed or paused when Google is busy.
@@ -313,11 +313,9 @@ WP Engine, Bluehost, etc.):
      column, tick **"Use Standard API."** Without it, Gemini returns empty
      replies. (The demo turns this on for you; a real site doesn't.)
 
-3. **Install and use Docket Ingest**
-   - Download
-     [docket-ingest.zip](https://github.com/mrwhinna-mw/hearback_wordpress/releases/latest/download/docket-ingest.zip)
-     and install it the same way. It needs Public Docket and AI Engine
-     active, and will tell you if either is missing.
+3. **Use the document reader**
+   - It is part of Public Docket, so there is nothing more to install. The
+     screen tells you if AI Engine is missing.
    - Go to **Public Docket → Ingest Document** and choose:
      - **AI provider** — the connection you set up in AI Engine, e.g.
        "Gemini (Google Gemini)". Ignore any marked "no API key added"; AI
@@ -391,7 +389,7 @@ a demo needed placeholder content (to show what a feature looks like without
 real data available yet), it says so explicitly rather than presenting
 invented text as if a resident said it.
 
-Docket Ingest is built the same way: every item comes with an exact quote
+The document reader is built the same way: every item comes with an exact quote
 from your document, the one AI-written field is labeled as such, and nothing
 reaches the public without a person approving it. If you adopt this, please
 keep that approval step real — read the quotes, don't just click through.
