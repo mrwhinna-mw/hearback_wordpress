@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_filter(
 	'manage_hb_decision_posts_columns',
 	function ( $columns ) {
-		$columns['hb_status']  = __( 'Status', 'hearback-cabinet' );
-		$columns['hb_count']   = __( 'Submissions', 'hearback-cabinet' );
+		$columns['hb_status']  = __( 'Status', 'public-docket' );
+		$columns['hb_count']   = __( 'Submissions', 'public-docket' );
 		return $columns;
 	}
 );
@@ -45,10 +45,10 @@ add_filter(
 	'manage_hb_submission_posts_columns',
 	function ( $columns ) {
 		unset( $columns['title'] );
-		$columns['hb_comment']  = __( 'Comment', 'hearback-cabinet' );
-		$columns['hb_decision'] = __( 'Decision', 'hearback-cabinet' );
-		$columns['hb_theme']    = __( 'Theme', 'hearback-cabinet' );
-		$columns['hb_featured'] = __( 'Featured', 'hearback-cabinet' );
+		$columns['hb_comment']  = __( 'Comment', 'public-docket' );
+		$columns['hb_decision'] = __( 'Decision', 'public-docket' );
+		$columns['hb_theme']    = __( 'Theme', 'public-docket' );
+		$columns['hb_featured'] = __( 'Featured', 'public-docket' );
 		return $columns;
 	}
 );
@@ -65,7 +65,7 @@ add_action(
 		}
 		if ( 'hb_theme' === $column ) {
 			$theme_id = (int) get_post_meta( $post_id, '_hb_theme_id', true );
-			echo $theme_id ? esc_html( get_the_title( $theme_id ) ) : esc_html__( 'Unassigned', 'hearback-cabinet' );
+			echo $theme_id ? esc_html( get_the_title( $theme_id ) ) : esc_html__( 'Unassigned', 'public-docket' );
 		}
 		if ( 'hb_featured' === $column ) {
 			echo get_post_meta( $post_id, '_hb_featured', true ) ? '★' : '';
@@ -80,7 +80,7 @@ add_action(
 add_filter(
 	'manage_hb_theme_posts_columns',
 	function ( $columns ) {
-		$columns['hb_decision'] = __( 'Decision', 'hearback-cabinet' );
+		$columns['hb_decision'] = __( 'Decision', 'public-docket' );
 		return $columns;
 	}
 );

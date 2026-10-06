@@ -61,10 +61,10 @@ function di_compose_content( $item ) {
 		$parts[] = $item['context'];
 	}
 	if ( ! empty( $item['address'] ) ) {
-		$parts[] = sprintf( __( 'Location: %s', 'docket-ingest' ), $item['address'] );
+		$parts[] = sprintf( __( 'Location: %s', 'public-docket' ), $item['address'] );
 	}
 	if ( ! empty( $item['recommendation'] ) ) {
-		$parts[] = sprintf( __( 'Committee recommendation: %s', 'docket-ingest' ), $item['recommendation'] );
+		$parts[] = sprintf( __( 'Committee recommendation: %s', 'public-docket' ), $item['recommendation'] );
 	}
 
 	return implode( "\n\n", $parts );

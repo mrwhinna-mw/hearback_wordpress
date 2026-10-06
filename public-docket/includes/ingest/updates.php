@@ -139,13 +139,13 @@ function di_apply_update( $update, $set_next_step = false, $source_file = '', $s
 	$post    = get_post( $post_id );
 
 	if ( ! $post || 'hb_decision' !== $post->post_type ) {
-		return new WP_Error( 'di_missing_item', __( 'That docket item no longer exists.', 'docket-ingest' ) );
+		return new WP_Error( 'di_missing_item', __( 'That docket item no longer exists.', 'public-docket' ) );
 	}
 
 	$label = di_update_date_label( $update );
 	$line  = sprintf(
 		/* translators: 1: date of the meeting, 2: what changed */
-		__( 'Update (%1$s): %2$s', 'docket-ingest' ),
+		__( 'Update (%1$s): %2$s', 'public-docket' ),
 		$label,
 		$update['summary']
 	);

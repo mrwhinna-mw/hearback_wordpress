@@ -47,7 +47,7 @@ function hb_render_decision( $decision_id ) {
 	<div class="hb-decision" id="hb-decision-<?php echo esc_attr( $decision_id ); ?>">
 
 		<?php if ( $decision_question ) : ?>
-			<p class="hb-decision__eyebrow"><?php esc_html_e( 'The question', 'hearback-cabinet' ); ?></p>
+			<p class="hb-decision__eyebrow"><?php esc_html_e( 'The question', 'public-docket' ); ?></p>
 			<p class="hb-decision__question"><?php echo esc_html( $decision_question ); ?></p>
 		<?php endif; ?>
 
@@ -56,7 +56,7 @@ function hb_render_decision( $decision_id ) {
 				<?php
 				printf(
 					/* translators: 1: name, 2: role */
-					esc_html__( 'Owns the response: %1$s (%2$s).', 'hearback-cabinet' ),
+					esc_html__( 'Owns the response: %1$s (%2$s).', 'public-docket' ),
 					esc_html( $owner_name ),
 					esc_html( $owner_role )
 				);
@@ -66,7 +66,7 @@ function hb_render_decision( $decision_id ) {
 				<?php
 				printf(
 					/* translators: %s: date */
-					esc_html__( ' Response due by %s.', 'hearback-cabinet' ),
+					esc_html__( ' Response due by %s.', 'public-docket' ),
 					esc_html( $response_by )
 				);
 				?>
@@ -88,7 +88,7 @@ function hb_render_decision( $decision_id ) {
 			<?php if ( 'open' === $status ) : ?>
 				<?php echo hb_render_submission_form( $decision_id ); // phpcs:ignore ?>
 			<?php else : ?>
-				<p class="hb-decision__closed"><?php esc_html_e( 'Comment period is not currently open for this item.', 'hearback-cabinet' ); ?></p>
+				<p class="hb-decision__closed"><?php esc_html_e( 'Comment period is not currently open for this item.', 'public-docket' ); ?></p>
 			<?php endif; ?>
 
 		<?php else : ?>
@@ -97,7 +97,7 @@ function hb_render_decision( $decision_id ) {
 			<?php if ( 'answered' === $status ) : ?>
 				<?php echo hb_render_response( $decision_id ); // phpcs:ignore ?>
 			<?php else : ?>
-				<p class="hb-decision__closed"><?php esc_html_e( 'This is a posted item. No public comment period applies.', 'hearback-cabinet' ); ?></p>
+				<p class="hb-decision__closed"><?php esc_html_e( 'This is a posted item. No public comment period applies.', 'public-docket' ); ?></p>
 			<?php endif; ?>
 
 		<?php endif; ?>
@@ -134,11 +134,11 @@ function hb_render_synthesis( $decision_id ) {
 	ob_start();
 	?>
 	<section class="hb-synthesis">
-		<h2><?php esc_html_e( 'What we heard', 'hearback-cabinet' ); ?></h2>
+		<h2><?php esc_html_e( 'What we heard', 'public-docket' ); ?></h2>
 		<p><?php
 			printf(
 				/* translators: %d: number of submissions */
-				esc_html( _n( '%d comment received.', '%d comments received.', $total_submissions, 'hearback-cabinet' ) ),
+				esc_html( _n( '%d comment received.', '%d comments received.', $total_submissions, 'public-docket' ) ),
 				(int) $total_submissions
 			);
 		?></p>
@@ -194,7 +194,7 @@ function hb_render_response( $decision_id ) {
 	ob_start();
 	?>
 	<section class="hb-response hb-response--<?php echo esc_attr( $tone ); ?>">
-		<h2><?php esc_html_e( 'Outcome', 'hearback-cabinet' ); ?></h2>
+		<h2><?php esc_html_e( 'Outcome', 'public-docket' ); ?></h2>
 		<div class="hb-response__badge-row">
 			<span class="hb-response__badge"><?php echo esc_html( $label ); ?></span>
 			<?php if ( $date ) : ?>
@@ -206,7 +206,7 @@ function hb_render_response( $decision_id ) {
 		<?php endif; ?>
 		<?php if ( $next_step ) : ?>
 			<div class="hb-next-step">
-				<span class="hb-next-step__badge"><?php esc_html_e( 'Next step', 'hearback-cabinet' ); ?></span>
+				<span class="hb-next-step__badge"><?php esc_html_e( 'Next step', 'public-docket' ); ?></span>
 				<p><?php echo esc_html( $next_step ); ?></p>
 			</div>
 		<?php endif; ?>
@@ -221,14 +221,14 @@ function hb_render_submission_form( $decision_id ) {
 	?>
 	<section class="hb-form">
 		<?php if ( isset( $_GET['hb_submitted'] ) ) : ?>
-			<p class="hb-form__notice hb-form__notice--success"><?php esc_html_e( 'Thanks — your comment has been received.', 'hearback-cabinet' ); ?></p>
+			<p class="hb-form__notice hb-form__notice--success"><?php esc_html_e( 'Thanks — your comment has been received.', 'public-docket' ); ?></p>
 		<?php elseif ( isset( $_GET['hb_error'] ) ) : ?>
-			<p class="hb-form__notice hb-form__notice--error"><?php esc_html_e( 'Your comment could not be submitted. Please try again.', 'hearback-cabinet' ); ?></p>
+			<p class="hb-form__notice hb-form__notice--error"><?php esc_html_e( 'Your comment could not be submitted. Please try again.', 'public-docket' ); ?></p>
 		<?php endif; ?>
 
-		<h2><?php esc_html_e( 'Add a public comment', 'hearback-cabinet' ); ?></h2>
+		<h2><?php esc_html_e( 'Add a public comment', 'public-docket' ); ?></h2>
 		<div class="hb-form__sample">
-			<?php esc_html_e( 'This is where a public comment would go if a resident had submitted one.', 'hearback-cabinet' ); ?>
+			<?php esc_html_e( 'This is where a public comment would go if a resident had submitted one.', 'public-docket' ); ?>
 		</div>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 			<input type="hidden" name="action" value="hb_submit" />
@@ -237,34 +237,34 @@ function hb_render_submission_form( $decision_id ) {
 
 			<!-- Honeypot: hidden from real visitors via CSS, left blank by them. -->
 			<p class="hb-honeypot" aria-hidden="true">
-				<label for="hb_website"><?php esc_html_e( 'Website', 'hearback-cabinet' ); ?></label>
+				<label for="hb_website"><?php esc_html_e( 'Website', 'public-docket' ); ?></label>
 				<input type="text" id="hb_website" name="hb_website" tabindex="-1" autocomplete="off" />
 			</p>
 
 			<p>
-				<label for="hb_comment"><?php esc_html_e( 'Your comment (required)', 'hearback-cabinet' ); ?></label><br />
+				<label for="hb_comment"><?php esc_html_e( 'Your comment (required)', 'public-docket' ); ?></label><br />
 				<textarea id="hb_comment" name="hb_comment" rows="5" required></textarea>
 			</p>
 			<p>
-				<label for="hb_name"><?php esc_html_e( 'Name (optional)', 'hearback-cabinet' ); ?></label>
+				<label for="hb_name"><?php esc_html_e( 'Name (optional)', 'public-docket' ); ?></label>
 				<input type="text" id="hb_name" name="hb_name" />
 			</p>
 			<p>
-				<label for="hb_email"><?php esc_html_e( 'Email (optional, never shown publicly)', 'hearback-cabinet' ); ?></label>
+				<label for="hb_email"><?php esc_html_e( 'Email (optional, never shown publicly)', 'public-docket' ); ?></label>
 				<input type="email" id="hb_email" name="hb_email" />
 			</p>
 			<p>
-				<label for="hb_neighborhood"><?php esc_html_e( 'Neighborhood (optional)', 'hearback-cabinet' ); ?></label>
+				<label for="hb_neighborhood"><?php esc_html_e( 'Neighborhood (optional)', 'public-docket' ); ?></label>
 				<input type="text" id="hb_neighborhood" name="hb_neighborhood" />
 			</p>
 			<p>
 				<label>
 					<input type="checkbox" name="hb_consent" value="1" />
-					<?php esc_html_e( 'I understand this comment becomes part of the public record and may be quoted anonymously in the synthesis.', 'hearback-cabinet' ); ?>
+					<?php esc_html_e( 'I understand this comment becomes part of the public record and may be quoted anonymously in the synthesis.', 'public-docket' ); ?>
 				</label>
 			</p>
 			<p>
-				<button type="submit" class="hb-submit"><?php esc_html_e( 'Submit comment', 'hearback-cabinet' ); ?></button>
+				<button type="submit" class="hb-submit"><?php esc_html_e( 'Submit comment', 'public-docket' ); ?></button>
 			</p>
 		</form>
 	</section>
@@ -292,7 +292,7 @@ function hb_render_cabinet() {
 	?>
 	<div class="hb-cabinet">
 		<?php if ( empty( $decisions ) ) : ?>
-			<p><?php esc_html_e( 'No items have been posted yet.', 'hearback-cabinet' ); ?></p>
+			<p><?php esc_html_e( 'No items have been posted yet.', 'public-docket' ); ?></p>
 		<?php endif; ?>
 		<?php foreach ( $decisions as $decision ) : ?>
 			<?php $status = hb_get_decision_status( $decision->ID ); ?>

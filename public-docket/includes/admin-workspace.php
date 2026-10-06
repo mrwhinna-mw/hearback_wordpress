@@ -17,8 +17,8 @@ function hb_register_workspace_menu() {
 	// default place a board member lands.
 	$GLOBALS['hb_workspace_hook'] = add_submenu_page(
 		'edit.php?post_type=hb_decision',
-		__( 'Docket workspace', 'hearback-cabinet' ),
-		__( 'Workspace', 'hearback-cabinet' ),
+		__( 'Docket workspace', 'public-docket' ),
+		__( 'Workspace', 'public-docket' ),
 		'edit_posts',
 		'hb-workspace',
 		'hb_render_workspace_page',
@@ -37,7 +37,7 @@ add_action( 'admin_enqueue_scripts', 'hb_enqueue_workspace_assets' );
 
 function hb_render_workspace_page() {
 	if ( ! current_user_can( 'edit_posts' ) ) {
-		wp_die( esc_html__( 'You do not have permission to access this page.', 'hearback-cabinet' ) );
+		wp_die( esc_html__( 'You do not have permission to access this page.', 'public-docket' ) );
 	}
 
 	// Include pending/draft items, not just published ones, so an item
@@ -60,18 +60,18 @@ function hb_render_workspace_page() {
 	}
 
 	echo '<div class="wrap hb-workspace">';
-	echo '<h1>' . esc_html__( 'Docket workspace', 'hearback-cabinet' ) . '</h1>';
+	echo '<h1>' . esc_html__( 'Docket workspace', 'public-docket' ) . '</h1>';
 
 	if ( isset( $_GET['hb_saved'] ) ) {
-		echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Saved.', 'hearback-cabinet' ) . '</p></div>';
+		echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Saved.', 'public-docket' ) . '</p></div>';
 	}
 
 	if ( empty( $decisions ) ) {
 		printf(
 			'<p>%s <a href="%s">%s</a></p>',
-			esc_html__( 'No docket items yet.', 'hearback-cabinet' ),
+			esc_html__( 'No docket items yet.', 'public-docket' ),
 			esc_url( admin_url( 'post-new.php?post_type=hb_decision' ) ),
-			esc_html__( 'Create your first one', 'hearback-cabinet' )
+			esc_html__( 'Create your first one', 'public-docket' )
 		);
 		echo '</div>';
 		return;
@@ -90,13 +90,13 @@ function hb_render_workspace_page() {
 	echo '<form method="get" class="hb-decision-switcher" action="' . esc_url( admin_url( 'edit.php' ) ) . '">';
 	echo '<input type="hidden" name="post_type" value="hb_decision" />';
 	echo '<input type="hidden" name="page" value="hb-workspace" />';
-	echo '<label for="hb-decision-select"><strong>' . esc_html__( 'Item:', 'hearback-cabinet' ) . '</strong></label> ';
+	echo '<label for="hb-decision-select"><strong>' . esc_html__( 'Item:', 'public-docket' ) . '</strong></label> ';
 	echo '<select id="hb-decision-select" name="decision_id" onchange="var u=this.options[this.selectedIndex].getAttribute(\'data-url\'); if(u){window.location.href=u;}else{this.form.submit();}">';
 	foreach ( $decisions as $d ) {
-		$title = $d->post_title ? $d->post_title : __( '(untitled)', 'hearback-cabinet' );
+		$title = $d->post_title ? $d->post_title : __( '(untitled)', 'public-docket' );
 		if ( 'publish' !== $d->post_status ) {
 			/* translators: 1: item title, 2: status (e.g. Pending) */
-			$title = sprintf( __( '%1$s (%2$s)', 'hearback-cabinet' ), $title, get_post_status_object( $d->post_status )->label );
+			$title = sprintf( __( '%1$s (%2$s)', 'public-docket' ), $title, get_post_status_object( $d->post_status )->label );
 		}
 		printf(
 			'<option value="%d" data-url="%s" %s>%s</option>',
@@ -107,8 +107,8 @@ function hb_render_workspace_page() {
 		);
 	}
 	echo '</select>';
-	echo ' <button type="submit" class="button">' . esc_html__( 'Go', 'hearback-cabinet' ) . '</button>';
-	echo ' <a href="' . esc_url( admin_url( 'post-new.php?post_type=hb_decision' ) ) . '" class="button">' . esc_html__( '+ New item', 'hearback-cabinet' ) . '</a>';
+	echo ' <button type="submit" class="button">' . esc_html__( 'Go', 'public-docket' ) . '</button>';
+	echo ' <a href="' . esc_url( admin_url( 'post-new.php?post_type=hb_decision' ) ) . '" class="button">' . esc_html__( '+ New item', 'public-docket' ) . '</a>';
 	echo '</form>';
 
 	if ( $current_id ) {
@@ -169,13 +169,13 @@ function hb_render_workspace_form( $decision_id ) {
 		<?php
 		printf(
 			/* translators: %s: current status label */
-			esc_html__( 'Current status: %s', 'hearback-cabinet' ),
+			esc_html__( 'Current status: %s', 'public-docket' ),
 			'<strong>' . esc_html( $status_label ) . '</strong>'
 		);
 		?>
 		<?php if ( 'publish' !== $decision->post_status ) : ?>
 			&mdash; <em><?php echo esc_html( get_post_status_object( $decision->post_status )->label ); ?>,
-			<?php esc_html_e( 'not yet visible to residents', 'hearback-cabinet' ); ?></em>
+			<?php esc_html_e( 'not yet visible to residents', 'public-docket' ); ?></em>
 		<?php endif; ?>
 	</p>
 
@@ -184,105 +184,105 @@ function hb_render_workspace_form( $decision_id ) {
 		<input type="hidden" name="decision_id" value="<?php echo esc_attr( $decision_id ); ?>" />
 		<?php wp_nonce_field( 'hb_save_workspace_' . $decision_id, 'hb_workspace_nonce' ); ?>
 
-		<h2><?php esc_html_e( '1. Item details', 'hearback-cabinet' ); ?></h2>
+		<h2><?php esc_html_e( '1. Item details', 'public-docket' ); ?></h2>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th><label for="hb_title"><?php esc_html_e( 'Title', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_title"><?php esc_html_e( 'Title', 'public-docket' ); ?></label></th>
 				<td><input type="text" id="hb_title" name="hb_title" class="large-text" value="<?php echo esc_attr( $decision->post_title ); ?>" /></td>
 			</tr>
 			<tr>
-				<th><label for="hb_context"><?php esc_html_e( 'Context', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_context"><?php esc_html_e( 'Context', 'public-docket' ); ?></label></th>
 				<td>
 					<textarea id="hb_context" name="hb_context" rows="4" class="large-text"><?php echo esc_textarea( $decision->post_content ); ?></textarea>
-					<p class="description"><?php esc_html_e( 'Plain-language background: why this item exists.', 'hearback-cabinet' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Plain-language background: why this item exists.', 'public-docket' ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<th><label>
 					<input type="checkbox" name="hb_comments_enabled" value="1" <?php checked( $comments_enabled ); ?> />
-					<?php esc_html_e( 'Collect public comments', 'hearback-cabinet' ); ?>
+					<?php esc_html_e( 'Collect public comments', 'public-docket' ); ?>
 				</label></th>
-				<td><p class="description"><?php esc_html_e( 'Turn off for a purely informational item - hides the comment form, themes, and timeline below, and shows just the outcome when one is posted.', 'hearback-cabinet' ); ?></p></td>
+				<td><p class="description"><?php esc_html_e( 'Turn off for a purely informational item - hides the comment form, themes, and timeline below, and shows just the outcome when one is posted.', 'public-docket' ); ?></p></td>
 			</tr>
 			<tr>
-				<th><label for="hb_decision_question"><?php esc_html_e( 'The question', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_decision_question"><?php esc_html_e( 'The question', 'public-docket' ); ?></label></th>
 				<td><input type="text" id="hb_decision_question" name="hb_decision_question" class="large-text" value="<?php echo esc_attr( $decision_question ); ?>" /></td>
 			</tr>
 			<tr>
-				<th><label for="hb_comment_open_at"><?php esc_html_e( 'Comments open at', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_comment_open_at"><?php esc_html_e( 'Comments open at', 'public-docket' ); ?></label></th>
 				<td><input type="datetime-local" id="hb_comment_open_at" name="hb_comment_open_at" value="<?php echo esc_attr( $comment_open_at ); ?>" /></td>
 			</tr>
 			<tr>
-				<th><label for="hb_response_by_date"><?php esc_html_e( 'Response due by', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_response_by_date"><?php esc_html_e( 'Response due by', 'public-docket' ); ?></label></th>
 				<td><input type="date" id="hb_response_by_date" name="hb_response_by_date" value="<?php echo esc_attr( $response_by_date ); ?>" /></td>
 			</tr>
 			<tr>
-				<th><label for="hb_response_owner_name"><?php esc_html_e( 'Response owner', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_response_owner_name"><?php esc_html_e( 'Response owner', 'public-docket' ); ?></label></th>
 				<td>
-					<input type="text" id="hb_response_owner_name" name="hb_response_owner_name" placeholder="<?php esc_attr_e( 'Name', 'hearback-cabinet' ); ?>" value="<?php echo esc_attr( $owner_name ); ?>" style="width: 48%;" />
-					<input type="text" name="hb_response_owner_role" placeholder="<?php esc_attr_e( 'Role', 'hearback-cabinet' ); ?>" value="<?php echo esc_attr( $owner_role ); ?>" style="width: 48%;" />
+					<input type="text" id="hb_response_owner_name" name="hb_response_owner_name" placeholder="<?php esc_attr_e( 'Name', 'public-docket' ); ?>" value="<?php echo esc_attr( $owner_name ); ?>" style="width: 48%;" />
+					<input type="text" name="hb_response_owner_role" placeholder="<?php esc_attr_e( 'Role', 'public-docket' ); ?>" value="<?php echo esc_attr( $owner_role ); ?>" style="width: 48%;" />
 				</td>
 			</tr>
 			<tr>
-				<th><label for="hb_external_reference"><?php esc_html_e( 'Reference / case number', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_external_reference"><?php esc_html_e( 'Reference / case number', 'public-docket' ); ?></label></th>
 				<td><input type="text" id="hb_external_reference" name="hb_external_reference" class="regular-text" value="<?php echo esc_attr( $reference ); ?>" />
-					<p class="description"><?php esc_html_e( 'A stable ID so a future ingestion script recognizes this as the same matter across meetings.', 'hearback-cabinet' ); ?></p>
+					<p class="description"><?php esc_html_e( 'A stable ID so a future ingestion script recognizes this as the same matter across meetings.', 'public-docket' ); ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="hb_source"><?php esc_html_e( 'Source', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_source"><?php esc_html_e( 'Source', 'public-docket' ); ?></label></th>
 				<td>
 					<select id="hb_source" name="hb_source">
-						<option value="manual" <?php selected( $source, 'manual' ); ?>><?php esc_html_e( 'Entered manually', 'hearback-cabinet' ); ?></option>
-						<option value="scraped" <?php selected( $source, 'scraped' ); ?>><?php esc_html_e( 'Scraped from agenda/transcript', 'hearback-cabinet' ); ?></option>
+						<option value="manual" <?php selected( $source, 'manual' ); ?>><?php esc_html_e( 'Entered manually', 'public-docket' ); ?></option>
+						<option value="scraped" <?php selected( $source, 'scraped' ); ?>><?php esc_html_e( 'Scraped from agenda/transcript', 'public-docket' ); ?></option>
 					</select>
 					<input type="url" name="hb_source_url" class="regular-text" placeholder="https://" value="<?php echo esc_attr( $source_url ); ?>" />
 				</td>
 			</tr>
 		</table>
 
-		<h2><?php esc_html_e( '2. Themes', 'hearback-cabinet' ); ?></h2>
+		<h2><?php esc_html_e( '2. Themes', 'public-docket' ); ?></h2>
 		<table class="wp-list-table widefat fixed striped hb-theme-table">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Title', 'hearback-cabinet' ); ?></th>
-					<th><?php esc_html_e( 'Description', 'hearback-cabinet' ); ?></th>
-					<th style="width:80px;"><?php esc_html_e( 'Delete', 'hearback-cabinet' ); ?></th>
+					<th><?php esc_html_e( 'Title', 'public-docket' ); ?></th>
+					<th><?php esc_html_e( 'Description', 'public-docket' ); ?></th>
+					<th style="width:80px;"><?php esc_html_e( 'Delete', 'public-docket' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if ( empty( $themes ) ) : ?>
-					<tr><td colspan="3"><em><?php esc_html_e( 'No themes yet - add one below.', 'hearback-cabinet' ); ?></em></td></tr>
+					<tr><td colspan="3"><em><?php esc_html_e( 'No themes yet - add one below.', 'public-docket' ); ?></em></td></tr>
 				<?php endif; ?>
 				<?php foreach ( $themes as $theme ) : ?>
 					<tr>
 						<td><input type="text" name="theme_title[<?php echo esc_attr( $theme->ID ); ?>]" value="<?php echo esc_attr( $theme->post_title ); ?>" class="regular-text" /></td>
 						<td><input type="text" name="theme_description[<?php echo esc_attr( $theme->ID ); ?>]" value="<?php echo esc_attr( $theme->post_content ); ?>" class="large-text" /></td>
-						<td><label><input type="checkbox" name="theme_delete[]" value="<?php echo esc_attr( $theme->ID ); ?>" /> <?php esc_html_e( 'Delete', 'hearback-cabinet' ); ?></label></td>
+						<td><label><input type="checkbox" name="theme_delete[]" value="<?php echo esc_attr( $theme->ID ); ?>" /> <?php esc_html_e( 'Delete', 'public-docket' ); ?></label></td>
 					</tr>
 				<?php endforeach; ?>
 				<tr class="hb-add-theme-row">
-					<td><input type="text" name="new_theme_title" class="regular-text" placeholder="<?php esc_attr_e( 'New theme title', 'hearback-cabinet' ); ?>" /></td>
-					<td><input type="text" name="new_theme_description" class="large-text" placeholder="<?php esc_attr_e( 'Optional description', 'hearback-cabinet' ); ?>" /></td>
+					<td><input type="text" name="new_theme_title" class="regular-text" placeholder="<?php esc_attr_e( 'New theme title', 'public-docket' ); ?>" /></td>
+					<td><input type="text" name="new_theme_description" class="large-text" placeholder="<?php esc_attr_e( 'Optional description', 'public-docket' ); ?>" /></td>
 					<td></td>
 				</tr>
 			</tbody>
 		</table>
 
-		<h2><?php esc_html_e( '3. Submissions', 'hearback-cabinet' ); ?></h2>
+		<h2><?php esc_html_e( '3. Submissions', 'public-docket' ); ?></h2>
 		<table class="wp-list-table widefat fixed striped hb-submission-table">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Comment', 'hearback-cabinet' ); ?></th>
-					<th><?php esc_html_e( 'Neighborhood', 'hearback-cabinet' ); ?></th>
-					<th><?php esc_html_e( 'Consent', 'hearback-cabinet' ); ?></th>
-					<th><?php esc_html_e( 'Theme', 'hearback-cabinet' ); ?></th>
-					<th><?php esc_html_e( 'Featured', 'hearback-cabinet' ); ?></th>
+					<th><?php esc_html_e( 'Comment', 'public-docket' ); ?></th>
+					<th><?php esc_html_e( 'Neighborhood', 'public-docket' ); ?></th>
+					<th><?php esc_html_e( 'Consent', 'public-docket' ); ?></th>
+					<th><?php esc_html_e( 'Theme', 'public-docket' ); ?></th>
+					<th><?php esc_html_e( 'Featured', 'public-docket' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if ( empty( $submissions ) ) : ?>
-					<tr><td colspan="5"><em><?php esc_html_e( 'No submissions yet.', 'hearback-cabinet' ); ?></em></td></tr>
+					<tr><td colspan="5"><em><?php esc_html_e( 'No submissions yet.', 'public-docket' ); ?></em></td></tr>
 				<?php endif; ?>
 				<?php foreach ( $submissions as $submission ) : ?>
 					<?php
@@ -296,11 +296,11 @@ function hb_render_workspace_form( $decision_id ) {
 						<td><?php echo esc_html( $neighborhood ? $neighborhood : '—' ); ?></td>
 						<td>
 							<input type="hidden" class="hb-consent-flag" value="<?php echo $consent ? '1' : '0'; ?>" />
-							<?php echo $consent ? esc_html__( 'Yes', 'hearback-cabinet' ) : esc_html__( 'No', 'hearback-cabinet' ); ?>
+							<?php echo $consent ? esc_html__( 'Yes', 'public-docket' ) : esc_html__( 'No', 'public-docket' ); ?>
 						</td>
 						<td>
 							<select name="submission_theme[<?php echo esc_attr( $submission->ID ); ?>]">
-								<option value=""><?php esc_html_e( '— Unassigned —', 'hearback-cabinet' ); ?></option>
+								<option value=""><?php esc_html_e( '— Unassigned —', 'public-docket' ); ?></option>
 								<?php foreach ( $themes as $theme ) : ?>
 									<option value="<?php echo esc_attr( $theme->ID ); ?>" <?php selected( $theme_id, $theme->ID ); ?>><?php echo esc_html( $theme->post_title ); ?></option>
 								<?php endforeach; ?>
@@ -313,23 +313,23 @@ function hb_render_workspace_form( $decision_id ) {
 				<?php endforeach; ?>
 			</tbody>
 		</table>
-		<p class="description"><?php esc_html_e( 'Themes you add above become selectable here immediately after you save - you may need to save once to create new themes, then again to assign submissions to them.', 'hearback-cabinet' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Themes you add above become selectable here immediately after you save - you may need to save once to create new themes, then again to assign submissions to them.', 'public-docket' ); ?></p>
 
-		<h2><?php esc_html_e( '4. Publish "What we heard"', 'hearback-cabinet' ); ?></h2>
+		<h2><?php esc_html_e( '4. Publish "What we heard"', 'public-docket' ); ?></h2>
 		<p>
 			<label>
 				<input type="checkbox" name="hb_synthesis_published" value="1" <?php checked( ! empty( $synthesis_at ) ); ?> />
-				<?php esc_html_e( 'Make the themes and any featured quotes visible to residents.', 'hearback-cabinet' ); ?>
+				<?php esc_html_e( 'Make the themes and any featured quotes visible to residents.', 'public-docket' ); ?>
 			</label>
 		</p>
 
-		<h2><?php esc_html_e( '5. Outcome', 'hearback-cabinet' ); ?></h2>
+		<h2><?php esc_html_e( '5. Outcome', 'public-docket' ); ?></h2>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th><label for="hb_response_status"><?php esc_html_e( 'Outcome', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_response_status"><?php esc_html_e( 'Outcome', 'public-docket' ); ?></label></th>
 				<td>
 					<select id="hb_response_status" name="hb_response_status">
-						<option value=""><?php esc_html_e( '— Not yet decided —', 'hearback-cabinet' ); ?></option>
+						<option value=""><?php esc_html_e( '— Not yet decided —', 'public-docket' ); ?></option>
 						<?php foreach ( $outcome_options as $option ) : ?>
 							<option value="<?php echo esc_attr( $option['key'] ); ?>" <?php selected( $response_status, $option['key'] ); ?>><?php echo esc_html( $option['label'] ); ?></option>
 						<?php endforeach; ?>
@@ -338,24 +338,24 @@ function hb_render_workspace_form( $decision_id ) {
 					printf(
 						' <a href="%s">%s</a>',
 						esc_url( admin_url( 'edit.php?post_type=hb_decision&page=hb-settings' ) ),
-						esc_html__( 'Edit options', 'hearback-cabinet' )
+						esc_html__( 'Edit options', 'public-docket' )
 					);
 					?>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="hb_response_rationale"><?php esc_html_e( 'Rationale', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_response_rationale"><?php esc_html_e( 'Rationale', 'public-docket' ); ?></label></th>
 				<td><textarea id="hb_response_rationale" name="hb_response_rationale" rows="3" class="large-text"><?php echo esc_textarea( $rationale ); ?></textarea></td>
 			</tr>
 			<tr>
-				<th><label for="hb_response_next_step"><?php esc_html_e( 'Next step', 'hearback-cabinet' ); ?></label></th>
+				<th><label for="hb_response_next_step"><?php esc_html_e( 'Next step', 'public-docket' ); ?></label></th>
 				<td><textarea id="hb_response_next_step" name="hb_response_next_step" rows="3" class="large-text"><?php echo esc_textarea( $next_step ); ?></textarea></td>
 			</tr>
 		</table>
 		<p>
 			<label>
 				<input type="checkbox" name="hb_response_published" value="1" <?php checked( ! empty( $response_at ) ); ?> />
-				<?php esc_html_e( 'Publish this outcome to residents.', 'hearback-cabinet' ); ?>
+				<?php esc_html_e( 'Publish this outcome to residents.', 'public-docket' ); ?>
 			</label>
 		</p>
 
@@ -366,7 +366,7 @@ function hb_render_workspace_form( $decision_id ) {
 					<strong><?php
 					printf(
 						/* translators: %s: the item's current status, e.g. Pending */
-						esc_html__( 'Make this item public when saving. It is currently %s, so residents cannot see it.', 'hearback-cabinet' ),
+						esc_html__( 'Make this item public when saving. It is currently %s, so residents cannot see it.', 'public-docket' ),
 						esc_html( get_post_status_object( $decision->post_status )->label )
 					);
 					?></strong>
@@ -375,7 +375,7 @@ function hb_render_workspace_form( $decision_id ) {
 		<?php endif; ?>
 
 		<p class="submit">
-			<button type="submit" class="button button-primary button-hero"><?php esc_html_e( 'Save everything', 'hearback-cabinet' ); ?></button>
+			<button type="submit" class="button button-primary button-hero"><?php esc_html_e( 'Save everything', 'public-docket' ); ?></button>
 		</p>
 	</form>
 	<?php
@@ -390,13 +390,13 @@ function hb_handle_workspace_save() {
 	$decision_id = isset( $_POST['decision_id'] ) ? absint( $_POST['decision_id'] ) : 0;
 
 	if ( ! $decision_id || 'hb_decision' !== get_post_type( $decision_id ) ) {
-		wp_die( esc_html__( 'Invalid item.', 'hearback-cabinet' ) );
+		wp_die( esc_html__( 'Invalid item.', 'public-docket' ) );
 	}
 	if ( ! current_user_can( 'edit_post', $decision_id ) ) {
-		wp_die( esc_html__( 'You do not have permission to edit this item.', 'hearback-cabinet' ) );
+		wp_die( esc_html__( 'You do not have permission to edit this item.', 'public-docket' ) );
 	}
 	if ( ! isset( $_POST['hb_workspace_nonce'] ) || ! wp_verify_nonce( $_POST['hb_workspace_nonce'], 'hb_save_workspace_' . $decision_id ) ) {
-		wp_die( esc_html__( 'Security check failed. Please go back and try again.', 'hearback-cabinet' ) );
+		wp_die( esc_html__( 'Security check failed. Please go back and try again.', 'public-docket' ) );
 	}
 
 	// 1. Title + context (post_title / post_content), then everything

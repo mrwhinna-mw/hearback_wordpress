@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function hb_add_submission_meta_boxes() {
 	add_meta_box(
 		'hb_submission_review',
-		__( 'HearBack: Review submission', 'hearback-cabinet' ),
+		__( 'HearBack: Review submission', 'public-docket' ),
 		'hb_render_submission_review_box',
 		'hb_submission',
 		'normal',
@@ -14,7 +14,7 @@ function hb_add_submission_meta_boxes() {
 	);
 	add_meta_box(
 		'hb_submission_source',
-		__( 'HearBack: Submitted by', 'hearback-cabinet' ),
+		__( 'HearBack: Submitted by', 'public-docket' ),
 		'hb_render_submission_source_box',
 		'hb_submission',
 		'side',
@@ -49,16 +49,16 @@ function hb_render_submission_review_box( $post ) {
 	}
 	?>
 	<p>
-		<strong><?php esc_html_e( 'Comment', 'hearback-cabinet' ); ?></strong><br />
+		<strong><?php esc_html_e( 'Comment', 'public-docket' ); ?></strong><br />
 		<?php echo wpautop( esc_html( $post->post_content ) ); // phpcs:ignore -- plain text, escaped above. ?>
 	</p>
 	<p>
-		<label for="hb_theme_id"><strong><?php esc_html_e( 'Assign to theme', 'hearback-cabinet' ); ?></strong></label><br />
+		<label for="hb_theme_id"><strong><?php esc_html_e( 'Assign to theme', 'public-docket' ); ?></strong></label><br />
 		<?php if ( empty( $themes ) ) : ?>
-			<em><?php esc_html_e( 'No themes exist yet for this decision. Create one under Themes first.', 'hearback-cabinet' ); ?></em>
+			<em><?php esc_html_e( 'No themes exist yet for this decision. Create one under Themes first.', 'public-docket' ); ?></em>
 		<?php else : ?>
 			<select id="hb_theme_id" name="hb_theme_id">
-				<option value=""><?php esc_html_e( '— Unassigned —', 'hearback-cabinet' ); ?></option>
+				<option value=""><?php esc_html_e( '— Unassigned —', 'public-docket' ); ?></option>
 				<?php foreach ( $themes as $theme ) : ?>
 					<option value="<?php echo esc_attr( $theme->ID ); ?>" <?php selected( $theme_id, $theme->ID ); ?>>
 						<?php echo esc_html( $theme->post_title ); ?>
@@ -70,20 +70,20 @@ function hb_render_submission_review_box( $post ) {
 	<p>
 		<label>
 			<input type="checkbox" disabled <?php checked( $consent ); ?> />
-			<?php esc_html_e( 'Author consented to a public, anonymized quote', 'hearback-cabinet' ); ?>
+			<?php esc_html_e( 'Author consented to a public, anonymized quote', 'public-docket' ); ?>
 		</label><br />
-		<small><?php esc_html_e( 'Set by the resident at submission time — not editable here.', 'hearback-cabinet' ); ?></small>
+		<small><?php esc_html_e( 'Set by the resident at submission time — not editable here.', 'public-docket' ); ?></small>
 	</p>
 	<p>
 		<label>
 			<input type="checkbox" id="hb_featured" name="hb_featured" value="1" <?php checked( $featured ); ?> <?php disabled( ! $consent ); ?> />
-			<strong><?php esc_html_e( 'Feature as a public quote', 'hearback-cabinet' ); ?></strong>
+			<strong><?php esc_html_e( 'Feature as a public quote', 'public-docket' ); ?></strong>
 		</label><br />
 		<small>
 			<?php
 			echo $consent
-				? esc_html__( 'Shown (anonymized, with neighborhood if given) in "What we heard" once the synthesis is published.', 'hearback-cabinet' )
-				: esc_html__( 'Disabled: this author did not consent to a public quote.', 'hearback-cabinet' );
+				? esc_html__( 'Shown (anonymized, with neighborhood if given) in "What we heard" once the synthesis is published.', 'public-docket' )
+				: esc_html__( 'Disabled: this author did not consent to a public quote.', 'public-docket' );
 			?>
 		</small>
 	</p>
@@ -95,10 +95,10 @@ function hb_render_submission_source_box( $post ) {
 	$email        = get_post_meta( $post->ID, '_hb_email', true );
 	$neighborhood = get_post_meta( $post->ID, '_hb_neighborhood', true );
 	?>
-	<p><strong><?php esc_html_e( 'Name', 'hearback-cabinet' ); ?>:</strong> <?php echo esc_html( $name ? $name : __( '(not given)', 'hearback-cabinet' ) ); ?></p>
-	<p><strong><?php esc_html_e( 'Email', 'hearback-cabinet' ); ?>:</strong> <?php echo esc_html( $email ? $email : __( '(not given)', 'hearback-cabinet' ) ); ?></p>
-	<p><strong><?php esc_html_e( 'Neighborhood', 'hearback-cabinet' ); ?>:</strong> <?php echo esc_html( $neighborhood ? $neighborhood : __( '(not given)', 'hearback-cabinet' ) ); ?></p>
-	<p><small><?php esc_html_e( 'The email address above is only ever shown here, to logged-in admins - it is never rendered on any public page.', 'hearback-cabinet' ); ?></small></p>
+	<p><strong><?php esc_html_e( 'Name', 'public-docket' ); ?>:</strong> <?php echo esc_html( $name ? $name : __( '(not given)', 'public-docket' ) ); ?></p>
+	<p><strong><?php esc_html_e( 'Email', 'public-docket' ); ?>:</strong> <?php echo esc_html( $email ? $email : __( '(not given)', 'public-docket' ) ); ?></p>
+	<p><strong><?php esc_html_e( 'Neighborhood', 'public-docket' ); ?>:</strong> <?php echo esc_html( $neighborhood ? $neighborhood : __( '(not given)', 'public-docket' ) ); ?></p>
+	<p><small><?php esc_html_e( 'The email address above is only ever shown here, to logged-in admins - it is never rendered on any public page.', 'public-docket' ); ?></small></p>
 	<?php
 }
 

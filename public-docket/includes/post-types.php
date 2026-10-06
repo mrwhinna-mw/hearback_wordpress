@@ -16,12 +16,12 @@ function hb_register_post_types() {
 		'hb_decision',
 		array(
 			'labels'       => array(
-				'name'          => __( 'Docket Items', 'hearback-cabinet' ),
-				'singular_name' => __( 'Docket Item', 'hearback-cabinet' ),
-				'add_new_item'  => __( 'Add New Docket Item', 'hearback-cabinet' ),
-				'edit_item'     => __( 'Edit Docket Item', 'hearback-cabinet' ),
-				'all_items'     => __( 'All Docket Items', 'hearback-cabinet' ),
-				'menu_name'     => __( 'Public Docket', 'hearback-cabinet' ),
+				'name'          => __( 'Docket Items', 'public-docket' ),
+				'singular_name' => __( 'Docket Item', 'public-docket' ),
+				'add_new_item'  => __( 'Add New Docket Item', 'public-docket' ),
+				'edit_item'     => __( 'Edit Docket Item', 'public-docket' ),
+				'all_items'     => __( 'All Docket Items', 'public-docket' ),
+				'menu_name'     => __( 'Public Docket', 'public-docket' ),
 			),
 			'public'       => true,
 			'has_archive'  => 'docket',
@@ -39,9 +39,9 @@ function hb_register_post_types() {
 		'hb_theme',
 		array(
 			'labels'       => array(
-				'name'          => __( 'Themes', 'hearback-cabinet' ),
-				'singular_name' => __( 'Theme', 'hearback-cabinet' ),
-				'add_new_item'  => __( 'Add New Theme', 'hearback-cabinet' ),
+				'name'          => __( 'Themes', 'public-docket' ),
+				'singular_name' => __( 'Theme', 'public-docket' ),
+				'add_new_item'  => __( 'Add New Theme', 'public-docket' ),
 			),
 			'public'       => false,
 			'show_ui'      => true,
@@ -56,8 +56,8 @@ function hb_register_post_types() {
 		'hb_submission',
 		array(
 			'labels'       => array(
-				'name'          => __( 'Submissions', 'hearback-cabinet' ),
-				'singular_name' => __( 'Submission', 'hearback-cabinet' ),
+				'name'          => __( 'Submissions', 'public-docket' ),
+				'singular_name' => __( 'Submission', 'public-docket' ),
 			),
 			'public'       => false,
 			'show_ui'      => true,

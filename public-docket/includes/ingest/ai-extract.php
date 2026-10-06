@@ -71,12 +71,12 @@ EOT;
  */
 function di_run_json_query( $prompt ) {
 	if ( ! class_exists( 'Meow_MWAI_Query_Text' ) ) {
-		return new WP_Error( 'di_no_ai_engine', __( 'AI Engine is not active, so the document cannot be analyzed.', 'docket-ingest' ) );
+		return new WP_Error( 'di_no_ai_engine', __( 'AI Engine is not active, so the document cannot be analyzed.', 'public-docket' ) );
 	}
 
 	global $mwai_core;
 	if ( ! isset( $mwai_core ) || ! is_object( $mwai_core ) ) {
-		return new WP_Error( 'di_no_ai_engine', __( 'AI Engine is active but did not initialize. Try reloading, or check its settings.', 'docket-ingest' ) );
+		return new WP_Error( 'di_no_ai_engine', __( 'AI Engine is active but did not initialize. Try reloading, or check its settings.', 'public-docket' ) );
 	}
 
 	$env_id = get_option( 'di_env_id', '' );
@@ -86,7 +86,7 @@ function di_run_json_query( $prompt ) {
 	// one, which it auto-creates as OpenAI - on a Gemini-only site that
 	// surfaces as a baffling "model gpt-... is not available" error.
 	if ( empty( $env_id ) ) {
-		return new WP_Error( 'di_no_env', __( 'Choose an AI provider on this page first. If the list is empty, add an API key under Meow Apps > AI Engine > Settings > AI.', 'docket-ingest' ) );
+		return new WP_Error( 'di_no_env', __( 'Choose an AI provider on this page first. If the list is empty, add an API key under Meow Apps > AI Engine > Settings > AI.', 'public-docket' ) );
 	}
 
 	try {
@@ -106,7 +106,7 @@ function di_run_json_query( $prompt ) {
 	if ( '' === trim( $raw ) ) {
 		return new WP_Error(
 			'di_ai_empty',
-			__( 'The AI returned an empty reply. If you are using Gemini, try enabling "Use Standard API" under AI Engine > Settings > AI, which switches Gemini off its newer Interactions API.', 'docket-ingest' )
+			__( 'The AI returned an empty reply. If you are using Gemini, try enabling "Use Standard API" under AI Engine > Settings > AI, which switches Gemini off its newer Interactions API.', 'public-docket' )
 		);
 	}
 
@@ -117,7 +117,7 @@ function di_run_json_query( $prompt ) {
 			'di_ai_bad_json',
 			sprintf(
 				/* translators: %s: start of the model's reply */
-				__( 'The AI replied, but not with valid JSON, so nothing could be extracted. Start of its reply: %s', 'docket-ingest' ),
+				__( 'The AI replied, but not with valid JSON, so nothing could be extracted. Start of its reply: %s', 'public-docket' ),
 				mb_substr( $raw, 0, 300 )
 			)
 		);
@@ -160,7 +160,7 @@ function di_extract_items( $text ) {
 	}
 
 	if ( empty( $items ) ) {
-		return new WP_Error( 'di_no_items', __( 'No commentable agenda items were found in that document.', 'docket-ingest' ) );
+		return new WP_Error( 'di_no_items', __( 'No commentable agenda items were found in that document.', 'public-docket' ) );
 	}
 
 	$items[0]['_meeting_date'] = $meeting_date;

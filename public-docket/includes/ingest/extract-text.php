@@ -26,7 +26,7 @@ function di_extract_text( $file_path, $original_name ) {
 				'di_unsupported',
 				sprintf(
 					/* translators: %s: file extension */
-					__( '.%s files are not supported yet. Open the file, copy its text, and save it as a .txt or .docx file instead.', 'docket-ingest' ),
+					__( '.%s files are not supported yet. Open the file, copy its text, and save it as a .txt or .docx file instead.', 'public-docket' ),
 					$ext
 				)
 			);
@@ -35,7 +35,7 @@ function di_extract_text( $file_path, $original_name ) {
 			'di_unsupported',
 			sprintf(
 				/* translators: %s: comma-separated list of extensions */
-				__( 'Unsupported file type. Upload one of: %s', 'docket-ingest' ),
+				__( 'Unsupported file type. Upload one of: %s', 'public-docket' ),
 				implode( ', ', di_supported_extensions() )
 			)
 		);
@@ -54,7 +54,7 @@ function di_extract_text( $file_path, $original_name ) {
 	$text = trim( preg_replace( "/\n{3,}/", "\n\n", (string) $text ) );
 
 	if ( '' === $text ) {
-		return new WP_Error( 'di_empty', __( 'No readable text was found in that file.', 'docket-ingest' ) );
+		return new WP_Error( 'di_empty', __( 'No readable text was found in that file.', 'public-docket' ) );
 	}
 
 	return $text;
@@ -68,19 +68,19 @@ function di_extract_text( $file_path, $original_name ) {
  */
 function di_extract_docx( $file_path ) {
 	if ( ! class_exists( 'ZipArchive' ) ) {
-		return new WP_Error( 'di_no_zip', __( 'This server cannot read .docx files (PHP is missing ZipArchive). Save the file as .txt instead.', 'docket-ingest' ) );
+		return new WP_Error( 'di_no_zip', __( 'This server cannot read .docx files (PHP is missing ZipArchive). Save the file as .txt instead.', 'public-docket' ) );
 	}
 
 	$zip = new ZipArchive();
 	if ( true !== $zip->open( $file_path ) ) {
-		return new WP_Error( 'di_bad_docx', __( 'That .docx file could not be opened. It may be corrupted.', 'docket-ingest' ) );
+		return new WP_Error( 'di_bad_docx', __( 'That .docx file could not be opened. It may be corrupted.', 'public-docket' ) );
 	}
 
 	$xml = $zip->getFromName( 'word/document.xml' );
 	$zip->close();
 
 	if ( false === $xml ) {
-		return new WP_Error( 'di_bad_docx', __( 'That file is not a readable Word document.', 'docket-ingest' ) );
+		return new WP_Error( 'di_bad_docx', __( 'That file is not a readable Word document.', 'public-docket' ) );
 	}
 
 	$xml = str_replace( array( '</w:p>', '<w:br/>', '<w:br />' ), "\n", $xml );

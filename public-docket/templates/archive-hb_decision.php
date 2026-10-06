@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 <main class="hb-archive-main">
-	<h1 class="hb-archive-title"><?php esc_html_e( 'Public Docket', 'hearback-cabinet' ); ?></h1>
+	<h1 class="hb-archive-title"><?php esc_html_e( 'Public Docket', 'public-docket' ); ?></h1>
 	<?php echo hb_render_cabinet(); // phpcs:ignore -- built entirely from escaped parts. ?>
 </main>
 <?php

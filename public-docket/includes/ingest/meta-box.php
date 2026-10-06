@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function di_add_meta_box() {
 	add_meta_box(
 		'di_provenance',
-		__( 'Ingested From Document', 'docket-ingest' ),
+		__( 'Ingested From Document', 'public-docket' ),
 		'di_render_meta_box',
 		'hb_decision',
 		'side',
@@ -28,12 +28,12 @@ function di_render_meta_box( $post ) {
 	$updates = di_get_updates( $post->ID );
 
 	if ( ! $quote && ! $file && ! $when && ! $updates ) {
-		echo '<p>' . esc_html__( 'This item was created by hand, not ingested from a document.', 'docket-ingest' ) . '</p>';
+		echo '<p>' . esc_html__( 'This item was created by hand, not ingested from a document.', 'public-docket' ) . '</p>';
 		return;
 	}
 
 	if ( $file ) {
-		echo '<p><strong>' . esc_html__( 'File:', 'docket-ingest' ) . '</strong> ' . esc_html( $file ) . '</p>';
+		echo '<p><strong>' . esc_html__( 'File:', 'public-docket' ) . '</strong> ' . esc_html( $file ) . '</p>';
 	}
 
 	$source_url = get_post_meta( $post->ID, '_hb_source_url', true );
@@ -41,22 +41,22 @@ function di_render_meta_box( $post ) {
 		printf(
 			'<p><a href="%s" target="_blank" rel="noopener">%s</a></p>',
 			esc_url( $source_url ),
-			esc_html__( 'Open original source', 'docket-ingest' )
+			esc_html__( 'Open original source', 'public-docket' )
 		);
 	}
 
 	if ( $quote ) {
-		echo '<p><strong>' . esc_html__( 'Verbatim excerpt:', 'docket-ingest' ) . '</strong></p>';
+		echo '<p><strong>' . esc_html__( 'Verbatim excerpt:', 'public-docket' ) . '</strong></p>';
 		echo '<blockquote style="margin:0;padding:8px;background:#f6f7f7;border-left:3px solid #c3c4c7;font-style:italic;">'
 			. esc_html( $quote ) . '</blockquote>';
-		echo '<p class="description">' . esc_html__( 'Check this against the source document before publishing.', 'docket-ingest' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Check this against the source document before publishing.', 'public-docket' ) . '</p>';
 	}
 
 	if ( $when ) {
 		echo '<p class="description">' . esc_html(
 			sprintf(
 				/* translators: %s: date/time */
-				__( 'Ingested %s', 'docket-ingest' ),
+				__( 'Ingested %s', 'public-docket' ),
 				$when
 			)
 		) . '</p>';
@@ -66,7 +66,7 @@ function di_render_meta_box( $post ) {
 		return;
 	}
 
-	echo '<hr><p><strong>' . esc_html__( 'Updates from later documents:', 'docket-ingest' ) . '</strong></p>';
+	echo '<hr><p><strong>' . esc_html__( 'Updates from later documents:', 'public-docket' ) . '</strong></p>';
 
 	foreach ( $updates as $update ) {
 		echo '<p style="margin-bottom:4px;"><strong>' . esc_html( $update['date'] ) . '</strong><br>'
@@ -80,7 +80,7 @@ function di_render_meta_box( $post ) {
 			echo '<p class="description">' . esc_html(
 				sprintf(
 					/* translators: %d: number of conflicting details */
-					_n( 'Applied despite %d conflicting detail.', 'Applied despite %d conflicting details.', count( $update['conflicts'] ), 'docket-ingest' ),
+					_n( 'Applied despite %d conflicting detail.', 'Applied despite %d conflicting details.', count( $update['conflicts'] ), 'public-docket' ),
 					count( $update['conflicts'] )
 				)
 			) . '</p>';
@@ -89,7 +89,7 @@ function di_render_meta_box( $post ) {
 			echo '<p class="description">' . esc_html(
 				sprintf(
 					/* translators: %s: file name */
-					__( 'From %s', 'docket-ingest' ),
+					__( 'From %s', 'public-docket' ),
 					$update['source_file']
 				)
 			) . '</p>';

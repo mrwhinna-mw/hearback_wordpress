@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function hb_add_decision_meta_boxes() {
 	add_meta_box(
 		'hb_decision_details',
-		__( 'Public Docket: Item details', 'hearback-cabinet' ),
+		__( 'Public Docket: Item details', 'public-docket' ),
 		'hb_render_decision_meta_box',
 		'hb_decision',
 		'normal',
@@ -14,7 +14,7 @@ function hb_add_decision_meta_boxes() {
 	);
 	add_meta_box(
 		'hb_decision_response',
-		__( 'Public Docket: Outcome', 'hearback-cabinet' ),
+		__( 'Public Docket: Outcome', 'public-docket' ),
 		'hb_render_response_meta_box',
 		'hb_decision',
 		'normal',
@@ -22,7 +22,7 @@ function hb_add_decision_meta_boxes() {
 	);
 	add_meta_box(
 		'hb_decision_automation',
-		__( 'Public Docket: Source', 'hearback-cabinet' ),
+		__( 'Public Docket: Source', 'public-docket' ),
 		'hb_render_automation_meta_box',
 		'hb_decision',
 		'side',
@@ -45,53 +45,53 @@ function hb_render_decision_meta_box( $post ) {
 	<p>
 		<label>
 			<input type="checkbox" name="hb_comments_enabled" value="1" <?php checked( $comments_enabled ); ?> />
-			<strong><?php esc_html_e( 'Collect public comments on this item', 'hearback-cabinet' ); ?></strong>
+			<strong><?php esc_html_e( 'Collect public comments on this item', 'public-docket' ); ?></strong>
 		</label><br />
-		<small><?php esc_html_e( 'Turn this off for purely informational items with no feedback period - the comment form, themes, and timeline are all hidden, and only the item details and eventual outcome are shown.', 'hearback-cabinet' ); ?></small>
+		<small><?php esc_html_e( 'Turn this off for purely informational items with no feedback period - the comment form, themes, and timeline are all hidden, and only the item details and eventual outcome are shown.', 'public-docket' ); ?></small>
 	</p>
 	<hr />
 	<p>
-		<label for="hb_decision_question"><strong><?php esc_html_e( 'The question', 'hearback-cabinet' ); ?></strong></label><br />
-		<small><?php esc_html_e( 'What is actually being decided or addressed. The "Context" text above (the post editor) is the plain-language background.', 'hearback-cabinet' ); ?></small><br />
+		<label for="hb_decision_question"><strong><?php esc_html_e( 'The question', 'public-docket' ); ?></strong></label><br />
+		<small><?php esc_html_e( 'What is actually being decided or addressed. The "Context" text above (the post editor) is the plain-language background.', 'public-docket' ); ?></small><br />
 		<input type="text" id="hb_decision_question" name="hb_decision_question" class="widefat"
 			value="<?php echo esc_attr( $decision_question ); ?>" />
 	</p>
 	<p>
-		<label for="hb_comment_open_at"><strong><?php esc_html_e( 'Comments open at', 'hearback-cabinet' ); ?></strong></label><br />
+		<label for="hb_comment_open_at"><strong><?php esc_html_e( 'Comments open at', 'public-docket' ); ?></strong></label><br />
 		<input type="datetime-local" id="hb_comment_open_at" name="hb_comment_open_at"
 			value="<?php echo esc_attr( $comment_open_at ); ?>" />
 	</p>
 	<p>
-		<label for="hb_response_by_date"><strong><?php esc_html_e( 'Response due by', 'hearback-cabinet' ); ?></strong></label><br />
+		<label for="hb_response_by_date"><strong><?php esc_html_e( 'Response due by', 'public-docket' ); ?></strong></label><br />
 		<input type="date" id="hb_response_by_date" name="hb_response_by_date"
 			value="<?php echo esc_attr( $response_by_date ); ?>" />
 	</p>
 	<p>
-		<label for="hb_response_owner_name"><strong><?php esc_html_e( 'Response owner', 'hearback-cabinet' ); ?></strong></label><br />
-		<small><?php esc_html_e( 'Named before comments open, so accountability is visible to residents, not just tracked internally.', 'hearback-cabinet' ); ?></small><br />
+		<label for="hb_response_owner_name"><strong><?php esc_html_e( 'Response owner', 'public-docket' ); ?></strong></label><br />
+		<small><?php esc_html_e( 'Named before comments open, so accountability is visible to residents, not just tracked internally.', 'public-docket' ); ?></small><br />
 		<input type="text" id="hb_response_owner_name" name="hb_response_owner_name"
-			placeholder="<?php esc_attr_e( 'Name', 'hearback-cabinet' ); ?>"
+			placeholder="<?php esc_attr_e( 'Name', 'public-docket' ); ?>"
 			value="<?php echo esc_attr( $owner_name ); ?>" style="width: 48%;" />
 		<input type="text" id="hb_response_owner_role" name="hb_response_owner_role"
-			placeholder="<?php esc_attr_e( 'Role, e.g. Committee Chair', 'hearback-cabinet' ); ?>"
+			placeholder="<?php esc_attr_e( 'Role, e.g. Committee Chair', 'public-docket' ); ?>"
 			value="<?php echo esc_attr( $owner_role ); ?>" style="width: 48%;" />
 	</p>
 	<hr />
 	<p>
 		<label>
 			<input type="checkbox" name="hb_synthesis_published" value="1" <?php checked( ! empty( $synthesis_at ) ); ?> />
-			<strong><?php esc_html_e( 'Publish "What we heard"', 'hearback-cabinet' ); ?></strong>
+			<strong><?php esc_html_e( 'Publish "What we heard"', 'public-docket' ); ?></strong>
 		</label><br />
 		<small>
 			<?php
 			if ( $synthesis_at ) {
 				printf(
 					/* translators: %s: date */
-					esc_html__( 'Published %s. Uncheck and update to unpublish.', 'hearback-cabinet' ),
+					esc_html__( 'Published %s. Uncheck and update to unpublish.', 'public-docket' ),
 					esc_html( $synthesis_at )
 				);
 			} else {
-				esc_html_e( 'Makes the themes below, and any featured quotes, visible to residents. Check the box and click Update to publish now.', 'hearback-cabinet' );
+				esc_html_e( 'Makes the themes below, and any featured quotes, visible to residents. Check the box and click Update to publish now.', 'public-docket' );
 			}
 			?>
 		</small>
@@ -107,9 +107,9 @@ function hb_render_response_meta_box( $post ) {
 	$options     = hb_get_outcome_options();
 	?>
 	<p>
-		<label for="hb_response_status"><strong><?php esc_html_e( 'Outcome', 'hearback-cabinet' ); ?></strong></label><br />
+		<label for="hb_response_status"><strong><?php esc_html_e( 'Outcome', 'public-docket' ); ?></strong></label><br />
 		<select id="hb_response_status" name="hb_response_status">
-			<option value=""><?php esc_html_e( '— Not yet decided —', 'hearback-cabinet' ); ?></option>
+			<option value=""><?php esc_html_e( '— Not yet decided —', 'public-docket' ); ?></option>
 			<?php foreach ( $options as $option ) : ?>
 				<option value="<?php echo esc_attr( $option['key'] ); ?>" <?php selected( $status, $option['key'] ); ?>><?php echo esc_html( $option['label'] ); ?></option>
 			<?php endforeach; ?>
@@ -118,37 +118,37 @@ function hb_render_response_meta_box( $post ) {
 			<?php
 			printf(
 				/* translators: %s: link to the settings page */
-				wp_kses( __( 'Edit the list of options on the <a href="%s">Settings</a> page.', 'hearback-cabinet' ), array( 'a' => array( 'href' => array() ) ) ),
+				wp_kses( __( 'Edit the list of options on the <a href="%s">Settings</a> page.', 'public-docket' ), array( 'a' => array( 'href' => array() ) ) ),
 				esc_url( admin_url( 'edit.php?post_type=hb_decision&page=hb-settings' ) )
 			);
 			?>
 		</small>
 	</p>
 	<p>
-		<label for="hb_response_rationale"><strong><?php esc_html_e( 'Rationale', 'hearback-cabinet' ); ?></strong></label><br />
+		<label for="hb_response_rationale"><strong><?php esc_html_e( 'Rationale', 'public-docket' ); ?></strong></label><br />
 		<textarea id="hb_response_rationale" name="hb_response_rationale" class="widefat" rows="3"><?php echo esc_textarea( $rationale ); ?></textarea>
 	</p>
 	<p>
-		<label for="hb_response_next_step"><strong><?php esc_html_e( 'Next step', 'hearback-cabinet' ); ?></strong></label><br />
-		<small><?php esc_html_e( 'What happens next, and whether there is still anything a resident can do — a hearing date, a follow-up meeting, a deadline. This is shown to residents even after an outcome is posted.', 'hearback-cabinet' ); ?></small><br />
+		<label for="hb_response_next_step"><strong><?php esc_html_e( 'Next step', 'public-docket' ); ?></strong></label><br />
+		<small><?php esc_html_e( 'What happens next, and whether there is still anything a resident can do — a hearing date, a follow-up meeting, a deadline. This is shown to residents even after an outcome is posted.', 'public-docket' ); ?></small><br />
 		<textarea id="hb_response_next_step" name="hb_response_next_step" class="widefat" rows="3"><?php echo esc_textarea( $next_step ); ?></textarea>
 	</p>
 	<hr />
 	<p>
 		<label>
 			<input type="checkbox" name="hb_response_published" value="1" <?php checked( ! empty( $response_at ) ); ?> />
-			<strong><?php esc_html_e( 'Publish outcome', 'hearback-cabinet' ); ?></strong>
+			<strong><?php esc_html_e( 'Publish outcome', 'public-docket' ); ?></strong>
 		</label><br />
 		<small>
 			<?php
 			if ( $response_at ) {
 				printf(
 					/* translators: %s: date */
-					esc_html__( 'Published %s. Uncheck and update to unpublish.', 'hearback-cabinet' ),
+					esc_html__( 'Published %s. Uncheck and update to unpublish.', 'public-docket' ),
 					esc_html( $response_at )
 				);
 			} else {
-				esc_html_e( 'Fill in the outcome and next step above first, then check this box and click Update.', 'hearback-cabinet' );
+				esc_html_e( 'Fill in the outcome and next step above first, then check this box and click Update.', 'public-docket' );
 			}
 			?>
 		</small>
@@ -162,19 +162,19 @@ function hb_render_automation_meta_box( $post ) {
 	$reference  = get_post_meta( $post->ID, '_hb_external_reference', true );
 	?>
 	<p>
-		<label for="hb_source"><?php esc_html_e( 'Source', 'hearback-cabinet' ); ?></label><br />
+		<label for="hb_source"><?php esc_html_e( 'Source', 'public-docket' ); ?></label><br />
 		<select id="hb_source" name="hb_source" class="widefat">
-			<option value="manual" <?php selected( $source, 'manual' ); ?>><?php esc_html_e( 'Entered manually', 'hearback-cabinet' ); ?></option>
-			<option value="scraped" <?php selected( $source, 'scraped' ); ?>><?php esc_html_e( 'Created from scraped agenda/transcript data', 'hearback-cabinet' ); ?></option>
+			<option value="manual" <?php selected( $source, 'manual' ); ?>><?php esc_html_e( 'Entered manually', 'public-docket' ); ?></option>
+			<option value="scraped" <?php selected( $source, 'scraped' ); ?>><?php esc_html_e( 'Created from scraped agenda/transcript data', 'public-docket' ); ?></option>
 		</select>
 	</p>
 	<p>
-		<label for="hb_external_reference"><?php esc_html_e( 'Reference / case number', 'hearback-cabinet' ); ?></label><br />
-		<small><?php esc_html_e( 'A stable ID (e.g. a case number) so a future ingestion script can recognize this is the same item when it resurfaces at a later meeting, instead of creating a duplicate.', 'hearback-cabinet' ); ?></small><br />
+		<label for="hb_external_reference"><?php esc_html_e( 'Reference / case number', 'public-docket' ); ?></label><br />
+		<small><?php esc_html_e( 'A stable ID (e.g. a case number) so a future ingestion script can recognize this is the same item when it resurfaces at a later meeting, instead of creating a duplicate.', 'public-docket' ); ?></small><br />
 		<input type="text" id="hb_external_reference" name="hb_external_reference" class="widefat" value="<?php echo esc_attr( $reference ); ?>" />
 	</p>
 	<p>
-		<label for="hb_source_url"><?php esc_html_e( 'Source document/URL', 'hearback-cabinet' ); ?></label><br />
+		<label for="hb_source_url"><?php esc_html_e( 'Source document/URL', 'public-docket' ); ?></label><br />
 		<input type="url" id="hb_source_url" name="hb_source_url" class="widefat" value="<?php echo esc_attr( $source_url ); ?>" placeholder="https://" />
 	</p>
 	<?php

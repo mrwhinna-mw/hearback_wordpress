@@ -5,11 +5,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'DI_CAPABILITY', 'edit_others_posts' );
 
+/**
+ * Ingest needs AI Engine to reach a model. Public Docket itself is no
+ * longer in question - this ships inside it - so AI Engine is the only
+ * thing that can be missing. Reported on this screen rather than as a
+ * site-wide notice: a site that never ingests a document should not be
+ * nagged about a plugin it does not need.
+ */
+function di_missing_dependencies() {
+	$missing = array();
+	if ( ! class_exists( 'Meow_MWAI_API' ) ) {
+		$missing[] = 'AI Engine';
+	}
+	return $missing;
+}
+
 function di_register_admin_page() {
 	add_submenu_page(
 		'edit.php?post_type=hb_decision',
-		__( 'Ingest Document', 'docket-ingest' ),
-		__( 'Ingest Document', 'docket-ingest' ),
+		__( 'Ingest Document', 'public-docket' ),
+		__( 'Ingest Document', 'public-docket' ),
 		DI_CAPABILITY,
 		'docket-ingest',
 		'di_render_admin_page'
@@ -19,17 +34,25 @@ add_action( 'admin_menu', 'di_register_admin_page', 20 );
 
 function di_render_admin_page() {
 	if ( ! current_user_can( DI_CAPABILITY ) ) {
-		wp_die( esc_html__( 'You do not have permission to do this.', 'docket-ingest' ) );
+		wp_die( esc_html__( 'You do not have permission to do this.', 'public-docket' ) );
 	}
 
-	echo '<div class="wrap"><h1>' . esc_html__( 'Ingest Document', 'docket-ingest' ) . '</h1>';
+	echo '<div class="wrap"><h1>' . esc_html__( 'Ingest Document', 'public-docket' ) . '</h1>';
 
-	$missing = di_missing_dependencies();
-	if ( ! empty( $missing ) ) {
-		printf(
-			'<div class="notice notice-error"><p>%s</p></div></div>',
-			esc_html( sprintf( __( 'Cannot run: %s not active.', 'docket-ingest' ), implode( ', ', $missing ) ) )
+	if ( di_missing_dependencies() ) {
+		$install = wp_nonce_url(
+			self_admin_url( 'plugin-install.php?tab=plugin-information&plugin=ai-engine&TB_iframe=true' ),
+			'install-plugin_ai-engine'
 		);
+		echo '<div class="notice notice-warning"><p>';
+		printf(
+			/* translators: %s: link to the AI Engine plugin page */
+			esc_html__( 'Reading documents needs the free AI Engine plugin, which holds the connection to whichever AI provider you choose. %s, then come back here.', 'public-docket' ),
+			'<a href="' . esc_url( $install ) . '">' . esc_html__( 'Install AI Engine', 'public-docket' ) . '</a>'
+		);
+		echo '</p><p>';
+		esc_html_e( 'Everything else in Public Docket works without it. You can always add docket items by hand.', 'public-docket' );
+		echo '</p></div></div>';
 		return;
 	}
 
@@ -52,21 +75,21 @@ function di_render_upload_form( $error = '' ) {
 	}
 	?>
 	<p>
-		<?php esc_html_e( 'Upload a meeting agenda, minutes, or transcript. Items are drafted as Pending for review — nothing is published automatically.', 'docket-ingest' ); ?>
+		<?php esc_html_e( 'Upload a meeting agenda, minutes, or transcript. Items are drafted as Pending for review — nothing is published automatically.', 'public-docket' ); ?>
 	</p>
 	<form method="post" enctype="multipart/form-data">
 		<?php wp_nonce_field( 'di_upload' ); ?>
 		<input type="hidden" name="di_action" value="review">
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><label for="di_file"><?php esc_html_e( 'Document', 'docket-ingest' ); ?></label></th>
+				<th scope="row"><label for="di_file"><?php esc_html_e( 'Document', 'public-docket' ); ?></label></th>
 				<td>
 					<input type="file" name="di_file" id="di_file" accept=".txt,.md,.docx" required>
 					<p class="description">
 						<?php
 						printf(
 							/* translators: %s: list of file extensions */
-							esc_html__( 'Supported: %s. For a PDF, open it, copy the text, and save it as .txt.', 'docket-ingest' ),
+							esc_html__( 'Supported: %s. For a PDF, open it, copy the text, and save it as .txt.', 'public-docket' ),
 							esc_html( implode( ', ', di_supported_extensions() ) )
 						);
 						?>
@@ -74,25 +97,25 @@ function di_render_upload_form( $error = '' ) {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="di_source_url"><?php esc_html_e( 'Source URL', 'docket-ingest' ); ?></label></th>
+				<th scope="row"><label for="di_source_url"><?php esc_html_e( 'Source URL', 'public-docket' ); ?></label></th>
 				<td>
 					<input type="url" name="di_source_url" id="di_source_url" class="regular-text" placeholder="https://anc6a.org/wp-content/uploads/...">
-					<p class="description"><?php esc_html_e( 'Optional. Where this document is published, recorded on every item it creates.', 'docket-ingest' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Optional. Where this document is published, recorded on every item it creates.', 'public-docket' ); ?></p>
 				</td>
 			</tr>
 			<?php di_render_ai_rows(); ?>
 			<tr>
-				<th scope="row"><label for="di_extra_instructions"><?php esc_html_e( 'Extra instructions', 'docket-ingest' ); ?></label></th>
+				<th scope="row"><label for="di_extra_instructions"><?php esc_html_e( 'Extra instructions', 'public-docket' ); ?></label></th>
 				<td>
 					<textarea name="di_extra_instructions" id="di_extra_instructions" rows="3" class="large-text"
-						placeholder="<?php esc_attr_e( 'e.g. Our case numbers look like ZC-2026-14. Treat liquor licence items as commentable even when listed under consent.', 'docket-ingest' ); ?>"><?php echo esc_textarea( get_option( 'di_extra_instructions', '' ) ); ?></textarea>
+						placeholder="<?php esc_attr_e( 'e.g. Our case numbers look like ZC-2026-14. Treat liquor licence items as commentable even when listed under consent.', 'public-docket' ); ?>"><?php echo esc_textarea( get_option( 'di_extra_instructions', '' ) ); ?></textarea>
 					<p class="description">
-						<?php esc_html_e( 'Optional, remembered between uploads. Added to the instructions the AI is given when reading documents — useful for how your organization words things. It cannot override the built-in rules that stop the AI inventing details or requiring a verbatim quote.', 'docket-ingest' ); ?>
+						<?php esc_html_e( 'Optional, remembered between uploads. Added to the instructions the AI is given when reading documents — useful for how your organization words things. It cannot override the built-in rules that stop the AI inventing details or requiring a verbatim quote.', 'public-docket' ); ?>
 					</p>
 				</td>
 			</tr>
 		</table>
-		<?php submit_button( __( 'Analyze Document', 'docket-ingest' ) ); ?>
+		<?php submit_button( __( 'Analyze Document', 'public-docket' ) ); ?>
 	</form>
 	<?php
 }
@@ -108,10 +131,10 @@ function di_render_ai_rows() {
 	if ( empty( $envs ) ) {
 		?>
 		<tr>
-			<th scope="row"><?php esc_html_e( 'AI provider', 'docket-ingest' ); ?></th>
+			<th scope="row"><?php esc_html_e( 'AI provider', 'public-docket' ); ?></th>
 			<td>
-				<p><strong><?php esc_html_e( 'No AI provider is set up yet.', 'docket-ingest' ); ?></strong>
-				<?php esc_html_e( 'Add an API key under Meow Apps > AI Engine > Settings > AI, then come back to this page.', 'docket-ingest' ); ?></p>
+				<p><strong><?php esc_html_e( 'No AI provider is set up yet.', 'public-docket' ); ?></strong>
+				<?php esc_html_e( 'Add an API key under Meow Apps > AI Engine > Settings > AI, then come back to this page.', 'public-docket' ); ?></p>
 			</td>
 		</tr>
 		<?php
@@ -134,7 +157,7 @@ function di_render_ai_rows() {
 	$selected    = in_array( $saved_model, $model_ids, true ) ? $saved_model : ( $env_models ? $env_models[0]['id'] : '' );
 	?>
 	<tr>
-		<th scope="row"><label for="di_env_id"><?php esc_html_e( 'AI provider', 'docket-ingest' ); ?></label></th>
+		<th scope="row"><label for="di_env_id"><?php esc_html_e( 'AI provider', 'public-docket' ); ?></label></th>
 		<td>
 			<select name="di_env_id" id="di_env_id">
 				<?php foreach ( $envs as $env ) : ?>
@@ -142,17 +165,17 @@ function di_render_ai_rows() {
 						<?php
 						echo esc_html(
 							$env['name'] . ' (' . di_provider_label( $env['type'] ) . ')'
-							. ( $env['has_key'] ? '' : ' - ' . __( 'no API key added', 'docket-ingest' ) )
+							. ( $env['has_key'] ? '' : ' - ' . __( 'no API key added', 'public-docket' ) )
 						);
 						?>
 					</option>
 				<?php endforeach; ?>
 			</select>
-			<p class="description"><?php esc_html_e( 'The AI connections set up in Meow Apps > AI Engine > Settings > AI.', 'docket-ingest' ); ?></p>
+			<p class="description"><?php esc_html_e( 'The AI connections set up in Meow Apps > AI Engine > Settings > AI.', 'public-docket' ); ?></p>
 		</td>
 	</tr>
 	<tr>
-		<th scope="row"><label for="di_model"><?php esc_html_e( 'Model', 'docket-ingest' ); ?></label></th>
+		<th scope="row"><label for="di_model"><?php esc_html_e( 'Model', 'public-docket' ); ?></label></th>
 		<td>
 			<select name="di_model" id="di_model">
 				<?php foreach ( $env_models as $model ) : ?>
@@ -161,28 +184,28 @@ function di_render_ai_rows() {
 						echo esc_html(
 							$model['latest']
 								/* translators: %s: model name */
-								? sprintf( __( '%s (always latest)', 'docket-ingest' ), $model['name'] )
+								? sprintf( __( '%s (always latest)', 'public-docket' ), $model['name'] )
 								: $model['name']
 						);
 						?>
 					</option>
 				<?php endforeach; ?>
-				<option value="__custom__" <?php selected( $use_custom ); ?>><?php esc_html_e( 'Other - type a model name', 'docket-ingest' ); ?></option>
+				<option value="__custom__" <?php selected( $use_custom ); ?>><?php esc_html_e( 'Other - type a model name', 'public-docket' ); ?></option>
 			</select>
 			<input type="text" name="di_model_custom" id="di_model_custom" class="regular-text"
 				value="<?php echo esc_attr( $use_custom ? $saved_model : '' ); ?>"
-				placeholder="<?php esc_attr_e( 'e.g. gemini-flash-lite-latest', 'docket-ingest' ); ?>"
+				placeholder="<?php esc_attr_e( 'e.g. gemini-flash-lite-latest', 'public-docket' ); ?>"
 				style="<?php echo $use_custom ? '' : 'display:none;'; ?>margin-top:6px;">
 			<p class="description" id="di_model_empty" style="<?php echo empty( $env_models ) ? '' : 'display:none;'; ?>">
-				<?php esc_html_e( 'AI Engine has no model list for this provider yet. Open the provider in AI Engine\'s settings to refresh it, or type a model name.', 'docket-ingest' ); ?>
+				<?php esc_html_e( 'AI Engine has no model list for this provider yet. Open the provider in AI Engine\'s settings to refresh it, or type a model name.', 'public-docket' ); ?>
 			</p>
-			<p class="description"><?php esc_html_e( '"Always latest" models follow the provider\'s newest release, so they are the least likely to be retired.', 'docket-ingest' ); ?></p>
+			<p class="description"><?php esc_html_e( '"Always latest" models follow the provider\'s newest release, so they are the least likely to be retired.', 'public-docket' ); ?></p>
 		</td>
 	</tr>
 	<script>
 	( function () {
 		var models = <?php echo wp_json_encode( $models_js, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?>;
-		var labels = <?php echo wp_json_encode( array( 'latest' => __( '%s (always latest)', 'docket-ingest' ), 'other' => __( 'Other - type a model name', 'docket-ingest' ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?>;
+		var labels = <?php echo wp_json_encode( array( 'latest' => __( '%s (always latest)', 'public-docket' ), 'other' => __( 'Other - type a model name', 'public-docket' ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?>;
 		var env = document.getElementById( 'di_env_id' );
 		var model = document.getElementById( 'di_model' );
 		var custom = document.getElementById( 'di_model_custom' );
@@ -234,7 +257,7 @@ function di_handle_upload() {
 	);
 
 	if ( empty( $_FILES['di_file']['tmp_name'] ) || ! is_uploaded_file( $_FILES['di_file']['tmp_name'] ) ) {
-		di_render_upload_form( __( 'No file was received.', 'docket-ingest' ) );
+		di_render_upload_form( __( 'No file was received.', 'public-docket' ) );
 		return;
 	}
 
@@ -286,7 +309,7 @@ function di_sort_items( $items ) {
 			$unchanged[] = array(
 				'title'    => $item['title'],
 				'existing' => $existing,
-				'note'     => __( 'Not compared - this document mentions more existing items than one upload checks.', 'docket-ingest' ),
+				'note'     => __( 'Not compared - this document mentions more existing items than one upload checks.', 'public-docket' ),
 			);
 			continue;
 		}
@@ -302,7 +325,7 @@ function di_sort_items( $items ) {
 				'existing' => $existing,
 				'note'     => sprintf(
 					/* translators: %s: error message */
-					__( 'Could not compare against the existing item: %s', 'docket-ingest' ),
+					__( 'Could not compare against the existing item: %s', 'public-docket' ),
 					$update->get_error_message()
 				),
 			);
@@ -315,7 +338,7 @@ function di_sort_items( $items ) {
 			$unchanged[] = array(
 				'title'    => $item['title'],
 				'existing' => $existing,
-				'note'     => __( 'Already on the docket; nothing new in this document.', 'docket-ingest' ),
+				'note'     => __( 'Already on the docket; nothing new in this document.', 'public-docket' ),
 			);
 		}
 	}
@@ -337,17 +360,17 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 		<?php
 		printf(
 			/* translators: 1: number of new items, 2: number of updates */
-			esc_html__( 'This document has %1$s and %2$s.', 'docket-ingest' ),
-			esc_html( sprintf( _n( '%d new item', '%d new items', count( $items ), 'docket-ingest' ), count( $items ) ) ),
-			esc_html( sprintf( _n( '%d update to an existing item', '%d updates to existing items', count( $updates ), 'docket-ingest' ), count( $updates ) ) )
+			esc_html__( 'This document has %1$s and %2$s.', 'public-docket' ),
+			esc_html( sprintf( _n( '%d new item', '%d new items', count( $items ), 'public-docket' ), count( $items ) ) ),
+			esc_html( sprintf( _n( '%d update to an existing item', '%d updates to existing items', count( $updates ), 'public-docket' ), count( $updates ) ) )
 		);
 		?>
 	</p>
 	<?php if ( $sorted['truncated'] ) : ?>
-		<div class="notice notice-warning"><p><?php esc_html_e( 'The document was long and only its first part was analyzed. Split it and upload the rest separately.', 'docket-ingest' ); ?></p></div>
+		<div class="notice notice-warning"><p><?php esc_html_e( 'The document was long and only its first part was analyzed. Split it and upload the rest separately.', 'public-docket' ); ?></p></div>
 	<?php endif; ?>
 	<div class="notice notice-info">
-		<p><?php esc_html_e( 'Everything except the question was copied from the document. The question was written by the AI — read it before approving.', 'docket-ingest' ); ?></p>
+		<p><?php esc_html_e( 'Everything except the question was copied from the document. The question was written by the AI — read it before approving.', 'public-docket' ); ?></p>
 	</div>
 	<form method="post">
 		<?php wp_nonce_field( 'di_create' ); ?>
@@ -358,13 +381,13 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 		<input type="hidden" name="di_updates" value="<?php echo esc_attr( wp_json_encode( $updates ) ); ?>">
 
 		<?php if ( ! empty( $updates ) ) : ?>
-			<h2><?php esc_html_e( 'Updates to items already on the docket', 'docket-ingest' ); ?></h2>
+			<h2><?php esc_html_e( 'Updates to items already on the docket', 'public-docket' ); ?></h2>
 			<table class="widefat striped">
 				<thead>
 					<tr>
-						<th style="width:2.5em;"><?php esc_html_e( 'Apply', 'docket-ingest' ); ?></th>
-						<th><?php esc_html_e( 'What this document adds', 'docket-ingest' ); ?></th>
-						<th><?php esc_html_e( 'Verbatim from document', 'docket-ingest' ); ?></th>
+						<th style="width:2.5em;"><?php esc_html_e( 'Apply', 'public-docket' ); ?></th>
+						<th><?php esc_html_e( 'What this document adds', 'public-docket' ); ?></th>
+						<th><?php esc_html_e( 'Verbatim from document', 'public-docket' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -380,7 +403,7 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 						</td>
 						<td>
 							<strong><?php echo esc_html( $update['title'] ); ?></strong>
-							<a href="<?php echo esc_url( get_edit_post_link( $update['existing_id'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'docket-ingest' ); ?></a>
+							<a href="<?php echo esc_url( get_edit_post_link( $update['existing_id'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'public-docket' ); ?></a>
 							<p><?php echo esc_html( $update['summary'] ); ?></p>
 
 							<?php if ( ! empty( $update['next_step'] ) ) : ?>
@@ -390,7 +413,7 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 										<?php
 										printf(
 											/* translators: %s: the proposed next step */
-											esc_html__( 'Set "Next step" to: %s', 'docket-ingest' ),
+											esc_html__( 'Set "Next step" to: %s', 'public-docket' ),
 											'<em>' . esc_html( $update['next_step'] ) . '</em>'
 										);
 										?>
@@ -400,7 +423,7 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 										<em><?php
 										printf(
 											/* translators: %s: the next step already written on the item */
-											esc_html__( 'This would replace what someone already wrote: "%s"', 'docket-ingest' ),
+											esc_html__( 'This would replace what someone already wrote: "%s"', 'public-docket' ),
 											esc_html( $existing_step )
 										);
 										?></em>
@@ -410,7 +433,7 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 
 							<?php if ( $has_conflicts ) : ?>
 								<div class="notice notice-warning inline" style="margin:8px 0;padding:6px 10px;">
-									<p style="margin:0 0 4px;"><strong><?php esc_html_e( 'This document contradicts what is already recorded — unchecked by default.', 'docket-ingest' ); ?></strong></p>
+									<p style="margin:0 0 4px;"><strong><?php esc_html_e( 'This document contradicts what is already recorded — unchecked by default.', 'public-docket' ); ?></strong></p>
 									<ul style="list-style:disc;margin:0 0 0 1.4em;">
 										<?php foreach ( $update['conflicts'] as $conflict ) : ?>
 											<li>
@@ -418,7 +441,7 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 												<?php
 												printf(
 													/* translators: 1: value already on the item, 2: value in the new document */
-													esc_html__( 'recorded: "%1$s"; this document: "%2$s"', 'docket-ingest' ),
+													esc_html__( 'recorded: "%1$s"; this document: "%2$s"', 'public-docket' ),
 													esc_html( $conflict['already_recorded'] ),
 													esc_html( $conflict['newer_document'] )
 												);
@@ -433,14 +456,14 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 							<?php endif; ?>
 
 							<?php if ( $is_published ) : ?>
-								<p class="description"><?php esc_html_e( 'This item is public — an applied update appears on the site immediately.', 'docket-ingest' ); ?></p>
+								<p class="description"><?php esc_html_e( 'This item is public — an applied update appears on the site immediately.', 'public-docket' ); ?></p>
 							<?php endif; ?>
 						</td>
 						<td style="max-width:28em;">
 							<?php if ( ! empty( $update['quote'] ) ) : ?>
 								<blockquote style="margin:0;font-style:italic;"><?php echo esc_html( $update['quote'] ); ?></blockquote>
 							<?php else : ?>
-								<em><?php esc_html_e( 'No quote provided — verify this one manually.', 'docket-ingest' ); ?></em>
+								<em><?php esc_html_e( 'No quote provided — verify this one manually.', 'public-docket' ); ?></em>
 							<?php endif; ?>
 						</td>
 					</tr>
@@ -450,13 +473,13 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 		<?php endif; ?>
 
 		<?php if ( ! empty( $items ) ) : ?>
-			<h2><?php esc_html_e( 'New items', 'docket-ingest' ); ?></h2>
+			<h2><?php esc_html_e( 'New items', 'public-docket' ); ?></h2>
 			<table class="widefat striped">
 				<thead>
 					<tr>
-						<th style="width:2.5em;"><?php esc_html_e( 'Add', 'docket-ingest' ); ?></th>
-						<th><?php esc_html_e( 'Item', 'docket-ingest' ); ?></th>
-						<th><?php esc_html_e( 'Verbatim from document', 'docket-ingest' ); ?></th>
+						<th style="width:2.5em;"><?php esc_html_e( 'Add', 'public-docket' ); ?></th>
+						<th><?php esc_html_e( 'Item', 'public-docket' ); ?></th>
+						<th><?php esc_html_e( 'Verbatim from document', 'public-docket' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -468,7 +491,7 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 						<td>
 							<strong><?php echo esc_html( $item['title'] ); ?></strong>
 							<?php if ( ! empty( $item['question'] ) ) : ?>
-								<p><em><?php esc_html_e( 'Drafted question:', 'docket-ingest' ); ?></em> <?php echo esc_html( $item['question'] ); ?></p>
+								<p><em><?php esc_html_e( 'Drafted question:', 'public-docket' ); ?></em> <?php echo esc_html( $item['question'] ); ?></p>
 							<?php endif; ?>
 							<p>
 								<?php if ( ! empty( $item['external_reference'] ) ) : ?>
@@ -483,7 +506,7 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 							<?php if ( ! empty( $item['source_quote'] ) ) : ?>
 								<blockquote style="margin:0;font-style:italic;"><?php echo esc_html( $item['source_quote'] ); ?></blockquote>
 							<?php else : ?>
-								<em><?php esc_html_e( 'No quote provided — verify this one manually.', 'docket-ingest' ); ?></em>
+								<em><?php esc_html_e( 'No quote provided — verify this one manually.', 'public-docket' ); ?></em>
 							<?php endif; ?>
 						</td>
 					</tr>
@@ -493,21 +516,21 @@ function di_render_review( $sorted, $source_url, $source_file ) {
 		<?php endif; ?>
 
 		<?php if ( ! empty( $unchanged ) ) : ?>
-			<h2><?php esc_html_e( 'Mentioned, but nothing to do', 'docket-ingest' ); ?></h2>
+			<h2><?php esc_html_e( 'Mentioned, but nothing to do', 'public-docket' ); ?></h2>
 			<ul style="list-style:disc;margin-left:2em;">
 				<?php foreach ( $unchanged as $skip ) : ?>
 					<li>
 						<strong><?php echo esc_html( $skip['title'] ); ?></strong> — <?php echo esc_html( $skip['note'] ); ?>
-						<a href="<?php echo esc_url( get_edit_post_link( $skip['existing'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'docket-ingest' ); ?></a>
+						<a href="<?php echo esc_url( get_edit_post_link( $skip['existing'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'public-docket' ); ?></a>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endif; ?>
 
 		<?php if ( empty( $items ) && empty( $updates ) ) : ?>
-			<p><?php esc_html_e( 'Nothing to add or update from this document.', 'docket-ingest' ); ?></p>
+			<p><?php esc_html_e( 'Nothing to add or update from this document.', 'public-docket' ); ?></p>
 		<?php else : ?>
-			<?php submit_button( __( 'Apply Selected', 'docket-ingest' ) ); ?>
+			<?php submit_button( __( 'Apply Selected', 'public-docket' ) ); ?>
 		<?php endif; ?>
 	</form>
 	<?php
@@ -518,7 +541,7 @@ function di_handle_create() {
 
 	$raw = json_decode( wp_unslash( $_POST['di_items'] ?? '[]' ), true );
 	if ( ! is_array( $raw ) ) {
-		di_render_upload_form( __( 'Something went wrong reading the reviewed items. Please upload the document again.', 'docket-ingest' ) );
+		di_render_upload_form( __( 'Something went wrong reading the reviewed items. Please upload the document again.', 'public-docket' ) );
 		return;
 	}
 
@@ -526,7 +549,7 @@ function di_handle_create() {
 	$update_selected = isset( $_POST['di_update_selected'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['di_update_selected'] ) ) : array();
 
 	if ( empty( $selected ) && empty( $update_selected ) ) {
-		di_render_upload_form( __( 'Nothing was selected, so nothing was changed.', 'docket-ingest' ) );
+		di_render_upload_form( __( 'Nothing was selected, so nothing was changed.', 'public-docket' ) );
 		return;
 	}
 
@@ -609,7 +632,7 @@ function di_render_result( $result ) {
 		echo '<div class="notice notice-success"><p>' . esc_html(
 			sprintf(
 				/* translators: %d: number of items updated */
-				_n( '%d item updated.', '%d items updated.', count( $result['updated'] ), 'docket-ingest' ),
+				_n( '%d item updated.', '%d items updated.', count( $result['updated'] ), 'public-docket' ),
 				count( $result['updated'] )
 			)
 		) . '</p></div>';
@@ -634,7 +657,7 @@ function di_render_result( $result ) {
 		echo '<div class="notice notice-success"><p>' . esc_html(
 			sprintf(
 				/* translators: %d: number created */
-				_n( '%d pending item created.', '%d pending items created.', count( $result['created'] ), 'docket-ingest' ),
+				_n( '%d pending item created.', '%d pending items created.', count( $result['created'] ), 'public-docket' ),
 				count( $result['created'] )
 			)
 		) . '</p></div>';
@@ -651,7 +674,7 @@ function di_render_result( $result ) {
 	}
 
 	if ( ! empty( $result['skipped'] ) ) {
-		echo '<div class="notice notice-info"><p>' . esc_html__( 'Skipped as duplicates:', 'docket-ingest' ) . '</p><ul style="list-style:disc;margin-left:2em;">';
+		echo '<div class="notice notice-info"><p>' . esc_html__( 'Skipped as duplicates:', 'public-docket' ) . '</p><ul style="list-style:disc;margin-left:2em;">';
 		foreach ( $result['skipped'] as $skip ) {
 			printf(
 				'<li>%s (<code>%s</code>)</li>',
@@ -669,8 +692,8 @@ function di_render_result( $result ) {
 	printf(
 		'<p><a class="button" href="%s">%s</a> <a class="button button-primary" href="%s">%s</a></p>',
 		esc_url( admin_url( 'edit.php?post_type=hb_decision&page=docket-ingest' ) ),
-		esc_html__( 'Ingest Another', 'docket-ingest' ),
+		esc_html__( 'Ingest Another', 'public-docket' ),
 		esc_url( admin_url( 'edit.php?post_type=hb_decision&page=hb-workspace' ) ),
-		esc_html__( 'Review in Workspace', 'docket-ingest' )
+		esc_html__( 'Review in Workspace', 'public-docket' )
 	);
 }

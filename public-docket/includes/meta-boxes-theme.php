@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function hb_add_theme_meta_box() {
 	add_meta_box(
 		'hb_theme_decision',
-		__( 'HearBack: Belongs to decision', 'hearback-cabinet' ),
+		__( 'HearBack: Belongs to decision', 'public-docket' ),
 		'hb_render_theme_meta_box',
 		'hb_theme',
 		'side',
@@ -30,7 +30,7 @@ function hb_render_theme_meta_box( $post ) {
 	?>
 	<p>
 		<select name="hb_decision_id" class="widefat">
-			<option value=""><?php esc_html_e( '— Select a decision —', 'hearback-cabinet' ); ?></option>
+			<option value=""><?php esc_html_e( '— Select a decision —', 'public-docket' ); ?></option>
 			<?php foreach ( $decisions as $decision ) : ?>
 				<option value="<?php echo esc_attr( $decision->ID ); ?>" <?php selected( $current, $decision->ID ); ?>>
 					<?php echo esc_html( $decision->post_title ); ?>
@@ -39,7 +39,7 @@ function hb_render_theme_meta_box( $post ) {
 		</select>
 	</p>
 	<p>
-		<small><?php esc_html_e( 'Use the Order field below to control display order within this decision.', 'hearback-cabinet' ); ?></small>
+		<small><?php esc_html_e( 'Use the Order field below to control display order within this decision.', 'public-docket' ); ?></small>
 	</p>
 	<?php
 }

@@ -1,107 +1,179 @@
 === Public Docket ===
-Contributors: (your wordpress.org username)
-Tags: civic engagement, public comment, local government, feedback
+Contributors: YOUR-WORDPRESS-ORG-USERNAME
+Tags: public comment, local government, civic engagement, agenda, transparency
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.3.1
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A multi-item public docket for local government bodies: residents
-comment on open items, admins sort feedback into themes, and the board
-posts an outcome with a next step. Built on the HearBack model.
+Residents comment on the items before your board, staff group the feedback into themes, and the board publishes an outcome with a next step.
 
 == Description ==
 
-Public Docket is a generalized, many-item version of the original
-HearBack pilot: a small tool built around one specific failure mode in
-public meetings, where residents submit testimony and the only artifact
-that comes back is minutes almost nobody reads.
+Public comment usually goes one way. Residents testify, email, and fill
+in forms, and the only thing that comes back is minutes almost nobody
+reads. Public Docket is built around closing that loop: every item your
+board considers gets its own page, its own comment period, and - when
+the board has decided - a published outcome that says what happened and
+what a resident can still do about it.
 
-Not every docket item ends in an up-or-down vote, so this plugin
-doesn't assume one. Each item can:
+It was built for a Washington DC Advisory Neighborhood Commission and
+generalised from there. It suits any body that takes public input on a
+list of items: neighborhood commissions, advisory boards, planning
+committees, school councils, community coalitions.
 
-* Collect public comments on a plain-language question, with a
-  4-stage public timeline (Open for input -> Synthesis published ->
-  Board reviewing -> Outcome) - or skip the comment period entirely
-  for purely informational postings.
-* Have its outcome worded however your organization actually talks -
-  the outcome options (Proceed / Do not proceed / Not yet, by default)
-  are fully editable under Settings, each tagged with a tone
-  (positive/neutral/negative) so the public page still gets a sensible
-  accent color for wording the plugin has never seen before.
-* Show a "Next step" - what's still live and what a resident can still
-  do about it - even after an outcome is posted.
+= What each docket item does =
 
-Residents can submit a comment with just the comment itself required;
-name, email, and neighborhood are all optional, and email is never
-shown on any public page. Admins sort submissions into themes, then
-publish "What we heard" - aggregated themes plus anonymized quotes from
-residents who consented to be quoted.
+* Collects comments on one plain-language question, with a four-stage
+  public timeline - Open for input, Synthesis published, Board
+  reviewing, Answered - so nobody has to ask where a matter stands.
+* Skips the comment period entirely when an item is informational.
+* Records an outcome in your own words. The options (Proceed / Do not
+  proceed / Not yet, by default) are editable under Settings, and each
+  carries a tone so the public page still picks a sensible accent colour
+  for wording the plugin has never seen.
+* Shows a "Next step" even after an outcome is posted - a hearing date,
+  an appeal window, a matter returning next month.
 
-= Built for future automation =
+= What residents get =
 
-This plugin doesn't scrape or transcribe anything itself, but its data
-model is ready for something else to. Every docket item field is
-exposed over the REST API (`show_in_rest`), and each item carries a
-source (manual/scraped), a source URL, and a stable external
-reference/case number so an ingestion script can recognize "this is
-the same matter resurfacing" instead of creating a duplicate. Anything
-created that way should land as WordPress's native "Pending" status,
-not published - the Workspace screen shows pending items to admins for
-review, but they stay invisible to residents until a human approves
-them. Submissions carry a source field too (form vs. transcript);
-comments derived from a transcript should never be marked as consented
-to a public quote by anything other than a human affirmatively
-checking that box.
+Commenting asks for the comment and nothing else. Name, email and
+neighborhood are optional, no account is needed, and an email address is
+never shown on a public page. A resident's words are only ever quoted
+publicly if they ticked the box agreeing to be quoted.
 
-= Extending this plugin =
+= What staff get =
 
-Key actions fire at the moments an add-on would want to hook in
-(`hb_submission_created`, `hb_decision_saved`). Things like an agenda/
-transcript ingestion pipeline, or a chatbot that answers resident
-questions from published items, are meant to be separate plugins that
-read and write through the REST API rather than changes to this
-plugin's core.
+One Workspace screen holds the item, its themes and its submissions
+together, instead of scattering them across menus. Staff sort
+submissions into themes and publish a "What we heard" summary - the
+recurring points, plus consented quotes - then post the outcome. Items
+can be published straight from the Workspace.
+
+= Drafting items from your agenda (optional) =
+
+Reading a 100-page meeting package and typing out each item is the part
+that stops organisations doing this at all. Public Docket can read an
+agenda, minutes or transcript you upload (.txt, .md or .docx) and draft
+the items for you: case numbers, addresses, and a plain question for
+each one.
+
+Every drafted item is shown beside the exact sentence it came from. A
+later document about the same case updates the item already on your
+docket rather than duplicating it, and when a new document contradicts
+what is recorded, it says so and leaves the decision to you. Nothing is
+ever published automatically - drafts arrive as Pending and stay
+invisible to residents until a person approves them.
+
+This feature is entirely optional. It appears only in the admin, and the
+rest of the plugin works without it.
+
+== External services ==
+
+The document drafting feature described above sends text to an AI
+provider. It is the only part of this plugin that contacts a third
+party, it runs only when an administrator uploads a document and presses
+Analyze Document, and it is off until you configure it.
+
+Public Docket does not include an AI service of its own and has no
+account, server or API key of ours involved. It uses the connection you
+set up in the separate, free AI Engine plugin
+(https://wordpress.org/plugins/ai-engine/), under your own API key with
+the provider you choose - for example OpenAI, Anthropic, Google,
+OpenRouter, Mistral, Perplexity or Replicate.
+
+What is sent, and when:
+
+* Sent: the text extracted from the document you upload, up to roughly
+  60,000 characters, together with the instructions asking the model to
+  list the matters it contains. When you ask it to check for updates, the
+  title, question and recorded outcome of the existing docket items being
+  compared are sent too.
+* Also sent: any extra instructions you choose to save on the Ingest
+  Document screen.
+* Not sent: resident submissions, names, email addresses, or anything
+  else from your site.
+* When: only on an explicit upload by a logged-in administrator. Nothing
+  is sent on a schedule, on page views, or from the public site.
+
+Because you choose the provider, the terms that apply are that
+provider's. Their privacy policy and terms of service govern what they
+do with the text you send. Please read them before uploading documents
+that are not already public records, and check the provider's own
+documentation for whether submitted data may be retained or used for
+training. The providers' policies are linked from AI Engine's settings
+screen, where you enter the key.
 
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/public-docket`, or
-   install the zip through Plugins > Add New > Upload Plugin.
-2. Activate the plugin.
-3. Under Public Docket > Settings, review or edit the outcome options.
-4. Go to Public Docket > Add New Docket Item to create your first one.
-5. Go to Public Docket > Workspace to edit that item's details, manage
-   its themes, sort its submissions, and publish - all from one screen
-   with a single Save button.
-6. Visit `/docket/` to see the public archive.
+1. Install and activate Public Docket.
+2. Visit Public Docket > Settings to set your outcome options and the
+   name your organisation uses for its board.
+3. Add your first item under Public Docket > Add New Docket Item, or let
+   residents find the docket at /docket/ on your site.
+
+To draft items from documents, additionally install the free AI Engine
+plugin, add an API key for the provider of your choice in its settings,
+and then use Public Docket > Ingest Document. The screen tells you what
+is missing if AI Engine is not there.
 
 == Frequently Asked Questions ==
 
-= Can I have more than one open item at a time? =
+= Does this send anything to an AI service on its own? =
 
-Yes - each item is independent, and there's no limit on how many can
-be open for comment at once.
+No. The only outbound request happens when an administrator uploads a
+document and presses Analyze Document. Running a docket, collecting
+comments and publishing outcomes involve no third party at all. See the
+External services section above.
 
-= Does every item need public comments? =
+= Do residents need an account to comment? =
 
-No. Turn off "Collect public comments" on an item to post it as purely
-informational - it skips the comment form, themes, and timeline, and
-shows just the outcome once one is posted.
+No. Only the comment itself is required; name, email and neighborhood
+are optional, and email is never displayed publicly.
 
-= Where do public comments go? =
+= Can a resident's comment be quoted publicly? =
 
-Into a private submission post per comment. Nothing is public until an
-admin assigns themes and publishes the synthesis.
+Only if they ticked the consent box on the form. Nothing else, including
+the drafting feature, can mark a comment as quotable.
 
-= Is there spam protection on the comment form? =
+= Our board does not vote on things. Does that matter? =
 
-A honeypot field and a nonce are built in. For a public-facing site,
-also consider adding Akismet (bundled with WordPress) if spam becomes
-an issue.
+No. Outcome options are editable, so a body that recommends, advises or
+simply notes a matter is not forced into Approve and Deny.
+
+= Can I try it before installing? =
+
+Yes. A complete demo runs in your browser through WordPress Playground,
+with no hosting or install required. The link is on the project page in
+the Plugin URI above.
+
+= Will it read a PDF? =
+
+Not yet. Save the document as plain text (.txt) and upload that. Word
+(.docx), Markdown and plain text are supported today.
+
+== Screenshots ==
+
+1. A docket item on the public site: the question, the outcome, and the next step.
+2. The Workspace: one item with its themes and submissions on a single screen.
+3. Ingest Document: an uploaded agenda drafted into items, each beside the text it came from.
+4. An update found in a later document, with a contradiction flagged for a human to settle.
+5. Settings: outcome options worded the way your organisation talks.
 
 == Changelog ==
+
+= 0.4.0 =
+* Document ingest is now part of Public Docket rather than a separate
+  Docket Ingest plugin. One install instead of two; the Ingest Document
+  screen appears under Public Docket. Upgrading from the separate plugin:
+  deactivate and delete Docket Ingest, and your existing items, sources
+  and update history are untouched.
+* The plugin no longer loads a webfont from a third-party CDN. The
+  stylesheet asks for Lora and Lato and falls back to Georgia and Arial,
+  so a theme supplying those faces still gets them.
+* Renamed the text domain to public-docket.
 
 = 0.3.1 =
 * Fixed: switching items in the Workspace could fail with "Cannot load
@@ -115,14 +187,13 @@ an issue.
 
 = 0.2.0 =
 * Renamed from HearBack Cabinet / "Decision" to Public Docket / "Docket
-  Item," since not every item resolves as a decision.
-* Outcome options are now configurable under Settings instead of a
-  hardcoded Proceed/Do not proceed/Not yet.
-* Added a per-item toggle to turn public comments off for purely
-  informational postings.
-* Added source/source URL/external reference fields and REST exposure
-  on docket item meta, in preparation for a future scraper/ingestion
-  add-on.
+  item", and generalised from a single decision to a many-item docket.
 
 = 0.1.0 =
-* Initial release.
+* First release.
+
+== Upgrade Notice ==
+
+= 0.4.0 =
+Docket Ingest is now built in. If you installed it separately, deactivate
+and delete it after upgrading; your items and history are unaffected.

@@ -48,19 +48,6 @@
     {
       "step": "installPlugin",
       "pluginData": {
-        "resource": "git:directory",
-        "url": "https://github.com/mrwhinna-mw/hearback_wordpress",
-        "ref": "main",
-        "refType": "branch",
-        "path": "/docket-ingest"
-      },
-      "options": {
-        "activate": true
-      }
-    },
-    {
-      "step": "installPlugin",
-      "pluginData": {
         "resource": "wordpress.org/plugins",
         "slug": "ai-engine"
       },

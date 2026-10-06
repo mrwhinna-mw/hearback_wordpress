@@ -16,10 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function hb_get_timeline( $decision_id ) {
 	$stages = array(
-		__( 'Open for input', 'hearback-cabinet' ),
-		__( 'Synthesis published', 'hearback-cabinet' ),
-		__( 'Board reviewing', 'hearback-cabinet' ),
-		__( 'Outcome', 'hearback-cabinet' ),
+		__( 'Open for input', 'public-docket' ),
+		__( 'Synthesis published', 'public-docket' ),
+		__( 'Board reviewing', 'public-docket' ),
+		__( 'Outcome', 'public-docket' ),
 	);
 
 	$comment_open_at = get_post_meta( $decision_id, '_hb_comment_open_at', true );
@@ -77,10 +77,10 @@ function hb_get_decision_status( $decision_id ) {
  */
 function hb_get_status_labels() {
 	return array(
-		'posted'               => __( 'Posted', 'hearback-cabinet' ),
-		'open'                 => __( 'Open for input', 'hearback-cabinet' ),
-		'synthesis_published'  => __( 'Synthesis published', 'hearback-cabinet' ),
-		'reviewing'            => __( 'Board reviewing', 'hearback-cabinet' ),
-		'answered'             => __( 'Answered', 'hearback-cabinet' ),
+		'posted'               => __( 'Posted', 'public-docket' ),
+		'open'                 => __( 'Open for input', 'public-docket' ),
+		'synthesis_published'  => __( 'Synthesis published', 'public-docket' ),
+		'reviewing'            => __( 'Board reviewing', 'public-docket' ),
+		'answered'             => __( 'Answered', 'public-docket' ),
 	);
 }
