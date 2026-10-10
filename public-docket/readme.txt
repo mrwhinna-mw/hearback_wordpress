@@ -20,7 +20,7 @@ the board has decided - a published outcome that says what happened and
 what a resident can still do about it.
 
 It was built for a Washington DC Advisory Neighborhood Commission and
-generalised from there. It suits any body that takes public input on a
+generalized from there. It suits any body that takes public input on a
 list of items: neighborhood commissions, advisory boards, planning
 committees, school councils, community coalitions.
 
@@ -32,7 +32,7 @@ committees, school councils, community coalitions.
 * Skips the comment period entirely when an item is informational.
 * Records an outcome in your own words. The options (Proceed / Do not
   proceed / Not yet, by default) are editable under Settings, and each
-  carries a tone so the public page still picks a sensible accent colour
+  carries a tone so the public page still picks a sensible accent color
   for wording the plugin has never seen.
 * Shows a "Next step" even after an outcome is posted - a hearing date,
   an appeal window, a matter returning next month.
@@ -55,7 +55,7 @@ can be published straight from the Workspace.
 = Drafting items from your agenda (optional) =
 
 Reading a 100-page meeting package and typing out each item is the part
-that stops organisations doing this at all. Public Docket can read an
+that stops organizations doing this at all. Public Docket can read an
 agenda, minutes or transcript you upload (.txt, .md or .docx) and draft
 the items for you: case numbers, addresses, and a plain question for
 each one.
@@ -110,7 +110,7 @@ screen, where you enter the key.
 
 1. Install and activate Public Docket.
 2. Visit Public Docket > Settings to set your outcome options and the
-   name your organisation uses for its board.
+   name your organization uses for its board.
 3. Add your first item under Public Docket > Add New Docket Item, or let
    residents find the docket at /docket/ on your site.
 
@@ -160,7 +160,7 @@ Not yet. Save the document as plain text (.txt) and upload that. Word
 2. The Workspace: one item with its themes and submissions on a single screen.
 3. Ingest Document: an uploaded agenda drafted into items, each beside the text it came from.
 4. An update found in a later document, with a contradiction flagged for a human to settle.
-5. Settings: outcome options worded the way your organisation talks.
+5. Settings: outcome options worded the way your organization talks.
 
 == Changelog ==
 
@@ -187,7 +187,7 @@ Not yet. Save the document as plain text (.txt) and upload that. Word
 
 = 0.2.0 =
 * Renamed from HearBack Cabinet / "Decision" to Public Docket / "Docket
-  item", and generalised from a single decision to a many-item docket.
+  item", and generalized from a single decision to a many-item docket.
 
 = 0.1.0 =
 * First release.
